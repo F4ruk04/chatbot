@@ -57,16 +57,16 @@ export default function Layout({ children }: LayoutProps) {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
             {/* Logo e navegação principal */}
-            <div className="flex items-center">
-              {/* Logo */}
-              <div className="flex-shrink-0 flex items-center">
-                <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-blue-700 rounded-lg flex items-center justify-center mr-3">
+            <div className="flex items-center min-w-0 flex-1">
+              {/* Logo - Clicável para homepage */}
+              <Link href="/dashboard" className="flex-shrink-0 flex items-center group">
+                <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-blue-700 rounded-lg flex items-center justify-center mr-2 sm:mr-3 group-hover:scale-105 transition-transform">
                   <BarChart3 className="h-5 w-5 text-white" />
                 </div>
-                <h1 className="text-xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-300 bg-clip-text text-transparent">
+                <h1 className="text-lg sm:text-xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-300 bg-clip-text text-transparent truncate">
                   Chatbot SaaS
                 </h1>
-              </div>
+              </Link>
 
               {/* Navegação desktop */}
               <div className="hidden md:ml-8 md:flex md:space-x-1">
@@ -94,24 +94,22 @@ export default function Layout({ children }: LayoutProps) {
             </div>
 
             {/* Lado direito - usuário e ações */}
-            <div className="flex items-center gap-4">
-              {/* Notificações */}
-              <button className="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors">
-                <Bell className="h-5 w-5" />
-              </button>
-
-              {/* Configurações */}
-              <button className="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors">
+            <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
+              {/* Configurações - Desktop only */}
+              <button
+                className="hidden sm:flex p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors"
+                title="Configurações"
+              >
                 <Settings className="h-5 w-5" />
               </button>
 
               {/* Menu do usuário */}
               <div className="relative">
-                <button className="flex items-center gap-2 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-                  <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center">
-                    <User className="h-4 w-4 text-white" />
+                <button className="flex items-center gap-1 sm:gap-2 p-1 sm:p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                  <div className="w-7 h-7 sm:w-8 sm:h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center flex-shrink-0">
+                    <User className="h-3 w-3 sm:h-4 sm:w-4 text-white" />
                   </div>
-                  <span className="hidden sm:block text-sm font-medium text-gray-700 dark:text-gray-300">
+                  <span className="hidden md:block text-sm font-medium text-gray-700 dark:text-gray-300 truncate max-w-24 lg:max-w-none">
                     {userName}
                   </span>
                 </button>
@@ -120,21 +118,21 @@ export default function Layout({ children }: LayoutProps) {
               {/* Botão de logout */}
               <button
                 onClick={handleLogout}
-                className="p-2 text-gray-500 hover:text-red-600 dark:text-gray-400 dark:hover:text-red-400 transition-colors"
+                className="p-1 sm:p-2 text-gray-500 hover:text-red-600 dark:text-gray-400 dark:hover:text-red-400 transition-colors"
                 title="Sair"
               >
-                <LogOut className="h-5 w-5" />
+                <LogOut className="h-4 w-4 sm:h-5 sm:w-5" />
               </button>
 
               {/* Menu mobile */}
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="md:hidden p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors"
+                className="md:hidden p-1 sm:p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors"
               >
                 {mobileMenuOpen ? (
-                  <X className="h-6 w-6" />
+                  <X className="h-5 w-5 sm:h-6 sm:w-6" />
                 ) : (
-                  <Menu className="h-6 w-6" />
+                  <Menu className="h-5 w-5 sm:h-6 sm:w-6" />
                 )}
               </button>
             </div>

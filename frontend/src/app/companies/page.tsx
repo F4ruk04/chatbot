@@ -11,19 +11,20 @@ import { useRouter } from 'next/navigation';
 import Layout from '@/components/Layout';
 import AuthGuard from '@/components/AuthGuard';
 import { companiesAPI, Company } from '@/lib/api';
-import { 
-  Building2, 
-  Plus, 
-  Phone, 
-  Edit, 
-  Trash2, 
+import {
+  Building2,
+  Plus,
+  Phone,
+  Edit,
+  Trash2,
   Search,
   Filter,
   MoreVertical,
   Calendar,
   MessageSquare,
   CheckCircle,
-  AlertCircle
+  AlertCircle,
+  X
 } from 'lucide-react';
 
 export default function CompaniesPage() {
@@ -145,29 +146,34 @@ export default function CompaniesPage() {
             </div>
             <button
               onClick={() => setShowForm(!showForm)}
-              className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-medium rounded-lg transition-all duration-200 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+              className="inline-flex items-center justify-center px-3 sm:px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-medium rounded-lg transition-all duration-200 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 text-sm sm:text-base"
             >
-              <Plus className="mr-2 h-5 w-5" />
-              Adicionar Empresa
+              <Plus className="mr-1 sm:mr-2 h-4 w-4 sm:h-5 sm:w-5" />
+              <span className="hidden xs:inline">Adicionar </span>Empresa
             </button>
           </div>
 
           {/* Barra de pesquisa e filtros */}
-          <div className="flex flex-col sm:flex-row gap-4">
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
             <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 sm:h-5 sm:w-5 text-gray-400" />
               <input
                 type="text"
                 placeholder="Pesquisar empresas..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                className="w-full pl-9 sm:pl-10 pr-4 py-2.5 sm:py-2 text-sm sm:text-base border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
               />
+              {searchTerm && (
+                <button
+                  onClick={() => setSearchTerm('')}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              )}
             </div>
-            <button className="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-              <Filter className="mr-2 h-5 w-5" />
-              Filtros
-            </button>
+            {/* Removido botão de filtros por enquanto */}
           </div>
 
           {/* Mensagem de erro */}
@@ -341,40 +347,40 @@ export default function CompaniesPage() {
             ) : (
               <div className="divide-y divide-gray-200 dark:divide-gray-700">
                 {filteredCompanies.map((company) => (
-                  <div key={company.id} className="p-6 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-                    <div className="flex items-start justify-between">
-                      <div className="flex items-start space-x-4">
-                        <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center flex-shrink-0">
-                          <Building2 className="h-6 w-6 text-white" />
+                  <div key={company.id} className="p-4 sm:p-6 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                    <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+                      <div className="flex items-start space-x-3 sm:space-x-4 flex-1 min-w-0">
+                        <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center flex-shrink-0">
+                          <Building2 className="h-5 w-5 sm:h-6 sm:w-6 text-white" />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <div className="flex items-center space-x-2 mb-1">
-                            <h3 className="text-lg font-semibold text-gray-900 dark:text-white truncate">
+                          <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-1">
+                            <h3 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white truncate">
                               {company.nome}
                             </h3>
-                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400">
+                            <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400 w-fit">
                               <CheckCircle className="h-3 w-3 mr-1" />
                               Ativo
                             </span>
                           </div>
-                          <p className="text-gray-600 dark:text-gray-400 mb-2">
+                          <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 mb-2 line-clamp-2">
                             {company.descricao || 'Sem descrição'}
                           </p>
-                          <div className="flex items-center space-x-4 text-sm text-gray-500 dark:text-gray-400">
+                          <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-xs sm:text-sm text-gray-500 dark:text-gray-400">
                             <div className="flex items-center">
-                              <Phone className="h-4 w-4 mr-1" />
-                              {company.whatsapp_phone_number}
+                              <Phone className="h-3 w-3 sm:h-4 sm:w-4 mr-1 flex-shrink-0" />
+                              <span className="truncate">{company.whatsapp_phone_number}</span>
                             </div>
                             <div className="flex items-center">
-                              <Calendar className="h-4 w-4 mr-1" />
-                              Criado em {new Date(company.created_at).toLocaleDateString('pt-PT')}
+                              <Calendar className="h-3 w-3 sm:h-4 sm:w-4 mr-1 flex-shrink-0" />
+                              <span className="truncate">Criado em {new Date(company.created_at).toLocaleDateString('pt-PT')}</span>
                             </div>
                           </div>
                         </div>
                       </div>
-                      <div className="flex items-center space-x-2">
+                      <div className="flex items-center justify-end space-x-1 sm:space-x-2 flex-shrink-0">
                         <button
-                          className="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+                          className="p-1.5 sm:p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700"
                           onClick={() => {
                             setEditingCompany(company);
                             setFormData({
@@ -387,23 +393,24 @@ export default function CompaniesPage() {
                           }}
                           aria-label="Editar empresa"
                         >
-                          <Edit className="h-5 w-5" />
+                          <Edit className="h-4 w-4 sm:h-5 sm:w-5" />
                         </button>
-                        <button onClick={() => handleDelete(company.id)} className="p-2 text-gray-400 hover:text-red-600 dark:hover:text-red-400 transition-colors">
-                          <Trash2 className="h-5 w-5" />
-                        </button>
-                        <button className="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors">
-                          <MoreVertical className="h-5 w-5" />
+                        <button
+                          onClick={() => handleDelete(company.id)}
+                          className="p-1.5 sm:p-2 text-gray-400 hover:text-red-600 dark:hover:text-red-400 transition-colors rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700"
+                          aria-label="Deletar empresa"
+                        >
+                          <Trash2 className="h-4 w-4 sm:h-5 sm:w-5" />
                         </button>
                       </div>
                     </div>
                     {company.context_prompt && (
-                      <div className="mt-4 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                      <div className="mt-3 sm:mt-4 p-3 sm:p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
                         <div className="flex items-center mb-2">
-                          <MessageSquare className="h-4 w-4 text-gray-500 mr-2" />
-                          <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Contexto do Chatbot</span>
+                          <MessageSquare className="h-3 w-3 sm:h-4 sm:w-4 text-gray-500 mr-2 flex-shrink-0" />
+                          <span className="text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300">Contexto do Chatbot</span>
                         </div>
-                        <p className="text-sm text-gray-600 dark:text-gray-400">
+                        <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 line-clamp-3">
                           {company.context_prompt}
                         </p>
                       </div>
