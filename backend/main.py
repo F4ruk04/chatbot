@@ -26,8 +26,8 @@ app = FastAPI(
 allowed_origins = [
     "http://localhost:3000",
     "http://127.0.0.1:3000",
-    "https://*.railway.app",
-    "https://*.vercel.app"
+    "https://chatbot-frontend-pied.vercel.app",  # URL específica do Vercel
+    "*"  # Permitir todas as origens temporariamente para debug
 ]
 
 # Adicionar origem do Railway se estiver em produção
