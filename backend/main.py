@@ -5,6 +5,7 @@ Ponto de entrada da aplicação SaaS de Chatbot Inteligente
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import RedirectResponse
 from app.database import engine, Base
 from app.routers import auth, companies, whatsapp, dashboard
 import os
@@ -55,14 +56,27 @@ app.include_router(dashboard.router)
 @app.get("/")
 def read_root():
     """
-    Endpoint raiz da API
+    Redireciona para a landing page
+    """
+    return RedirectResponse(url="https://chatbot-frontend-pied.vercel.app")
+
+@app.get("/api")
+def api_info():
+    """
+    Informações da API
     """
     return {
         "message": "SaaS Chatbot Inteligente API",
         "version": "1.0.0",
         "status": "online",
         "environment": os.getenv("RAILWAY_ENVIRONMENT", "development"),
-        "docs": "/docs"
+        "docs": "/docs",
+        "endpoints": {
+            "auth": "/api/auth",
+            "companies": "/api/companies",
+            "whatsapp": "/api/whatsapp",
+            "dashboard": "/api/dashboard"
+        }
     }
 
 

@@ -9,16 +9,19 @@ import { ReactNode, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter, usePathname } from 'next/navigation';
 import { getAuthData, logout } from '@/lib/auth';
-import { 
-  LogOut, 
-  Home, 
-  Building2, 
-  BarChart3, 
-  Menu, 
+import { useTheme } from '@/contexts/ThemeContext';
+import {
+  LogOut,
+  Home,
+  Building2,
+  BarChart3,
+  Menu,
   X,
   User,
   Settings,
-  Bell
+  Bell,
+  Sun,
+  Moon
 } from 'lucide-react';
 
 interface LayoutProps {
@@ -28,6 +31,7 @@ interface LayoutProps {
 export default function Layout({ children }: LayoutProps) {
   const router = useRouter();
   const pathname = usePathname();
+  const { theme, toggleTheme } = useTheme();
   const [userName, setUserName] = useState<string>('');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -95,9 +99,22 @@ export default function Layout({ children }: LayoutProps) {
 
             {/* Lado direito - usuário e ações */}
             <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
+              {/* Toggle de tema */}
+              <button
+                onClick={toggleTheme}
+                className="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
+                title={theme === 'light' ? 'Modo escuro' : 'Modo claro'}
+              >
+                {theme === 'light' ? (
+                  <Moon className="h-5 w-5" />
+                ) : (
+                  <Sun className="h-5 w-5" />
+                )}
+              </button>
+
               {/* Configurações - Desktop only */}
               <button
-                className="hidden sm:flex p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors"
+                className="hidden sm:flex p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
                 title="Configurações"
               >
                 <Settings className="h-5 w-5" />

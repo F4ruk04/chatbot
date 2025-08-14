@@ -22,6 +22,20 @@ html, body {
   background-color: #111827;
 }
 
+/* Transições suaves para mudança de tema */
+* {
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+/* Melhorias para dark mode */
+.dark body {
+  background: linear-gradient(135deg, #111827, #1f2937);
+}
+
+body {
+  background: linear-gradient(135deg, #f9fafb, #f3f4f6);
+}
+
 /* Componentes básicos */
 .btn {
   display: inline-flex;
@@ -185,6 +199,41 @@ html, body {
     padding: 0.5rem 0.75rem;
     font-size: 0.875rem;
   }
+  
+  /* Melhorias específicas para mobile */
+  .card {
+    margin: 0.5rem 0;
+  }
+  
+  /* Ajustes para textos em mobile */
+  h1 { font-size: 1.5rem; }
+  h2 { font-size: 1.25rem; }
+  h3 { font-size: 1.125rem; }
+  h4 { font-size: 1rem; }
+}
+
+/* Breakpoint para tablets */
+@media (max-width: 1024px) and (min-width: 769px) {
+  .container {
+    padding: 0 1rem;
+  }
+}
+
+/* Melhorias para telas muito pequenas */
+@media (max-width: 475px) {
+  .container {
+    padding: 0 0.25rem;
+  }
+  
+  .btn {
+    padding: 0.375rem 0.5rem;
+    font-size: 0.75rem;
+  }
+  
+  h1 { font-size: 1.25rem; }
+  h2 { font-size: 1.125rem; }
+  h3 { font-size: 1rem; }
+  h4 { font-size: 0.875rem; }
 }
 
 /* Animações */
@@ -248,3 +297,75 @@ html, body {
 .dark .text-gray-600 { color: #9ca3af; }
 .dark .text-gray-700 { color: #d1d5db; }
 .dark .text-gray-900 { color: #f9fafb; }
+
+/* Animação para elementos que aparecem ao rolar */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in-on-scroll {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.6s ease-out;
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.6s ease-out forwards;
+}
+
+/* Melhorias para a landing page */
+.hero-gradient {
+  background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+}
+
+/* Smooth scroll para navegação */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Hover effects para cards */
+.card-hover {
+  transition: all 0.3s ease;
+}
+
+.card-hover:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+/* Gradientes personalizados */
+.gradient-blue {
+  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+}
+
+.gradient-purple {
+  background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+}
+
+.gradient-green {
+  background: linear-gradient(135deg, #10b981, #059669);
+}
+
+/* Melhorias para backdrop blur */
+.backdrop-blur-md {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+/* Estilos para FAQ accordion */
+.accordion-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-out;
+}
+
+.accordion-content.open {
+  max-height: 200px;
+}
