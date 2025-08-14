@@ -108,10 +108,16 @@ export default function CompaniesPage() {
     }
   };
 
-  const filteredCompanies = companies.filter(company =>
-    company.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    company.descricao?.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredCompanies = companies.filter(company => {
+    // Filtrar por termo de pesquisa
+    const matchesSearch = company.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      company.descricao?.toLowerCase().includes(searchTerm.toLowerCase());
+    
+    // Esconder empresa que está sendo editada
+    const isNotBeingEdited = !editingCompany || company.id !== editingCompany.id;
+    
+    return matchesSearch && isNotBeingEdited;
+  });
 
   if (loading) {
     return (
@@ -179,10 +185,10 @@ export default function CompaniesPage() {
             <div className="bg-white dark:bg-gray-900 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden animate-fade-in">
               <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
                 <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-                  Adicionar Nova Empresa
+                  {editingCompany ? 'Editar Empresa' : 'Adicionar Nova Empresa'}
                 </h3>
                 <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                  Configure os dados da sua empresa para o chatbot
+                  {editingCompany ? 'Atualize os dados da sua empresa' : 'Configure os dados da sua empresa para o chatbot'}
                 </p>
               </div>
               
@@ -275,7 +281,16 @@ export default function CompaniesPage() {
                   <div className="flex justify-end space-x-3 pt-4 border-t border-gray-200 dark:border-gray-700">
                     <button
                       type="button"
-                      onClick={() => setShowForm(false)}
+                      onClick={() => {
+                        setShowForm(false);
+                        setEditingCompany(null);
+                        setFormData({
+                          nome: '',
+                          descricao: '',
+                          whatsapp_phone_number: '',
+                          context_prompt: '',
+                        });
+                      }}
                       className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                     >
                       Cancelar
@@ -288,10 +303,10 @@ export default function CompaniesPage() {
                       {formLoading ? (
                         <div className="flex items-center">
                           <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                          Criando...
+                          {editingCompany ? 'Salvando...' : 'Criando...'}
                         </div>
                       ) : (
-                        'Criar Empresa'
+                        editingCompany ? 'Salvar Alterações' : 'Criar Empresa'
                       )}
                     </button>
                   </div>
