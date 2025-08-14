@@ -1,0 +1,81 @@
+# Docker Compose para SaaS Chatbot Inteligente
+# Orquestra backend, frontend e banco de dados
+
+version: '3.8'
+
+services:
+  # Banco de dados PostgreSQL
+  db:
+    image: postgres:15
+    container_name: chatbot_db
+    environment:
+      POSTGRES_DB: chatbot
+      POSTGRES_USER: fk04
+      POSTGRES_PASSWORD: F4RUK
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - chatbot_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U fk04 -d chatbot"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Backend FastAPI
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: chatbot_backend
+    environment:
+      - DATABASE_URL=postgresql+psycopg2://fk04:F4RUK@db:5432/chatbot
+      - GEMINI_API_KEY=${GEMINI_API_KEY:-CHAVE_AQUI}
+      - JWT_SECRET=${JWT_SECRET:-SEGREDO_AQUI}
+      - TWILIO_ACCOUNT_SID=${TWILIO_ACCOUNT_SID:-ACxxxxxxxxxxxxxxxxxxxxxxxxxxxxx}
+      - TWILIO_AUTH_TOKEN=${TWILIO_AUTH_TOKEN:-your_twilio_auth_token}
+      - TWILIO_WHATSAPP_NUMBER=${TWILIO_WHATSAPP_NUMBER:-whatsapp:+14155238886}
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - chatbot_network
+    volumes:
+      - ./backend:/app
+    restart: unless-stopped
+
+  # Frontend Next.js
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: chatbot_frontend
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:8000
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    networks:
+      - chatbot_network
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+      - /app/.next
+    restart: unless-stopped
+
+# Volumes para persistência de dados
+volumes:
+  postgres_data:
+    driver: local
+
+# Rede para comunicação entre serviços
+networks:
+  chatbot_network:
+    driver: bridge
+
+

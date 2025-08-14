@@ -1,0 +1,87 @@
+/**
+ * Biblioteca de Autenticação
+ * Funções para gerir autenticação no frontend
+ */
+
+import Cookies from 'js-cookie';
+
+export interface AuthUser {
+  id: number;
+  name: string;
+  email: string;
+}
+
+/**
+ * Salvar dados de autenticação nos cookies
+ */
+export const saveAuthData = (token: string, userId: number, userName: string) => {
+  // Configurar cookies com opções mais seguras
+  const cookieOptions = {
+    expires: 1, // 1 dia
+    secure: process.env.NODE_ENV === 'production', // HTTPS apenas em produção
+    sameSite: 'lax' as const,
+    path: '/'
+  };
+  
+  Cookies.set('access_token', token, cookieOptions);
+  Cookies.set('user_id', userId.toString(), cookieOptions);
+  Cookies.set('user_name', userName, cookieOptions);
+};
+
+/**
+ * Verificar se os dados de autenticação foram salvos corretamente
+ */
+export const verifyAuthDataSaved = (): boolean => {
+  const token = Cookies.get('access_token');
+  const userId = Cookies.get('user_id');
+  const userName = Cookies.get('user_name');
+  
+  return !!(token && userId && userName);
+};
+
+/**
+ * Obter dados de autenticação dos cookies
+ */
+export const getAuthData = (): { token: string | null; user: AuthUser | null } => {
+  const token = Cookies.get('access_token') || null;
+  const userId = Cookies.get('user_id');
+  const userName = Cookies.get('user_name');
+
+  let user: AuthUser | null = null;
+  if (userId && userName) {
+    user = {
+      id: parseInt(userId),
+      name: userName,
+      email: '', // Email não é armazenado no cookie por segurança
+    };
+  }
+
+  return { token, user };
+};
+
+/**
+ * Verificar se o utilizador está autenticado
+ */
+export const isAuthenticated = (): boolean => {
+  const { token } = getAuthData();
+  return !!token;
+};
+
+/**
+ * Fazer logout (remover dados de autenticação)
+ */
+export const logout = () => {
+  Cookies.remove('access_token');
+  Cookies.remove('user_id');
+  Cookies.remove('user_name');
+};
+
+/**
+ * Redirecionar para login se não autenticado
+ */
+export const requireAuth = () => {
+  if (typeof window !== 'undefined' && !isAuthenticated()) {
+    window.location.href = '/login';
+  }
+};
+
