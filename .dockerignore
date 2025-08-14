@@ -21,8 +21,13 @@ venv/
 pip-log.txt
 pip-delete-this-directory.txt
 
-# Environment variables
+# Environment variables (CRÍTICO - não copiar arquivos .env locais)
 .env
+.env.*
+backend/.env
+backend/.env.*
+*.env
+*.env.*
 .env.local
 .env.development.local
 .env.test.local
