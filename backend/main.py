@@ -56,14 +56,14 @@ app.include_router(dashboard.router)
 @app.get("/")
 def read_root():
     """
-    Redireciona para a landing page
+    Endpoint raiz da API. Retorna uma mensagem de boas-vindas.
     """
-    return RedirectResponse(url="https://chatbot-frontend-pied.vercel.app")
+    return {"message": "SaaS Chatbot Inteligente API is running!"}
 
 @app.get("/api")
 def api_info():
     """
-    Informações da API
+    Informações detalhadas da API.
     """
     return {
         "message": "SaaS Chatbot Inteligente API",
@@ -76,14 +76,15 @@ def api_info():
             "companies": "/api/companies",
             "whatsapp": "/api/whatsapp",
             "dashboard": "/api/dashboard"
-        }
+        },
+        "frontend_landing_page": "https://chatbot-frontend-pied.vercel.app"
     }
-
 
 @app.get("/health")
 def health_check():
     """
-    Endpoint para verificação de saúde da API
+    Endpoint para verificação de saúde da API.
+    Retorna um status 200 OK se a aplicação estiver respondendo.
     """
     return {"status": "healthy"}
 
