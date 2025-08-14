@@ -1,15 +1,5 @@
-# Multi-stage build para otimizar o deploy
-FROM node:18-alpine AS frontend-build
-
-# Build do Frontend
-WORKDIR /app/frontend
-COPY frontend/package*.json ./
-RUN npm ci --only=production
-COPY frontend/ ./
-RUN npm run build
-
-# Backend Python
-FROM python:3.11-slim AS backend
+# Dockerfile simplificado - só backend para Railway
+FROM python:3.11-slim
 
 # Instalar dependências do sistema
 RUN apt-get update && apt-get install -y \
@@ -20,15 +10,12 @@ RUN apt-get update && apt-get install -y \
 # Configurar diretório de trabalho
 WORKDIR /app
 
-# Instalar dependências Python
+# Copiar e instalar dependências Python
 COPY backend/requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copiar código do backend
-COPY backend/ ./backend/
-
-# Copiar build do frontend
-COPY --from=frontend-build /app/frontend/out ./frontend/out
+COPY backend/ ./
 
 # Copiar script de inicialização
 COPY start.sh ./

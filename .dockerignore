@@ -1,3 +1,8 @@
+# Frontend (não precisamos no backend)
+frontend/
+*.md
+README.md
+
 # Node modules
 node_modules/
 npm-debug.log*
@@ -44,13 +49,14 @@ Thumbs.db
 .gitignore
 
 # Docker
-Dockerfile*
 docker-compose*
-.dockerignore
 
 # Documentation
-README.md
 *.md
+DEPLOY_GUIDE.md
+RAILWAY_DEPLOY_READY.md
+TWILIO_SANDBOX_GUIDE.md
+WEBHOOK_SETUP_GUIDE.md
 
 # Logs
 logs/
@@ -74,9 +80,6 @@ out/
 tmp/
 temp/
 
-# Railway
-railway.toml
-
 # Database
 *.db
 *.sqlite
@@ -85,3 +88,16 @@ railway.toml
 # Backup files
 *.bak
 *.backup
+
+# Scripts
+scripts/
+
+# Makefile
+Makefile
+
+# Ngrok
+ngrok.exe
+
+# Todo
+todo.md
+setup-test.md

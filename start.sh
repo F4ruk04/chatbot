@@ -46,7 +46,6 @@ wait_for_db()
 
 # Executar migrações do Alembic
 echo "📊 Executando migrações do banco de dados..."
-cd backend
 alembic upgrade head
 
 # Iniciar aplicação
