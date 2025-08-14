@@ -27,10 +27,21 @@ class Settings(BaseSettings):
     # Configurações do Twilio para WhatsApp
     twilio_account_sid: str = "ACxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
     twilio_auth_token: str = "your_twilio_auth_token"
-    twilio_whatsapp_number: str = "whatsapp:+14155238886" # Exemplo: whatsapp:+1234567890
+    twilio_whatsapp_number: str = "whatsapp:+14155238886"
     
     class Config:
         env_file = ".env"
+        # Permitir variáveis de ambiente sobrescreverem valores padrão
+        case_sensitive = False
+        # Mapear nomes de variáveis de ambiente para campos
+        fields = {
+            'database_url': {'env': 'DATABASE_URL'},
+            'jwt_secret': {'env': 'JWT_SECRET_KEY'},
+            'gemini_api_key': {'env': 'GEMINI_API_KEY'},
+            'twilio_account_sid': {'env': 'TWILIO_ACCOUNT_SID'},
+            'twilio_auth_token': {'env': 'TWILIO_AUTH_TOKEN'},
+            'twilio_whatsapp_number': {'env': 'TWILIO_WHATSAPP_NUMBER'},
+        }
 
 
 # Instância global das configurações
