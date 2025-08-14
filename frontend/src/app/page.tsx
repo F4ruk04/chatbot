@@ -11,9 +11,6 @@ import {
   CheckCircle, 
   Star,
   ArrowRight,
-  Zap,
-  Shield,
-  Users,
   ChevronDown,
   ChevronUp,
   Facebook,
@@ -545,8 +542,7 @@ export default function LandingPage() {
                   <div className="px-6 pb-4">
                     <p className="text-gray-600">{faq.answer}</p>
                   </div>
-
-)}
+                )}
               </div>
             ))}
           </div>
