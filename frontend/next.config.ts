@@ -6,7 +6,7 @@ const nextConfig: NextConfig = {
   
   // Configurações de imagem para Vercel
   images: {
-    domains: ['localhost', 'chatbot-production-d2d7.up.railway.app'],
+    domains: ['localhost', 'saas-chatbot-inteligente-twilio-production.up.railway.app'],
   },
   
   // Configurações de API
@@ -18,6 +18,17 @@ const nextConfig: NextConfig = {
       },
     ];
   },
+
+  // Redirecionamentos (removido o redirecionamento de '/' para '/login')
+  // async redirects() {
+  //   return [
+  //     {
+  //       source: '/',
+  //       destination: '/login', // Exemplo: redirecionar para login
+  //       permanent: false,
+  //     },
+  //   ];
+  // },
   
   // Headers CORS para produção
   async headers() {
