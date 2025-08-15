@@ -30,6 +30,14 @@ class Settings(BaseSettings):
     twilio_auth_token: str
     twilio_whatsapp_number: str = "whatsapp:+14155238886"
     
+    # Configurações do Flutterwave
+    flutterwave_secret_key: str
+    flutterwave_public_key: str
+    flutterwave_sandbox: bool = True
+    
+    # URL do frontend para redirecionamentos
+    frontend_url: str = "http://localhost:3000"
+    
     model_config = {
         "env_file": ".env",
         "case_sensitive": False,
@@ -45,6 +53,10 @@ class Settings(BaseSettings):
             'twilio_account_sid': os.getenv('TWILIO_ACCOUNT_SID', 'ACxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'),
             'twilio_auth_token': os.getenv('TWILIO_AUTH_TOKEN', 'your_twilio_auth_token'),
             'twilio_whatsapp_number': os.getenv('TWILIO_WHATSAPP_NUMBER', 'whatsapp:+14155238886'),
+            'flutterwave_secret_key': os.getenv('FLUTTERWAVE_SECRET_KEY', 'your-flutterwave-secret-key-here'),
+            'flutterwave_public_key': os.getenv('FLUTTERWAVE_PUBLIC_KEY', 'your-flutterwave-public-key-here'),
+            'flutterwave_sandbox': os.getenv('FLUTTERWAVE_SANDBOX', 'true').lower() == 'true',
+            'frontend_url': os.getenv('FRONTEND_URL', 'http://localhost:3000'),
         }
         
         # Merge com kwargs fornecidos
