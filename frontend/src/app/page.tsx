@@ -195,7 +195,7 @@ export default function LandingPage() {
               </div>
               <h3 className="text-xl font-semibold text-gray-900 mb-4">Integração Direta com WhatsApp</h3>
               <p className="text-gray-600">
-                Conecte-se facilmente à sua conta do WhatsApp Business via Twilio, sem complicações técnicas.
+                Fornecemos um número WhatsApp Business oficial via Twilio para sua empresa, sem necessidade de configurações complexas.
               </p>
             </div>
             <div className="bg-white rounded-xl p-8 shadow-lg hover:shadow-xl transition-shadow fade-in-on-scroll">
