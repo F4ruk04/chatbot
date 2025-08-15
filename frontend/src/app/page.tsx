@@ -178,26 +178,7 @@ export default function LandingPage() {
 
       {/* Social Proof */}
       <section className="py-12 bg-white border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        Menu, 
-        X, 
-        Brain, 
-        MessageCircle, 
-        BarChart3, 
-        CheckCircle, 
-        Star,
-        ArrowRight,
-        ChevronDown,
-        ChevronUp,
-        Facebook,
-        Twitter,
-        Instagram,
-        Linkedin,
-        Mail,
-        Phone
-            </p>
-          </div>
-
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid md:grid-cols-3 gap-8">
             <div className="bg-white rounded-xl p-8 shadow-lg hover:shadow-xl transition-shadow fade-in-on-scroll">
               <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg flex items-center justify-center mb-6">
@@ -208,7 +189,6 @@ export default function LandingPage() {
                 Nossa IA aprende sobre seus produtos, serviços e configurações para oferecer respostas que parecem humanas.
               </p>
             </div>
-
             <div className="bg-white rounded-xl p-8 shadow-lg hover:shadow-xl transition-shadow fade-in-on-scroll">
               <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-lg flex items-center justify-center mb-6">
                 <MessageCircle className="h-6 w-6 text-white" />
@@ -218,7 +198,6 @@ export default function LandingPage() {
                 Conecte-se facilmente à sua conta do WhatsApp Business via Twilio, sem complicações técnicas.
               </p>
             </div>
-
             <div className="bg-white rounded-xl p-8 shadow-lg hover:shadow-xl transition-shadow fade-in-on-scroll">
               <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center mb-6">
                 <BarChart3 className="h-6 w-6 text-white" />
