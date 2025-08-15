@@ -179,25 +179,22 @@ export default function LandingPage() {
       {/* Social Proof */}
       <section className="py-12 bg-white border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <p className="text-gray-600 mb-8">Utilizado por empresas líderes em diversos setores</p>
-          <div className="flex justify-center items-center space-x-8 md:space-x-12 opacity-60">
-            <div className="text-2xl font-bold text-gray-400">TechCorp</div>
-            <div className="text-2xl font-bold text-gray-400">InovaDigital</div>
-            <div className="text-2xl font-bold text-gray-400">MarketMinds</div>
-            <div className="text-2xl font-bold text-gray-400">SalesForce</div>
-          </div>
-        </div>
-      </section>
-
-      {/* Features Section */}
-      <section id="features" className="py-20 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16 fade-in-on-scroll">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Tudo que você precisa para um atendimento excepcional
-            </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Nossa plataforma oferece todas as ferramentas necessárias para criar e gerenciar chatbots inteligentes
+        Menu, 
+        X, 
+        Brain, 
+        MessageCircle, 
+        BarChart3, 
+        CheckCircle, 
+        Star,
+        ArrowRight,
+        ChevronDown,
+        ChevronUp,
+        Facebook,
+        Twitter,
+        Instagram,
+        Linkedin,
+        Mail,
+        Phone
             </p>
           </div>
 
@@ -301,8 +298,8 @@ export default function LandingPage() {
                 ))}
               </div>
               <p className="text-gray-600 mb-6">
-                "Aumentamos nossa taxa de conversão em 40% desde que implementamos o chatbot. 
-                As respostas são tão naturais que os clientes nem percebem que é uma IA."
+                &quot;Aumentamos nossa taxa de conversão em 40% desde que implementamos o chatbot. 
+                As respostas são tão naturais que os clientes nem percebem que é uma IA.&quot;
               </p>
               <div className="flex items-center">
                 <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center mr-4">
@@ -322,8 +319,8 @@ export default function LandingPage() {
                 ))}
               </div>
               <p className="text-gray-600 mb-6">
-                "A integração foi super simples e o suporte é excepcional. 
-                Nossos clientes adoram o atendimento instantâneo, mesmo fora do horário comercial."
+                &quot;A integração foi super simples e o suporte é excepcional. 
+                Nossos clientes adoram o atendimento instantâneo, mesmo fora do horário comercial.&quot;
               </p>
               <div className="flex items-center">
                 <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center mr-4">
@@ -343,8 +340,8 @@ export default function LandingPage() {
                 ))}
               </div>
               <p className="text-gray-600 mb-6">
-                "ROI incrível! Reduzimos custos de atendimento em 60% e melhoramos a satisfação do cliente. 
-                Recomendo para qualquer empresa que usa WhatsApp."
+                &quot;ROI incrível! Reduzimos custos de atendimento em 60% e melhoramos a satisfação do cliente. 
+                Recomendo para qualquer empresa que usa WhatsApp.&quot;
               </p>
               <div className="flex items-center">
                 <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-full flex items-center justify-center mr-4">

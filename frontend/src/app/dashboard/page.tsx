@@ -18,7 +18,6 @@ import {
   TrendingUp, 
   Users, 
   Calendar,
-  Clock,
   ArrowUpRight,
   ArrowDownRight,
   Activity,

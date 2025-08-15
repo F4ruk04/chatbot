@@ -18,8 +18,6 @@ import {
   Edit,
   Trash2,
   Search,
-  Filter,
-  MoreVertical,
   Calendar,
   MessageSquare,
   CheckCircle,
@@ -28,7 +26,6 @@ import {
 } from 'lucide-react';
 
 export default function CompaniesPage() {
-  const router = useRouter();
   const [companies, setCompanies] = useState<Company[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
