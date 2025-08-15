@@ -4,12 +4,18 @@ Módulo para gerenciar a conexão e operações com o Redis
 """
 
 import asyncio
+import os
 from redis import asyncio as aioredis
 from redis.exceptions import ConnectionError
 from app.config import settings
 import logging
 
 logger = logging.getLogger(__name__)
+
+# Configurar logging mais detalhado se DEBUG estiver ativado
+if os.getenv('DEBUG'):
+    logging.basicConfig(level=logging.DEBUG)
+    logger.setLevel(logging.DEBUG)
 
 async def init_redis(max_retries=5, retry_delay=5):
     """
@@ -19,8 +25,12 @@ async def init_redis(max_retries=5, retry_delay=5):
         max_retries (int): Número máximo de tentativas de conexão
         retry_delay (int): Tempo em segundos entre tentativas
     """
+    logger.debug(f"Tentando conectar ao Redis em {settings.redis_host}:{settings.redis_port}")
+    logger.debug(f"URL do Redis: {settings.redis_url}")
+    
     for attempt in range(max_retries):
         try:
+            logger.debug(f"Tentativa {attempt + 1} de {max_retries}")
             redis = await aioredis.from_url(
                 settings.redis_url,
                 password=settings.redis_password,
@@ -31,7 +41,7 @@ async def init_redis(max_retries=5, retry_delay=5):
             )
             # Testa a conexão
             await redis.ping()
-            logger.info("Conexão com Redis estabelecida com sucesso")
+            logger.info(f"Conexão com Redis estabelecida com sucesso em {settings.redis_host}:{settings.redis_port}")
             return redis
         except ConnectionError as e:
             if attempt == max_retries - 1:

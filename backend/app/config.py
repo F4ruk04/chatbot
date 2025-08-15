@@ -49,6 +49,11 @@ class Settings(BaseSettings):
     @property
     def redis_url(self) -> str:
         """Constrói a URL do Redis baseada nas configurações"""
+        # Se REDIS_URL estiver definido, use-o diretamente
+        if os.getenv('REDIS_URL'):
+            return os.getenv('REDIS_URL')
+        
+        # Caso contrário, construa a URL com host e porta
         if self.redis_password:
             return f"redis://:{self.redis_password}@{self.redis_host}:{self.redis_port}/0"
         return f"redis://{self.redis_host}:{self.redis_port}/0"

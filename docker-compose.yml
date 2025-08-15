@@ -15,10 +15,11 @@ services:
     volumes:
       - redis_data:/data
     healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+      test: ["CMD", "sh", "-c", "redis-cli ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
     restart: unless-stopped
     
   # Banco de dados PostgreSQL
@@ -52,6 +53,7 @@ services:
       - REDIS_URL=redis://redis:6379/0
       - REDIS_HOST=redis
       - REDIS_PORT=6379
+      - DEBUG=1
       - GEMINI_API_KEY=${GEMINI_API_KEY:-CHAVE_AQUI}
       - JWT_SECRET=${JWT_SECRET:-SEGREDO_AQUI}
       - TWILIO_ACCOUNT_SID=${TWILIO_ACCOUNT_SID:-ACxxxxxxxxxxxxxxxxxxxxxxxxxxxxx}
