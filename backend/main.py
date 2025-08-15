@@ -7,7 +7,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import RedirectResponse
 from app.database import engine, Base
-from app.routers import auth, companies, whatsapp, dashboard, health
+from app.routers import auth, companies, whatsapp, dashboard, health, payments
 from app.services.redis_service import init_redis, close_redis
 import os
 
@@ -55,6 +55,7 @@ app.include_router(auth.router)
 app.include_router(companies.router)
 app.include_router(whatsapp.router)
 app.include_router(dashboard.router)
+app.include_router(payments.router)
 
 
 @app.get("/")
@@ -104,6 +105,7 @@ app.include_router(auth.router, prefix="/api/auth", tags=["auth"])
 app.include_router(companies.router, prefix="/api/companies", tags=["companies"])
 app.include_router(whatsapp.router, prefix="/api/whatsapp", tags=["whatsapp"])
 app.include_router(dashboard.router, prefix="/api/dashboard", tags=["dashboard"])
+app.include_router(payments.router, prefix="/api/payments", tags=["payments"])
 app.include_router(health.router, prefix="/health", tags=["health"])
 
 
@@ -115,5 +117,3 @@ if __name__ == "__main__":
         port=8000,
         reload=True
     )
-
-

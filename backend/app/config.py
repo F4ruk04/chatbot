@@ -31,11 +31,6 @@ class Settings(BaseSettings):
     twilio_auth_token: str = Field("your_twilio_auth_token", env="TWILIO_AUTH_TOKEN")
     twilio_whatsapp_number: str = "whatsapp:+14155238886"
     
-    # Configurações do Flutterwave
-    flutterwave_secret_key: str = Field("your-flutterwave-secret-key-here", env="FLUTTERWAVE_SECRET_KEY")
-    flutterwave_public_key: str = Field("your-flutterwave-public-key-here", env="FLUTTERWAVE_PUBLIC_KEY")
-    flutterwave_sandbox: bool = True
-    
     # URL do frontend para redirecionamentos
     frontend_url: str = "http://localhost:3000"
     

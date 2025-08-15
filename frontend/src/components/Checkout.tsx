@@ -30,8 +30,12 @@ export default function Checkout({ plan, amount }: CheckoutProps) {
 
       const data = await response.json();
 
-      if (data.payment_url) {
-        router.push(data.payment_url);
+      if (data.payment_link) {
+        router.push(data.payment_link);
+      } else if (data.message) {
+        // Handle cases where a direct link is not returned, e.g., show a success message
+        alert(data.message); 
+        router.push('/dashboard'); // Redirect to dashboard or payment status page
       }
     } catch (error) {
       console.error('Erro ao iniciar checkout:', error);
@@ -110,11 +114,11 @@ export default function Checkout({ plan, amount }: CheckoutProps) {
         )}
       </button>
 
-      {/* Selos de Segurança e Métodos de Pagamento */}
+      {/* Selos de Segurança e Métodos de Pagamento (Genéricos) */}
       <div className="border-t border-gray-200 pt-6">
         <div className="flex flex-col items-center space-y-4">
           <p className="text-sm text-gray-600 text-center mb-4">
-            Pagamento 100% seguro processado pela Flutterwave
+            Pagamento seguro e protegido.
           </p>
           
           {/* Ícones de Segurança */}
@@ -133,23 +137,10 @@ export default function Checkout({ plan, amount }: CheckoutProps) {
             </div>
           </div>
 
-          {/* Métodos de Pagamento */}
-          <div className="grid grid-cols-3 gap-4 items-center justify-items-center w-full">
-            <div className="flex items-center justify-center bg-gray-50 p-2 rounded-lg">
-              <Image src="/images/mpesa-logo.png" alt="M-PESA" width={32} height={32} className="h-8 object-contain" />
-            </div>
-            <div className="flex items-center justify-center bg-gray-50 p-2 rounded-lg">
-              <Image src="/images/visa-logo.png" alt="Visa" width={24} height={24} className="h-6 object-contain" />
-            </div>
-            <div className="flex items-center justify-center bg-gray-50 p-2 rounded-lg">
-              <Image src="/images/mastercard-logo.png" alt="Mastercard" width={24} height={24} className="h-6 object-contain" />
-            </div>
-          </div>
-
           {/* Texto de Garantia */}
           <p className="text-xs text-gray-500 text-center mt-4">
             Suas informações de pagamento são processadas com segurança. 
-            Seus dados pessoais são protegidos em conformidade com os padrões PCI DSS.
+            Seus dados pessoais são protegidos em conformidade com os padrões de segurança de dados.
           </p>
         </div>
       </div>
