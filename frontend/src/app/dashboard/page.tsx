@@ -31,7 +31,8 @@ import {
   Activity,
   Zap,
   Target,
-  BarChart3
+  BarChart3,
+  LucideIcon
 } from 'lucide-react';
 
 export default function DashboardPage() {
@@ -55,7 +56,7 @@ export default function DashboardPage() {
       
       setStats(dashboardStats);
       setCompaniesStats(compStats);
-    } catch (err: any) {
+    } catch (err: Error | unknown) {
       setError('Erro ao carregar dados do dashboard');
       console.error(err);
     } finally {
@@ -73,7 +74,7 @@ export default function DashboardPage() {
   }: {
     title: string;
     value: number;
-    icon: any;
+    icon: LucideIcon;
     trend?: 'up' | 'down';
     trendValue?: string;
     color?: 'blue' | 'green' | 'purple' | 'orange' | 'red' | 'indigo';

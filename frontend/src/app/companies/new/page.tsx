@@ -39,8 +39,8 @@ export default function NewCompanyForm() {
       }
 
       router.push('/dashboard');
-    } catch (err: any) {
-      setError(err.message || 'Erro ao criar empresa');
+    } catch (err: Error | unknown) {
+      setError(err instanceof Error ? err.message : 'Erro ao criar empresa');
     } finally {
       setLoading(false);
     }
