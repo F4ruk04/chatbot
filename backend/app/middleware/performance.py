@@ -15,21 +15,28 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
         # Pegar IP do cliente
         client_ip = request.client.host
         
-        # Implementar rate limiting baseado no Redis (TO-DO)
-        # Por enquanto, implementar in-memory rate limiting simples
-        current_minute = int(time.time() / 60)
-        cache_key = f"{client_ip}:{current_minute}"
-        
-        # Permitir 100 requisições por minuto por IP
-        request_count = await request.app.state.redis.incr(cache_key)
-        await request.app.state.redis.expire(cache_key, 60)
-        
-        if request_count > 100:
-            return Response(
-                content='{"detail":"Too many requests"}',
-                media_type='application/json',
-                status_code=429
-            )
+        # Rate limiting baseado no Redis
+        try:
+            current_minute = int(time.time() / 60)
+            cache_key = f"rate_limit:{client_ip}:{current_minute}"
+            
+            # Permitir 100 requisições por minuto por IP
+            request_count = await request.app.state.redis.incr(cache_key)
+            
+            # Define o TTL apenas na primeira requisição
+            if request_count == 1:
+                await request.app.state.redis.expire(cache_key, 60)
+            
+            if request_count > 100:
+                return Response(
+                    content='{"detail":"Too many requests"}',
+                    media_type='application/json',
+                    status_code=429
+                )
+        except Exception as e:
+            # Em caso de falha do Redis, permite a requisição mas loga o erro
+            print(f"Erro no rate limiting: {e}")
+            # Não bloqueia a requisição em caso de falha do Redis
         
         response = await call_next(request)
         return response

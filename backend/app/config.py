@@ -42,8 +42,16 @@ class Settings(BaseSettings):
     domain: str = "localhost"
     
     # Configurações do Redis
-    redis_url: str = "redis://localhost:6379"
+    redis_host: str = "localhost"
+    redis_port: int = 6379
     redis_password: Optional[str] = None
+    
+    @property
+    def redis_url(self) -> str:
+        """Constrói a URL do Redis baseada nas configurações"""
+        if self.redis_password:
+            return f"redis://:{self.redis_password}@{self.redis_host}:{self.redis_port}/0"
+        return f"redis://{self.redis_host}:{self.redis_port}/0"
     
     model_config = {
         "env_file": ".env",
@@ -65,7 +73,8 @@ class Settings(BaseSettings):
             'flutterwave_sandbox': os.getenv('FLUTTERWAVE_SANDBOX', 'true').lower() == 'true',
             'frontend_url': os.getenv('FRONTEND_URL', 'http://localhost:3000'),
             'domain': os.getenv('DOMAIN', 'localhost'),
-            'redis_url': os.getenv('REDIS_URL', 'redis://localhost:6379'),
+            'redis_host': os.getenv('REDIS_HOST', 'localhost'),
+            'redis_port': int(os.getenv('REDIS_PORT', '6379')),
             'redis_password': os.getenv('REDIS_PASSWORD', None),
         }
         
