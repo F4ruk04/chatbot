@@ -50,4 +50,7 @@ alembic upgrade head
 
 # Iniciar aplicação
 echo "🎯 Iniciando aplicação..."
+echo "--- Environment Variables ---"
+env
+echo "-----------------------------"
 uvicorn main:app --host 0.0.0.0 --port $PORT
