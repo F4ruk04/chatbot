@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import PricingSection from '@/components/Pricing';
 import { 
   Menu, 
   X, 
@@ -336,136 +337,10 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Pricing */}
-      <section id="pricing" className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16 fade-in-on-scroll">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Um plano para cada tamanho de empresa
-            </h2>
-            <p className="text-xl text-gray-600">
-              Escolha o plano ideal para suas necessidades
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            {/* Básico */}
-            <div className="bg-white rounded-xl border-2 border-gray-200 p-8 fade-in-on-scroll">
-              <h3 className="text-2xl font-bold text-gray-900 mb-2">Básico</h3>
-              <p className="text-gray-600 mb-6">Ideal para pequenas empresas</p>
-              <div className="mb-6">
-                <span className="text-4xl font-bold text-gray-900">R$ 97</span>
-                <span className="text-gray-600">/mês</span>
-              </div>
-              <ul className="space-y-3 mb-8">
-                <li className="flex items-center">
-                  <CheckCircle className="h-5 w-5 text-green-500 mr-3" />
-                  <span className="text-gray-600">Até 1.000 mensagens/mês</span>
-                </li>
-                <li className="flex items-center">
-                  <CheckCircle className="h-5 w-5 text-green-500 mr-3" />
-                  <span className="text-gray-600">1 empresa conectada</span>
-                </li>
-                <li className="flex items-center">
-                  <CheckCircle className="h-5 w-5 text-green-500 mr-3" />
-                  <span className="text-gray-600">Dashboard básico</span>
-                </li>
-                <li className="flex items-center">
-                  <CheckCircle className="h-5 w-5 text-green-500 mr-3" />
-                  <span className="text-gray-600">Suporte por email</span>
-                </li>
-              </ul>
-              <Link
-                href="/register?plan=basic"
-                className="w-full bg-gray-900 hover:bg-gray-800 text-white py-3 px-6 rounded-lg font-semibold transition-colors text-center block"
-              >
-                Escolher Plano
-              </Link>
-            </div>
-
-            {/* Profissional - Destacado */}
-            <div className="bg-white rounded-xl border-2 border-blue-500 p-8 relative fade-in-on-scroll">
-              <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                <span className="bg-blue-500 text-white px-4 py-1 rounded-full text-sm font-semibold">
-                  Mais Popular
-                </span>
-              </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-2">Profissional</h3>
-              <p className="text-gray-600 mb-6">Ideal para empresas em crescimento</p>
-              <div className="mb-6">
-                <span className="text-4xl font-bold text-gray-900">R$ 197</span>
-                <span className="text-gray-600">/mês</span>
-              </div>
-              <ul className="space-y-3 mb-8">
-                <li className="flex items-center">
-                  <CheckCircle className="h-5 w-5 text-green-500 mr-3" />
-                  <span className="text-gray-600">Até 5.000 mensagens/mês</span>
-                </li>
-                <li className="flex items-center">
-                  <CheckCircle className="h-5 w-5 text-green-500 mr-3" />
-                  <span className="text-gray-600">Até 3 empresas conectadas</span>
-                </li>
-                <li className="flex items-center">
-                  <CheckCircle className="h-5 w-5 text-green-500 mr-3" />
-                  <span className="text-gray-600">Dashboard avançado</span>
-                </li>
-                <li className="flex items-center">
-                  <CheckCircle className="h-5 w-5 text-green-500 mr-3" />
-                  <span className="text-gray-600">Suporte prioritário</span>
-                </li>
-                <li className="flex items-center">
-                  <CheckCircle className="h-5 w-5 text-green-500 mr-3" />
-                  <span className="text-gray-600">Relatórios detalhados</span>
-                </li>
-              </ul>
-              <Link
-                href="/register?plan=professional"
-                className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white py-3 px-6 rounded-lg font-semibold transition-all duration-200 transform hover:scale-105 text-center block"
-              >
-                Escolher Plano
-              </Link>
-            </div>
-
-            {/* Enterprise */}
-            <div className="bg-white rounded-xl border-2 border-gray-200 p-8 fade-in-on-scroll">
-              <h3 className="text-2xl font-bold text-gray-900 mb-2">Enterprise</h3>
-              <p className="text-gray-600 mb-6">Para grandes empresas</p>
-              <div className="mb-6">
-                <span className="text-4xl font-bold text-gray-900">R$ 497</span>
-                <span className="text-gray-600">/mês</span>
-              </div>
-              <ul className="space-y-3 mb-8">
-                <li className="flex items-center">
-                  <CheckCircle className="h-5 w-5 text-green-500 mr-3" />
-                  <span className="text-gray-600">Mensagens ilimitadas</span>
-                </li>
-                <li className="flex items-center">
-                  <CheckCircle className="h-5 w-5 text-green-500 mr-3" />
-                  <span className="text-gray-600">Empresas ilimitadas</span>
-                </li>
-                <li className="flex items-center">
-                  <CheckCircle className="h-5 w-5 text-green-500 mr-3" />
-                  <span className="text-gray-600">Dashboard personalizado</span>
-                </li>
-                <li className="flex items-center">
-                  <CheckCircle className="h-5 w-5 text-green-500 mr-3" />
-                  <span className="text-gray-600">Suporte 24/7</span>
-                </li>
-                <li className="flex items-center">
-                  <CheckCircle className="h-5 w-5 text-green-500 mr-3" />
-                  <span className="text-gray-600">API personalizada</span>
-                </li>
-              </ul>
-              <Link
-                href="/register?plan=enterprise"
-                className="w-full bg-gray-900 hover:bg-gray-800 text-white py-3 px-6 rounded-lg font-semibold transition-colors text-center block"
-              >
-                Escolher Plano
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* Pricing Section */}
+      <div id="pricing">
+        <PricingSection />
+      </div>
 
       {/* FAQ */}
       <section id="faq" className="py-20 bg-gray-50">
