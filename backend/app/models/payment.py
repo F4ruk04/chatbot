@@ -28,4 +28,4 @@ class Payment(Base):
     pagolu_payment_id = Column(String, unique=True)
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
-    metadata = Column(String)  # JSON string for additional data
+    extra_data = Column(String)  # JSON string for additional data

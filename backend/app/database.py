@@ -3,7 +3,7 @@ Configuração do banco de dados
 Este módulo configura a conexão com PostgreSQL usando SQLAlchemy
 """
 
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, MetaData
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from app.config import settings
@@ -15,7 +15,9 @@ engine = create_engine(settings.database_url)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 # Base para os modelos
-Base = declarative_base()
+# Explicitly define metadata to avoid potential conflicts
+metadata = MetaData()
+Base = declarative_base(metadata=metadata)
 
 
 def get_db():
@@ -28,4 +30,3 @@ def get_db():
         yield db
     finally:
         db.close()
-
