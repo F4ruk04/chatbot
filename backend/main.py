@@ -7,11 +7,14 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import RedirectResponse
 from app.database import engine, Base
-from app.routers import auth, companies, whatsapp, dashboard
+from app.routers import auth, companies, whatsapp, dashboard, health
 import os
 
 # Importar os modelos para que o Alembic os detete
 from app.models import user, company, message
+
+# Importar middleware de performance
+from app.middleware.performance import setup_middlewares
 
 # Criar tabelas no banco de dados (apenas se não estiver usando Alembic para isso)
 # Base.metadata.create_all(bind=engine)
@@ -80,13 +83,15 @@ def api_info():
         "frontend_landing_page": "https://chatbot-frontend-pied.vercel.app"
     }
 
-@app.get("/health")
-def health_check():
-    """
-    Endpoint para verificação de saúde da API.
-    Retorna um status 200 OK se a aplicação estiver respondendo.
-    """
-    return {"status": "healthy"}
+# Configurar middlewares
+setup_middlewares(app)
+
+# Incluir routers
+app.include_router(auth.router, prefix="/api/auth", tags=["auth"])
+app.include_router(companies.router, prefix="/api/companies", tags=["companies"])
+app.include_router(whatsapp.router, prefix="/api/whatsapp", tags=["whatsapp"])
+app.include_router(dashboard.router, prefix="/api/dashboard", tags=["dashboard"])
+app.include_router(health.router, prefix="/health", tags=["health"])
 
 
 if __name__ == "__main__":

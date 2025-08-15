@@ -1,8 +1,3 @@
-/**
- * Página do Dashboard
- * Interface moderna com estatísticas e resumo
- */
-
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 'use client';
@@ -11,8 +6,14 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Layout from '@/components/Layout';
 import AuthGuard from '@/components/AuthGuard';
-import SubscriptionStatusCard from '@/components/SubscriptionStatusCard';
-import { dashboardAPI, DashboardStats, CompanyStats } from '@/lib/api';
+import SubscriptionStatusCard from '@/components/SubscriptionStatusCard              </div>
+            </div>
+          </div>
+        </div>
+      </AuthGuard>
+    </Layout>
+  );
+}rt { dashboardAPI, DashboardStats, CompanyStats } from '@/lib/api';
 import { 
   Building2, 
   MessageSquare, 
