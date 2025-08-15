@@ -45,13 +45,14 @@ async def init_redis(max_retries=5, retry_delay=5):
             return redis
         except ConnectionError as e:
             if attempt == max_retries - 1:
-                logger.error(f"Falha ao conectar ao Redis após {max_retries} tentativas: {e}")
-                raise
+                logger.critical(f"Falha CRÍTICA ao conectar ao Redis após {max_retries} tentativas: {e}. A aplicação continuará sem Redis.")
+                return None # Return None instead of raising
             logger.warning(f"Tentativa {attempt + 1} de {max_retries} falhou. Tentando novamente em {retry_delay}s...")
             await asyncio.sleep(retry_delay)
         except Exception as e:
-            logger.error(f"Erro inesperado ao conectar ao Redis: {e}")
-            raise
+            logger.critical(f"Erro inesperado e CRÍTICO ao conectar ao Redis: {e}. A aplicação continuará sem Redis.")
+            return None # Return None instead of raising
+    return None # Should not be reached, but for safety
 
 async def close_redis(app):
     """Fecha a conexão com o Redis quando a aplicação for encerrada"""
