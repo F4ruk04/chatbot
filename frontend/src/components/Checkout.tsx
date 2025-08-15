@@ -97,7 +97,7 @@ export default function Checkout({ plan, amount }: CheckoutProps) {
       <button
         onClick={handleCheckout}
         disabled={loading}
-        className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 px-6 rounded-lg font-semibold transition-colors flex items-center justify-center"
+        className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 px-6 rounded-lg font-semibold transition-colors flex items-center justify-center mb-6"
       >
         {loading ? (
           <Loader2 className="w-5 h-5 animate-spin" />
@@ -109,9 +109,49 @@ export default function Checkout({ plan, amount }: CheckoutProps) {
         )}
       </button>
 
-      <p className="mt-4 text-sm text-gray-600 text-center">
-        Seu pagamento será processado de forma segura pelo PagoLu
-      </p>
+      {/* Selos de Segurança e Métodos de Pagamento */}
+      <div className="border-t border-gray-200 pt-6">
+        <div className="flex flex-col items-center space-y-4">
+          <p className="text-sm text-gray-600 text-center mb-4">
+            Pagamento 100% seguro processado pela Flutterwave
+          </p>
+          
+          {/* Ícones de Segurança */}
+          <div className="flex items-center justify-center space-x-4 mb-4">
+            <div className="flex items-center bg-gray-50 px-3 py-2 rounded-lg">
+              <svg className="w-5 h-5 text-green-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+              </svg>
+              <span className="text-xs font-medium">Pagamento Seguro</span>
+            </div>
+            <div className="flex items-center bg-gray-50 px-3 py-2 rounded-lg">
+              <svg className="w-5 h-5 text-blue-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+              </svg>
+              <span className="text-xs font-medium">Dados Criptografados</span>
+            </div>
+          </div>
+
+          {/* Métodos de Pagamento */}
+          <div className="grid grid-cols-3 gap-4 items-center justify-items-center w-full">
+            <div className="flex items-center justify-center bg-gray-50 p-2 rounded-lg">
+              <img src="/images/mpesa-logo.png" alt="M-PESA" className="h-8 object-contain" />
+            </div>
+            <div className="flex items-center justify-center bg-gray-50 p-2 rounded-lg">
+              <img src="/images/visa-logo.png" alt="Visa" className="h-6 object-contain" />
+            </div>
+            <div className="flex items-center justify-center bg-gray-50 p-2 rounded-lg">
+              <img src="/images/mastercard-logo.png" alt="Mastercard" className="h-6 object-contain" />
+            </div>
+          </div>
+
+          {/* Texto de Garantia */}
+          <p className="text-xs text-gray-500 text-center mt-4">
+            Suas informações de pagamento são processadas com segurança. 
+            Seus dados pessoais são protegidos em conformidade com os padrões PCI DSS.
+          </p>
+        </div>
+      </div>
     </div>
   );
 }
