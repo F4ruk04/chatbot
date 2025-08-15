@@ -38,6 +38,9 @@ class Settings(BaseSettings):
     # URL do frontend para redirecionamentos
     frontend_url: str = "http://localhost:3000"
     
+    # Domínio da aplicação
+    domain: str = "localhost"
+    
     model_config = {
         "env_file": ".env",
         "case_sensitive": False,
@@ -57,6 +60,7 @@ class Settings(BaseSettings):
             'flutterwave_public_key': os.getenv('FLUTTERWAVE_PUBLIC_KEY', 'your-flutterwave-public-key-here'),
             'flutterwave_sandbox': os.getenv('FLUTTERWAVE_SANDBOX', 'true').lower() == 'true',
             'frontend_url': os.getenv('FRONTEND_URL', 'http://localhost:3000'),
+            'domain': os.getenv('DOMAIN', 'localhost'),
         }
         
         # Merge com kwargs fornecidos

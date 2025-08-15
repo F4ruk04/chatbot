@@ -68,7 +68,7 @@ def setup_middlewares(app: FastAPI) -> None:
     # CORS
     app.add_middleware(
         CORSMiddleware,
-        allow_origins=[settings.FRONTEND_URL],
+        allow_origins=[settings.frontend_url],
         allow_credentials=True,
         allow_methods=["*"],
         allow_headers=["*"],
@@ -77,7 +77,7 @@ def setup_middlewares(app: FastAPI) -> None:
     # Hosts confiáveis
     app.add_middleware(
         TrustedHostMiddleware,
-        allowed_hosts=[settings.DOMAIN]
+        allowed_hosts=[settings.domain]
     )
     
     # Rate limiting
