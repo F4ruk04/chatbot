@@ -4,6 +4,23 @@
 version: '3.8'
 
 services:
+  # Redis para cache e rate limiting
+  redis:
+    image: redis:7-alpine
+    container_name: chatbot_redis
+    ports:
+      - "6379:6379"
+    networks:
+      - chatbot_network
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+    
   # Banco de dados PostgreSQL
   db:
     image: postgres:15
@@ -32,6 +49,7 @@ services:
     container_name: chatbot_backend
     environment:
       - DATABASE_URL=postgresql+psycopg2://fk04:F4RUK@db:5432/chatbot
+      - REDIS_URL=redis://redis:6379/0
       - GEMINI_API_KEY=${GEMINI_API_KEY:-CHAVE_AQUI}
       - JWT_SECRET=${JWT_SECRET:-SEGREDO_AQUI}
       - TWILIO_ACCOUNT_SID=${TWILIO_ACCOUNT_SID:-ACxxxxxxxxxxxxxxxxxxxxxxxxxxxxx}
@@ -71,6 +89,8 @@ services:
 # Volumes para persistência de dados
 volumes:
   postgres_data:
+    driver: local
+  redis_data:
     driver: local
 
 # Rede para comunicação entre serviços

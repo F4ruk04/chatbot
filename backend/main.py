@@ -8,6 +8,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import RedirectResponse
 from app.database import engine, Base
 from app.routers import auth, companies, whatsapp, dashboard, health
+from app.services.redis_service import init_redis, close_redis
 import os
 
 # Importar os modelos para que o Alembic os detete
@@ -84,6 +85,18 @@ def api_info():
     }
 
 # Configurar middlewares
+# Evento de inicialização
+@app.on_event("startup")
+async def startup_event():
+    """Inicializa serviços quando a aplicação inicia"""
+    app.state.redis = await init_redis()
+
+# Evento de encerramento
+@app.on_event("shutdown")
+async def shutdown_event():
+    """Encerra serviços quando a aplicação é encerrada"""
+    await close_redis(app)
+
 setup_middlewares(app)
 
 # Incluir routers

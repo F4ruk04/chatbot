@@ -41,6 +41,10 @@ class Settings(BaseSettings):
     # Domínio da aplicação
     domain: str = "localhost"
     
+    # Configurações do Redis
+    redis_url: str = "redis://localhost:6379"
+    redis_password: Optional[str] = None
+    
     model_config = {
         "env_file": ".env",
         "case_sensitive": False,
@@ -61,6 +65,8 @@ class Settings(BaseSettings):
             'flutterwave_sandbox': os.getenv('FLUTTERWAVE_SANDBOX', 'true').lower() == 'true',
             'frontend_url': os.getenv('FRONTEND_URL', 'http://localhost:3000'),
             'domain': os.getenv('DOMAIN', 'localhost'),
+            'redis_url': os.getenv('REDIS_URL', 'redis://localhost:6379'),
+            'redis_password': os.getenv('REDIS_PASSWORD', None),
         }
         
         # Merge com kwargs fornecidos
