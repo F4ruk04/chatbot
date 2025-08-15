@@ -2,6 +2,7 @@
 
 import { Check } from 'lucide-react';
 import Link from 'next/link';
+import clsx from 'clsx';
 
 interface PricingFeature {
   text: string;
@@ -93,10 +94,12 @@ export default function PricingSection() {
           {plans.map((plan) => (
             <div
               key={plan.title}
-              className={'relative rounded-2xl shadow-lg bg-white p-8 ' + 
-                (plan.popular
-                  ? 'border-2 border-blue-500 ring-2 ring-blue-500 ring-opacity-50'
-                  : 'border border-gray-200')}
+              className={clsx(
+                "relative rounded-2xl shadow-lg bg-white p-8",
+                plan.popular
+                  ? "border-2 border-blue-500 ring-2 ring-blue-500 ring-opacity-50"
+                  : "border border-gray-200"
+              )}
             >
               {plan.popular && (
                 <div className="absolute -top-5 left-1/2 transform -translate-x-1/2">
@@ -126,10 +129,12 @@ export default function PricingSection() {
 
               <Link 
                 href={`/checkout?plan=${plan.title.toLowerCase()}`}
-                className={'w-full py-3 px-6 rounded-lg font-semibold transition-colors ' + 
-                  (plan.popular
-                    ? 'bg-blue-500 text-white hover:bg-blue-600'
-                    : 'border-2 border-blue-500 text-blue-500 hover:bg-blue-50')}
+                className={clsx(
+                  "w-full py-3 px-6 rounded-lg font-semibold transition-colors block text-center",
+                  plan.popular
+                    ? "bg-blue-500 text-white hover:bg-blue-600"
+                    : "border-2 border-blue-500 text-blue-500 hover:bg-blue-50"
+                )}
               >
                 {plan.ctaText}
               </Link>
