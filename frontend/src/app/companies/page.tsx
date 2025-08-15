@@ -120,16 +120,18 @@ export default function CompaniesPage() {
   if (loading) {
     return (
       <Layout>
-        <div className="flex items-center justify-center h-64">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-        </div>
+        <AuthGuard>
+          <div className="flex items-center justify-center h-64">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+          </div>
+        </AuthGuard>
       </Layout>
     );
   }
 
   return (
-    <AuthGuard>
-      <Layout>
+    <Layout>
+      <AuthGuard>
         <div className="space-y-6">
           {/* Header */}
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -418,8 +420,8 @@ export default function CompaniesPage() {
             )}
           </div>
         </div>
-      </Layout>
-    </AuthGuard>
+      </AuthGuard>
+    </Layout>
   );
 }
 
