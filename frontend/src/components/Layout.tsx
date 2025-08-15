@@ -29,7 +29,7 @@ interface LayoutProps {
 }
 
 export default function Layout({ children }: LayoutProps) {
-  const router = useRouter();
+
   const pathname = usePathname();
   const [userName, setUserName] = useState<string>('');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);

@@ -30,7 +30,7 @@ export default function Checkout({ plan, amount }: CheckoutProps) {
       const data = await response.json();
 
       if (data.payment_url) {
-        window.location.href = data.payment_url;
+        router.push(data.payment_url);
       }
     } catch (error) {
       console.error('Erro ao iniciar checkout:', error);

@@ -1,12 +1,13 @@
-from fastapi import APIRouter, Depends, HTTPException, BackgroundTasks
+from fastapi import APIRouter, Depends, HTTPException, BackgroundTasks, Request, Header
 from sqlalchemy.orm import Session
 from typing import Optional
-from uuid import UUID
+from uuid import UUID, uuid4
+from datetime import datetime, timedelta
 import json
 
 from ..database import get_db
 from ..models import Payment, Subscription, User
-from ..services.pagolu_service import PagoluService
+from ..services.flutterwave_service import FlutterwaveService
 from ..utils.auth import get_current_user
 from ..config import settings
 
@@ -18,10 +19,17 @@ PLAN_PRICES = {
     "business": 6999  # 6.999 MZN
 }
 
+def get_plan_quota(plan: str) -> int:
+    quotas = {
+        "free": 150,
+        "pro": 3000,
+        "business": 10000
+    }
+    return quotas.get(plan, 0)
+
 @router.post("/checkout/{plan}")
 async def create_checkout(
     plan: str,
-    payment_method: str,
     background_tasks: BackgroundTasks,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
@@ -29,19 +37,27 @@ async def create_checkout(
     if plan not in PLAN_PRICES:
         raise HTTPException(status_code=400, detail="Plano inválido")
 
-    # Inicializar serviço do PagoLu
-    pagolu = PagoluService(api_key=settings.PAGOLU_API_KEY, sandbox=settings.PAGOLU_SANDBOX)
+    # Inicializar serviço do Flutterwave
+    flutterwave = FlutterwaveService(
+        secret_key=settings.FLUTTERWAVE_SECRET_KEY,
+        public_key=settings.FLUTTERWAVE_PUBLIC_KEY,
+        sandbox=settings.FLUTTERWAVE_SANDBOX
+    )
 
-    # Criar pagamento
+    # Gerar referência única
+    tx_ref = f"sub_{uuid4().hex}"
+
+    # Criar link de pagamento
     amount = PLAN_PRICES[plan]
-    payment_data = await pagolu.create_payment(
+    payment_data = await flutterwave.create_payment_link(
         amount=amount,
         currency="MZN",
-        payment_method=payment_method,
         customer_email=current_user.email,
-        reference=f"sub_{current_user.id}_{plan}",
-        return_url=f"{settings.FRONTEND_URL}/dashboard/payment/status",
-        metadata={
+        customer_name=f"{current_user.first_name} {current_user.last_name}",
+        payment_options="mpesa,card",
+        redirect_url=f"{settings.FRONTEND_URL}/dashboard/payment/status",
+        tx_ref=tx_ref,
+        meta={
             "user_id": str(current_user.id),
             "plan": plan
         }
@@ -49,56 +65,68 @@ async def create_checkout(
 
     # Criar registro de pagamento
     payment = Payment(
+        id=uuid4(),
         user_id=current_user.id,
         amount=amount,
         currency="MZN",
-        payment_method=payment_method,
-        pagolu_payment_id=payment_data["id"],
+        payment_method="flutterwave",
+        reference=tx_ref,
         metadata=json.dumps({
             "plan": plan,
-            "pagolu_data": payment_data
+            "flutterwave_data": payment_data
         })
     )
     db.add(payment)
     db.commit()
 
     return {
-        "payment_url": payment_data["checkout_url"],
+        "payment_link": payment_data["data"]["link"],
         "payment_id": payment.id
     }
 
-@router.post("/webhook/pagolu")
-async def pagolu_webhook(
-    payload: dict,
-    background_tasks: BackgroundTasks,
+@router.post("/webhook/flutterwave")
+async def flutterwave_webhook(
+    request: Request,
+    verify_hash: str = Header(None),
     db: Session = Depends(get_db)
 ):
-    """Webhook para receber notificações do PagoLu"""
+    """Webhook para receber notificações do Flutterwave"""
     
-    # Verificar assinatura do webhook (implementar depois)
+    # Verificar assinatura do webhook
+    payload = await request.body()
+    flutterwave = FlutterwaveService(
+        secret_key=settings.FLUTTERWAVE_SECRET_KEY,
+        public_key=settings.FLUTTERWAVE_PUBLIC_KEY,
+        sandbox=settings.FLUTTERWAVE_SANDBOX
+    )
     
+    if not await flutterwave.verify_webhook_signature(verify_hash, payload.decode()):
+        raise HTTPException(status_code=400, detail="Assinatura inválida")
+
+    data = await request.json()
+    
+    # Verificar o pagamento
     payment = db.query(Payment).filter_by(
-        pagolu_payment_id=payload["payment_id"]
+        reference=data["txRef"]
     ).first()
     
     if not payment:
         raise HTTPException(status_code=404, detail="Pagamento não encontrado")
 
-    # Atualizar status do pagamento
-    payment.status = payload["status"]
-    db.commit()
-
-    # Se o pagamento foi bem sucedido, atualizar assinatura
-    if payload["status"] == "completed":
+    # Se o pagamento foi confirmado
+    if data["status"] == "successful":
+        payment.status = "completed"
         metadata = json.loads(payment.metadata)
         plan = metadata["plan"]
         
+        # Criar ou atualizar assinatura
         subscription = Subscription(
+            id=uuid4(),
             user_id=payment.user_id,
             plan=plan,
             status="active",
-            current_period_start=payload["paid_at"],
-            current_period_end=payload["paid_at"] + timedelta(days=30),
+            current_period_start=datetime.utcnow(),
+            current_period_end=datetime.utcnow() + timedelta(days=30),
             messages_quota=get_plan_quota(plan),
             last_payment_id=payment.id
         )
