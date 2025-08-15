@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Check } from 'lucide-react';
 import clsx from 'clsx';
@@ -58,6 +58,14 @@ const plans: Plan[] = [
 ];
 
 export default function PlanSelection() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <PlanSelectionContent />
+    </Suspense>
+  );
+}
+
+function PlanSelectionContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [selectedPlan, setSelectedPlan] = useState(searchParams.get('plan') || 'free');
