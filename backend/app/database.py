@@ -15,9 +15,9 @@ engine = create_engine(settings.database_url)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 # Base para os modelos
-# Explicitly define metadata to avoid potential conflicts
-metadata = MetaData()
-Base = declarative_base(metadata=metadata)
+Base = declarative_base()
+# Ensure Base.metadata is the explicitly defined MetaData object
+metadata = Base.metadata
 
 
 def get_db():
