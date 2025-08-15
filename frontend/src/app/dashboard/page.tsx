@@ -1,4 +1,16 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslintimport { 
+  Building2, 
+  MessageSquare, 
+  TrendingUp, 
+  Users, 
+  Calendar,
+  ArrowUpRight,
+  ArrowDownRight,
+  Activity,
+  Zap,
+  Target,
+  BarChart3
+} from 'lucide-react';script-eslint/no-explicit-any */
 
 'use client';
 
@@ -6,14 +18,8 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Layout from '@/components/Layout';
 import AuthGuard from '@/components/AuthGuard';
-import SubscriptionStatusCard from '@/components/SubscriptionStatusCard              </div>
-            </div>
-          </div>
-        </div>
-      </AuthGuard>
-    </Layout>
-  );
-}rt { dashboardAPI, DashboardStats, CompanyStats } from '@/lib/api';
+import SubscriptionStatusCard from '@/components/SubscriptionStatusCard';
+import { dashboardAPI, DashboardStats, CompanyStats } from '@/lib/api';
 import { 
   Building2, 
   MessageSquare, 
@@ -141,7 +147,7 @@ export default function DashboardPage() {
   return (
     <Layout>
       <AuthGuard>
-        <div className="space-y-8">
+        <main className="space-y-8">
           {/* Header */}
           <div>
             <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
@@ -415,9 +421,11 @@ export default function DashboardPage() {
               <p className="text-purple-100 text-sm">
                 Gere relatórios detalhados de suas atividades
               </p>
+                </div>
             </div>
           </div>
-        </div>
+          </div>
+        </main>
       </AuthGuard>
     </Layout>
   );

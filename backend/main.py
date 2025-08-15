@@ -11,7 +11,7 @@ from app.routers import auth, companies, whatsapp, dashboard, health
 import os
 
 # Importar os modelos para que o Alembic os detete
-from app.models import user, company, message
+from app.models import user, company, message, subscription
 
 # Importar middleware de performance
 from app.middleware.performance import setup_middlewares
