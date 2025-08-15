@@ -11,6 +11,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Layout from '@/components/Layout';
 import AuthGuard from '@/components/AuthGuard';
+import SubscriptionStatusCard from '@/components/SubscriptionStatusCard';
 import { dashboardAPI, DashboardStats, CompanyStats } from '@/lib/api';
 import { 
   Building2, 
@@ -150,13 +151,20 @@ export default function DashboardPage() {
             </p>
           </div>
 
-          {/* Estatísticas principais */}
-          {stats && (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              <StatCard
-                title="Total de Empresas"
-                value={stats.total_companies}
-                icon={Building2}
+          {/* Status da Assinatura */}
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+            <div className="lg:col-span-1">
+              <SubscriptionStatusCard />
+            </div>
+            
+            {/* Estatísticas principais */}
+            <div className="lg:col-span-3">
+              {stats && (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  <StatCard
+                    title="Total de Empresas"
+                    value={stats.total_companies}
+                    icon={Building2}
                 color="blue"
                 trend="up"
                 trendValue="+12% este mês"
