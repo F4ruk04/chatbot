@@ -58,6 +58,24 @@ def register_user(user_data: UserRegister, db: Session = Depends(get_db)):
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
+        from app.models.subscription import Subscription, SubscriptionPlan, SubscriptionStatus
+        from datetime import datetime, timedelta
+
+        # Criar assinatura FREE para novo usuário
+        start = datetime.utcnow()
+        end = start + timedelta(days=30)
+        free_subscription = Subscription(
+        user_id=new_user.id,
+        plan=SubscriptionPlan.FREE.value,
+        status=SubscriptionStatus.ACTIVE.value,
+        current_period_start=start,
+        current_period_end=end,
+        messages_quota=150,
+        messages_used=0
+    )
+        db.add(free_subscription)
+        db.commit()
+        db.refresh(free_subscription)
     
     # Criar token de acesso
     access_token = create_access_token(data={"sub": str(new_user.id)})
