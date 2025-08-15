@@ -43,47 +43,21 @@ class Settings(BaseSettings):
     
     # Configurações do Redis - Prioriza REDIS_URL do Railway
     redis_url: str = "redis://localhost:6379"
-    
-    def __init__(self, **kwargs):
-        # Forçar uso da REDIS_URL do Railway se disponível
-        if os.getenv('REDIS_URL'):
-            kwargs['redis_url'] = os.getenv('REDIS_URL')
-        elif os.getenv('RAILWAY_REDIS_URL'):  # Fallback para variável específica do Railway
-            kwargs['redis_url'] = os.getenv('RAILWAY_REDIS_URL')
-        
-        super().__init__(**kwargs)
-    
+
     model_config = {
         "env_file": ".env",
         "case_sensitive": False,
         "extra": "ignore"
     }
-    
+
     def __init__(self, **kwargs):
-        # Forçar leitura das variáveis de ambiente do Railway
-        env_values = {
-            'database_url': os.getenv('DATABASE_URL', 'postgresql+psycopg2://user:password@localhost:5432/chatbot'),
-            'jwt_secret': os.getenv('JWT_SECRET_KEY', 'your-super-secret-jwt-key-change-this-in-production-2024'),
-            'gemini_api_key': os.getenv('GEMINI_API_KEY', 'your-gemini-api-key-here'),
-            'twilio_account_sid': os.getenv('TWILIO_ACCOUNT_SID', 'ACxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'),
-            'twilio_auth_token': os.getenv('TWILIO_AUTH_TOKEN', 'your_twilio_auth_token'),
-            'twilio_whatsapp_number': os.getenv('TWILIO_WHATSAPP_NUMBER', 'whatsapp:+14155238886'),
-            'flutterwave_secret_key': os.getenv('FLUTTERWAVE_SECRET_KEY', 'your-flutterwave-secret-key-here'),
-            'flutterwave_public_key': os.getenv('FLUTTERWAVE_PUBLIC_KEY', 'your-flutterwave-public-key-here'),
-            'flutterwave_sandbox': os.getenv('FLUTTERWAVE_SANDBOX', 'true').lower() == 'true',
-            'frontend_url': os.getenv('FRONTEND_URL', 'http://localhost:3000'),
-            'domain': os.getenv('DOMAIN', 'localhost'),
-            'redis_host': os.getenv('REDIS_HOST', 'localhost'),
-            'redis_port': int(os.getenv('REDIS_PORT', '6379')),
-            'redis_password': os.getenv('REDIS_PASSWORD', None),
-        }
-        
-        # Merge com kwargs fornecidos
-        env_values.update(kwargs)
-        
-        super().__init__(**env_values)
+        super().__init__(**kwargs)
+        # Forçar uso da REDIS_URL do Railway se disponível
+        if os.getenv('REDIS_URL'):
+            self.redis_url = os.getenv('REDIS_URL')
+        elif os.getenv('RAILWAY_REDIS_URL'):  # Fallback para variável específica do Railway
+            self.redis_url = os.getenv('RAILWAY_REDIS_URL')
 
 
 # Instância global das configurações
 settings = Settings()
-
