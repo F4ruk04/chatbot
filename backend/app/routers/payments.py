@@ -7,7 +7,6 @@ import json
 
 from ..database import get_db
 from ..models import Payment, Subscription, User
-from ..services.pagolu_service import PagoluService # Assuming PagoluService is still needed
 from ..utils.auth import get_current_user
 from ..config import settings
 
