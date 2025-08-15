@@ -31,9 +31,14 @@ interface LayoutProps {
 export default function Layout({ children }: LayoutProps) {
   const router = useRouter();
   const pathname = usePathname();
-  const { theme, toggleTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
   const [userName, setUserName] = useState<string>('');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { theme, toggleTheme } = useTheme();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     const { user } = getAuthData();
@@ -53,6 +58,11 @@ export default function Layout({ children }: LayoutProps) {
   ];
 
   const isActive = (href: string) => pathname === href;
+
+  // Evita problemas de hidratação/SSR retornando null enquanto o componente não está montado
+  if (!mounted) {
+    return null;
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
