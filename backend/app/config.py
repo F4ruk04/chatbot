@@ -4,6 +4,7 @@ Este módulo contém todas as configurações necessárias para o funcionamento 
 """
 
 import os
+from pydantic import Field
 from pydantic_settings import BaseSettings
 from typing import Optional
 
@@ -15,24 +16,24 @@ class Settings(BaseSettings):
     """
     
     # Configurações do banco de dados
-    database_url: str
+    database_url: str = Field(..., env="DATABASE_URL")
     
     # Configurações de autenticação
-    jwt_secret: str
+    jwt_secret: str = Field(..., env="JWT_SECRET_KEY")
     jwt_algorithm: str = "HS256"
     jwt_expiration_hours: int = 24
     
     # Configurações da API do Gemini
-    gemini_api_key: str
+    gemini_api_key: str = Field(..., env="GEMINI_API_KEY")
     
     # Configurações do Twilio para WhatsApp
-    twilio_account_sid: str
-    twilio_auth_token: str
+    twilio_account_sid: str = Field(..., env="TWILIO_ACCOUNT_SID")
+    twilio_auth_token: str = Field(..., env="TWILIO_AUTH_TOKEN")
     twilio_whatsapp_number: str = "whatsapp:+14155238886"
     
     # Configurações do Flutterwave
-    flutterwave_secret_key: str
-    flutterwave_public_key: str
+    flutterwave_secret_key: str = Field(..., env="FLUTTERWAVE_SECRET_KEY")
+    flutterwave_public_key: str = Field(..., env="FLUTTERWAVE_PUBLIC_KEY")
     flutterwave_sandbox: bool = True
     
     # URL do frontend para redirecionamentos
@@ -42,21 +43,16 @@ class Settings(BaseSettings):
     domain: str = "localhost"
     
     # Configurações do Redis - Prioriza REDIS_URL do Railway
-    redis_url: str = "redis://localhost:6379"
+    redis_url: str = Field(
+        "redis://localhost:6379",
+        env=["REDIS_URL", "RAILWAY_REDIS_URL"]
+    )
 
     model_config = {
         "env_file": ".env",
         "case_sensitive": False,
         "extra": "ignore"
     }
-
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        # Forçar uso da REDIS_URL do Railway se disponível
-        if os.getenv('REDIS_URL'):
-            self.redis_url = os.getenv('REDIS_URL')
-        elif os.getenv('RAILWAY_REDIS_URL'):  # Fallback para variável específica do Railway
-            self.redis_url = os.getenv('RAILWAY_REDIS_URL')
 
 
 # Instância global das configurações
