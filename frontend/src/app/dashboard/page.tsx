@@ -115,9 +115,11 @@ export default function DashboardPage() {
   if (loading) {
     return (
       <Layout>
-        <div className="flex items-center justify-center h-64">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-        </div>
+        <AuthGuard>
+          <div className="flex items-center justify-center h-64">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+          </div>
+        </AuthGuard>
       </Layout>
     );
   }
@@ -125,16 +127,18 @@ export default function DashboardPage() {
   if (error) {
     return (
       <Layout>
-        <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
-          <div className="text-red-700 dark:text-red-400">{error}</div>
-        </div>
+        <AuthGuard>
+          <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
+            <div className="text-red-700 dark:text-red-400">{error}</div>
+          </div>
+        </AuthGuard>
       </Layout>
     );
   }
 
   return (
-    <AuthGuard>
-      <Layout>
+    <Layout>
+      <AuthGuard>
         <div className="space-y-8">
           {/* Header */}
           <div>
@@ -405,8 +409,8 @@ export default function DashboardPage() {
             </div>
           </div>
         </div>
-      </Layout>
-    </AuthGuard>
+      </AuthGuard>
+    </Layout>
   );
 }
 
