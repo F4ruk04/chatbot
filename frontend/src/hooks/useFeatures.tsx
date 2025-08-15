@@ -64,7 +64,7 @@ export function FeatureGate({
 
 // HOC para proteger rotas baseado em features
 export function withFeatureAccess(WrappedComponent: React.ComponentType, requiredFeature: string) {
-  return function WithFeatureAccessWrapper(props: any) {
+  return function WithFeatureAccessWrapper(props: Record<string, unknown>) {
     const { checkFeature, loading, needsUpgrade } = useFeatures();
 
     if (loading) {

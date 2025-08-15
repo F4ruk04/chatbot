@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import { ArrowRight, Loader2 } from 'lucide-react';
 
 interface CheckoutProps {
@@ -135,13 +136,13 @@ export default function Checkout({ plan, amount }: CheckoutProps) {
           {/* Métodos de Pagamento */}
           <div className="grid grid-cols-3 gap-4 items-center justify-items-center w-full">
             <div className="flex items-center justify-center bg-gray-50 p-2 rounded-lg">
-              <img src="/images/mpesa-logo.png" alt="M-PESA" className="h-8 object-contain" />
+              <Image src="/images/mpesa-logo.png" alt="M-PESA" width={32} height={32} className="h-8 object-contain" />
             </div>
             <div className="flex items-center justify-center bg-gray-50 p-2 rounded-lg">
-              <img src="/images/visa-logo.png" alt="Visa" className="h-6 object-contain" />
+              <Image src="/images/visa-logo.png" alt="Visa" width={24} height={24} className="h-6 object-contain" />
             </div>
             <div className="flex items-center justify-center bg-gray-50 p-2 rounded-lg">
-              <img src="/images/mastercard-logo.png" alt="Mastercard" className="h-6 object-contain" />
+              <Image src="/images/mastercard-logo.png" alt="Mastercard" width={24} height={24} className="h-6 object-contain" />
             </div>
           </div>
 

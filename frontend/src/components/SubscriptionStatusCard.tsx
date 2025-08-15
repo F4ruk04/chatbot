@@ -27,7 +27,8 @@ export default function SubscriptionStatusCard() {
       const response = await fetch('/api/subscription/status');
       const data = await response.json();
       setStatus(data);
-    } catch (err) {
+    } catch (error) {
+      console.error('Erro ao carregar status:', error);
       setError('Erro ao carregar status da assinatura');
     } finally {
       setLoading(false);
