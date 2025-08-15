@@ -1,17 +1,10 @@
 'use client';
 
-import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
-
-type Theme = 'light' | 'dark';
-
-interface ThemeContextType {
-  theme: Theme;
-  toggleTheme: () => void;
-}
-
-const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
-
-export function ThemeProvider({ children }: { children: ReactNode }) {
+// This file is kept for backward compatibility but all theme functionality
+// has been moved to the useClientTheme hook
+export const ThemeContext = null;
+export const ThemeProvider = ({ children }) => children;
+export const useTheme = () => {
   const [theme, setTheme] = useState<Theme>('light');
   const [mounted, setMounted] = useState(false);
 

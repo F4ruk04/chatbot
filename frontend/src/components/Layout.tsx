@@ -9,7 +9,7 @@ import { ReactNode, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter, usePathname } from 'next/navigation';
 import { getAuthData, logout } from '@/lib/auth';
-import { useTheme } from '@/contexts/ThemeContext';
+import { useClientTheme } from '@/hooks/useClientTheme';
 import {
   LogOut,
   Home,
@@ -31,10 +31,10 @@ interface LayoutProps {
 export default function Layout({ children }: LayoutProps) {
   const router = useRouter();
   const pathname = usePathname();
-  const [mounted, setMounted] = useState(false);
   const [userName, setUserName] = useState<string>('');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const { theme, toggleTheme } = useTheme();
+  const { theme, toggleTheme } = useClientTheme();
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
