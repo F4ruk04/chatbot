@@ -19,7 +19,6 @@ import {
   X,
   User,
   Settings,
-  Bell,
   Sun,
   Moon
 } from 'lucide-react';

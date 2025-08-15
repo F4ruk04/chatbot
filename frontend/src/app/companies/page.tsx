@@ -7,7 +7,6 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
 import Layout from '@/components/Layout';
 import AuthGuard from '@/components/AuthGuard';
 import { companiesAPI, Company } from '@/lib/api';
