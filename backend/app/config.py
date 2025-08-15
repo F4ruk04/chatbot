@@ -41,22 +41,17 @@ class Settings(BaseSettings):
     # Domínio da aplicação
     domain: str = "localhost"
     
-    # Configurações do Redis
-    redis_host: str = "localhost"
-    redis_port: int = 6379
-    redis_password: Optional[str] = None
+    # Configurações do Redis - Prioriza REDIS_URL do Railway
+    redis_url: str = "redis://localhost:6379"
     
-    @property
-    def redis_url(self) -> str:
-        """Constrói a URL do Redis baseada nas configurações"""
-        # Se REDIS_URL estiver definido, use-o diretamente
+    def __init__(self, **kwargs):
+        # Forçar uso da REDIS_URL do Railway se disponível
         if os.getenv('REDIS_URL'):
-            return os.getenv('REDIS_URL')
+            kwargs['redis_url'] = os.getenv('REDIS_URL')
+        elif os.getenv('RAILWAY_REDIS_URL'):  # Fallback para variável específica do Railway
+            kwargs['redis_url'] = os.getenv('RAILWAY_REDIS_URL')
         
-        # Caso contrário, construa a URL com host e porta
-        if self.redis_password:
-            return f"redis://:{self.redis_password}@{self.redis_host}:{self.redis_port}/0"
-        return f"redis://{self.redis_host}:{self.redis_port}/0"
+        super().__init__(**kwargs)
     
     model_config = {
         "env_file": ".env",

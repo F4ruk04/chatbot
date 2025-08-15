@@ -12,20 +12,26 @@ from ..config import settings
 
 class RateLimitMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next: Callable) -> Response:
+        # Não aplicar rate limiting em ambiente de desenvolvimento
+        if os.getenv('RAILWAY_ENVIRONMENT') != 'production':
+            return await call_next(request)
+            
         # Pegar IP do cliente
         client_ip = request.client.host
         
         # Rate limiting baseado no Redis
         try:
+            if not hasattr(request.app.state, 'redis'):
+                logger.warning("Redis não disponível, pulando rate limiting")
+                return await call_next(request)
+                
             current_minute = int(time.time() / 60)
             cache_key = f"rate_limit:{client_ip}:{current_minute}"
             
-            # Permitir 100 requisições por minuto por IP
-            request_count = await request.app.state.redis.incr(cache_key)
-            
-            # Define o TTL apenas na primeira requisição
-            if request_count == 1:
-                await request.app.state.redis.expire(cache_key, 60)
+            pipe = request.app.state.redis.pipeline()
+            pipe.incr(cache_key)
+            pipe.expire(cache_key, 60)
+            request_count, _ = await pipe.execute()
             
             if request_count > 100:
                 return Response(
@@ -34,9 +40,9 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
                     status_code=429
                 )
         except Exception as e:
-            # Em caso de falha do Redis, permite a requisição mas loga o erro
-            print(f"Erro no rate limiting: {e}")
-            # Não bloqueia a requisição em caso de falha do Redis
+            logger.error(f"Erro no rate limiting: {e}")
+            # Em produção, ser conservador e permitir a requisição
+            return await call_next(request)
         
         response = await call_next(request)
         return response

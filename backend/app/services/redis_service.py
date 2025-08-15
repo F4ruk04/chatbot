@@ -25,19 +25,19 @@ async def init_redis(max_retries=5, retry_delay=5):
         max_retries (int): Número máximo de tentativas de conexão
         retry_delay (int): Tempo em segundos entre tentativas
     """
-    logger.debug(f"Tentando conectar ao Redis em {settings.redis_host}:{settings.redis_port}")
-    logger.debug(f"URL do Redis: {settings.redis_url}")
+    logger.info(f"Iniciando conexão com Redis usando URL: {settings.redis_url}")
     
     for attempt in range(max_retries):
         try:
             logger.debug(f"Tentativa {attempt + 1} de {max_retries}")
+            # Usar diretamente a URL do Redis que já contém todas as credenciais
             redis = await aioredis.from_url(
                 settings.redis_url,
-                password=settings.redis_password,
                 encoding="utf-8",
                 decode_responses=True,
-                socket_timeout=5,
-                socket_connect_timeout=5
+                socket_timeout=10,
+                socket_connect_timeout=10,
+                retry_on_timeout=True
             )
             # Testa a conexão
             await redis.ping()
