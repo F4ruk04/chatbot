@@ -34,10 +34,11 @@ const plans: Plan[] = [
     description: 'Para empresas em crescimento',
     features: [
       '3.000 mensagens/mês',
-      '3 Conexões WhatsApp',
-      'Dashboard Completo',
-      'Suporte Prioritário',
-      'Sem nossa marca'
+      '1 Conexão WhatsApp',
+      'Dashboard Avançado com Relatórios',
+      'Histórico de conversas (90 dias)',
+      'Sem a nossa marca',
+      'Suporte Prioritário via Email'
     ],
     recommended: true
   },
@@ -48,11 +49,10 @@ const plans: Plan[] = [
     description: 'Para grandes operações',
     features: [
       '10.000 mensagens/mês',
-      'Conexões Ilimitadas',
-      'API Personalizada',
-      'Suporte 24/7',
-      'Dashboard Personalizado',
-      'Onboarding VIP'
+      '3 Conexões WhatsApp',
+      'Tudo do Plano Pro +',
+      'Onboarding Personalizado por vídeo-chamada',
+      'Suporte VIP direto via WhatsApp'
     ]
   }
 ];

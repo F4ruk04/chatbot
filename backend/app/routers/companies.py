@@ -13,6 +13,7 @@ from app.database import get_db
 from app.models.user import User
 from app.models.company import Company
 from app.models.message import Message
+from app.models.subscription import Subscription, SubscriptionPlan
 from app.utils.auth import get_current_user
 
 router = APIRouter(prefix="/companies", tags=["companies"])
@@ -55,15 +56,48 @@ def create_company(
     """
     Endpoint para adicionar nova empresa
     """
-    # Verificar se o número do WhatsApp já está em uso
-    existing_company = db.query(Company).filter(
+    # Obter a assinatura atual do usuário
+    user_subscription = db.query(Subscription).filter(
+        Subscription.user_id == current_user.id,
+        Subscription.status == "active"
+    ).order_by(Subscription.created_at.desc()).first()
+
+    if not user_subscription:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Usuário não possui uma assinatura ativa para adicionar empresas."
+        )
+
+    # Definir limites de conexão WhatsApp com base no plano
+    whatsapp_connection_limit = 0
+    if user_subscription.plan == SubscriptionPlan.FREE.value:
+        whatsapp_connection_limit = 1
+    elif user_subscription.plan == SubscriptionPlan.PRO.value:
+        whatsapp_connection_limit = 1
+    elif user_subscription.plan == SubscriptionPlan.BUSINESS.value:
+        whatsapp_connection_limit = 3
+    
+    # Contar as empresas existentes do usuário
+    existing_companies_count = db.query(Company).filter(
+        Company.owner_id == current_user.id
+    ).count()
+
+    # Verificar se o limite de conexões WhatsApp foi atingido
+    if existing_companies_count >= whatsapp_connection_limit:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail=f"Você atingiu o limite de {whatsapp_connection_limit} conexões WhatsApp para o seu plano '{user_subscription.plan.capitalize()}'."
+        )
+
+    # Verificar se o número do WhatsApp já está em uso por qualquer empresa
+    existing_whatsapp_number = db.query(Company).filter(
         Company.whatsapp_phone_number == company_data.whatsapp_phone_number
     ).first()
     
-    if existing_company:
+    if existing_whatsapp_number:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Número do WhatsApp já está em uso"
+            detail="Número do WhatsApp já está em uso por outra empresa."
         )
     
     # Criar nova empresa

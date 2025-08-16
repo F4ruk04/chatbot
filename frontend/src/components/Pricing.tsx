@@ -51,7 +51,7 @@ const plans: PricingPlan[] = [
     description: 'Para negócios que exigem o máximo de performance e um suporte personalizado.',
     features: [
       { text: '10.000 mensagens/mês' },
-      { text: '1 Conexão WhatsApp' },
+      { text: '3 Conexões WhatsApp' },
       { text: 'Tudo do Plano Pro +' },
       { text: 'Onboarding Personalizado por vídeo-chamada' },
       { text: 'Suporte VIP direto via WhatsApp' },
