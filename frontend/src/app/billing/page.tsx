@@ -14,7 +14,6 @@ import {
   Crown, 
   Zap, 
   Shield, 
-  Headphones, 
   Star,
   CreditCard,
   Smartphone,
@@ -31,7 +30,7 @@ interface Plan {
   features: string[];
   popular?: boolean;
   color: string;
-  icon: React.ComponentType<any>;
+  icon: React.ComponentType<{ className?: string }>;
 }
 
 const plans: Plan[] = [
@@ -169,8 +168,9 @@ export default function BillingPage() {
       } else {
         setError('Erro ao processar pagamento. Tente novamente.');
       }
-    } catch (err: any) {
-      setError(err.response?.data?.detail || 'Erro ao processar pagamento');
+    } catch (err: unknown) {
+      const error = err as { response?: { data?: { detail?: string } } };
+      setError(error.response?.data?.detail || 'Erro ao processar pagamento');
     } finally {
       setLoading(false);
     }
