@@ -41,6 +41,14 @@ if app_settings.frontend_url and app_settings.frontend_url not in allowed_origin
 if os.getenv("RAILWAY_ENVIRONMENT") != "production":
     allowed_origins.append("*")
 
+# Permitir configuração dinâmica via variável de ambiente ALLOWED_ORIGINS (CSV)
+env_origins = os.getenv("ALLOWED_ORIGINS")
+if env_origins:
+    for o in env_origins.split(","):
+        o = o.strip()
+        if o and o not in allowed_origins:
+            allowed_origins.append(o)
+
 # Adicionar origem do Railway se estiver em produção
 if os.getenv("RAILWAY_ENVIRONMENT"):
     railway_url = os.getenv("RAILWAY_STATIC_URL")
