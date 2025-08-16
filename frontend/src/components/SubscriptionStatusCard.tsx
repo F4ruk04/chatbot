@@ -55,11 +55,13 @@ export default function SubscriptionStatusCard() {
           warning_level: 'LOW'
         });
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Erro ao carregar status:', error);
       
+      const axiosError = error as { response?: { status?: number }; message?: string };
+      
       // Se for erro 401, não mostrar erro (usuário não autenticado)
-      if (error.response?.status === 401) {
+      if (axiosError.response?.status === 401) {
         setError('');
         return;
       }
@@ -76,7 +78,7 @@ export default function SubscriptionStatusCard() {
         warning_level: 'LOW'
       });
       
-      console.warn('Usando dados padrão devido ao erro:', error.message);
+      console.warn('Usando dados padrão devido ao erro:', axiosError.message || 'Erro desconhecido');
     } finally {
       setLoading(false);
     }
