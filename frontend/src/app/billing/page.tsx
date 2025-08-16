@@ -5,7 +5,7 @@
 
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Layout from '@/components/Layout';
 import AuthGuard from '@/components/AuthGuard';
@@ -104,7 +104,7 @@ const paymentMethods = [
   }
 ];
 
-export default function BillingPage() {
+function BillingContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [selectedPlan, setSelectedPlan] = useState<string>('pro');
@@ -439,5 +439,55 @@ export default function BillingPage() {
         </div>
       </AuthGuard>
     </Layout>
+  );
+}
+
+function BillingPageFallback() {
+  return (
+    <Layout>
+      <AuthGuard>
+        <div className="max-w-6xl mx-auto space-y-8">
+          <div className="flex items-center space-x-4">
+            <div className="w-8 h-8 bg-gray-200 rounded-lg animate-pulse"></div>
+            <div>
+              <div className="h-8 bg-gray-200 rounded w-48 animate-pulse mb-2"></div>
+              <div className="h-4 bg-gray-200 rounded w-64 animate-pulse"></div>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="lg:col-span-2">
+              <div className="h-6 bg-gray-200 rounded w-48 animate-pulse mb-6"></div>
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                {[1, 2, 3].map((i) => (
+                  <div key={i} className="bg-white rounded-xl border p-6 animate-pulse">
+                    <div className="h-20 bg-gray-200 rounded mb-4"></div>
+                    <div className="h-4 bg-gray-200 rounded mb-2"></div>
+                    <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="lg:col-span-1">
+              <div className="bg-white rounded-xl shadow-lg border p-6">
+                <div className="h-6 bg-gray-200 rounded w-32 animate-pulse mb-6"></div>
+                <div className="space-y-4">
+                  <div className="h-16 bg-gray-200 rounded animate-pulse"></div>
+                  <div className="h-32 bg-gray-200 rounded animate-pulse"></div>
+                  <div className="h-12 bg-gray-200 rounded animate-pulse"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </AuthGuard>
+    </Layout>
+  );
+}
+
+export default function BillingPage() {
+  return (
+    <Suspense fallback={<BillingPageFallback />}>
+      <BillingContent />
+    </Suspense>
   );
 }
