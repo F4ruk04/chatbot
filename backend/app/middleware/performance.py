@@ -88,14 +88,7 @@ def setup_middlewares(app: FastAPI) -> None:
     # Comprimir respostas
     app.add_middleware(GZipMiddleware, minimum_size=1000)
     
-    # CORS
-    app.add_middleware(
-        CORSMiddleware,
-        allow_origins=[settings.frontend_url],
-        allow_credentials=True,
-        allow_methods=["*"],
-        allow_headers=["*"],
-    )
+    # CORS é configurado centralmente no main.py para evitar conflitos
     
     # Hosts confiáveis
     # Em produção, restringe ao domínio configurado e ao domínio do Railway
@@ -106,6 +99,13 @@ def setup_middlewares(app: FastAPI) -> None:
         railway_host = railway_host.replace("https://", "").replace("http://", "")
         allowed_hosts.append(railway_host)
         allowed_hosts.append("*.railway.app")
+    # Permitir configuração adicional via ALLOWED_HOSTS (CSV)
+    env_hosts = os.getenv("ALLOWED_HOSTS")
+    if env_hosts:
+        for h in env_hosts.split(","):
+            h = h.strip()
+            if h and h not in allowed_hosts:
+                allowed_hosts.append(h)
     if os.getenv("RAILWAY_ENVIRONMENT") != "production":
         allowed_hosts = ["*"]
     app.add_middleware(
