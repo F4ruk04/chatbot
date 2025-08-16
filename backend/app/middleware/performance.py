@@ -30,14 +30,15 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
         
         # Rate limiting baseado no Redis
         try:
-            if not hasattr(request.app.state, 'redis'):
+            redis = getattr(request.app.state, 'redis', None)
+            if not redis:
                 logger.warning("Redis não disponível, pulando rate limiting")
                 return await call_next(request)
                 
             current_minute = int(time.time() / 60)
             cache_key = f"rate_limit:{client_ip}:{current_minute}"
             
-            pipe = request.app.state.redis.pipeline()
+            pipe = redis.pipeline()
             pipe.incr(cache_key)
             pipe.expire(cache_key, 60)
             request_count, _ = await pipe.execute()
@@ -97,9 +98,19 @@ def setup_middlewares(app: FastAPI) -> None:
     )
     
     # Hosts confiáveis
+    # Em produção, restringe ao domínio configurado e ao domínio do Railway
+    # Em desenvolvimento, permite todos para evitar 400 Bad Request por Host inválido
+    allowed_hosts = ["localhost", "127.0.0.1", "0.0.0.0"]
+    railway_host = os.getenv("RAILWAY_STATIC_URL") or os.getenv("RAILWAY_URL")
+    if railway_host:
+        railway_host = railway_host.replace("https://", "").replace("http://", "")
+        allowed_hosts.append(railway_host)
+        allowed_hosts.append("*.railway.app")
+    if os.getenv("RAILWAY_ENVIRONMENT") != "production":
+        allowed_hosts = ["*"]
     app.add_middleware(
         TrustedHostMiddleware,
-        allowed_hosts=[settings.domain]
+        allowed_hosts=allowed_hosts
     )
     
     # Rate limiting
