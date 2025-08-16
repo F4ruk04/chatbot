@@ -2,18 +2,19 @@
  * Página de Billing/Checkout
  * Interface para upgrade de planos e pagamentos
  */
-
+ 
 'use client';
 
 import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Layout from '@/components/Layout';
 import AuthGuard from '@/components/AuthGuard';
-import { 
-  Check, 
-  Crown, 
-  Zap, 
-  Shield, 
+import { useNotification } from '@/hooks/useNotification';
+import {
+  Check,
+  Crown,
+  Zap,
+  Shield,
   Star,
   CreditCard,
   Smartphone,
@@ -110,6 +111,7 @@ function BillingContent() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [currentPlan, setCurrentPlan] = useState<string>('free');
+  const { showNotification } = useNotification();
 
   useEffect(() => {
     // Verificar plano atual do usuário
@@ -129,6 +131,12 @@ function BillingContent() {
       setCurrentPlan(response.data.plan || 'free');
     } catch (error) {
       console.error('Erro ao carregar plano atual:', error);
+      showNotification({
+        type: 'error',
+        title: 'Erro ao carregar plano atual',
+        message: 'Não foi possível carregar o seu plano de assinatura atual.',
+        duration: 5000
+      });
     }
   };
 
@@ -140,11 +148,23 @@ function BillingContent() {
   const handlePayment = async () => {
     if (selectedPlan === currentPlan) {
       setError('Você já está neste plano');
+      showNotification({
+        type: 'warning',
+        title: 'Plano Atual',
+        message: 'Você já está inscrito neste plano.',
+        duration: 5000
+      });
       return;
     }
 
     if (selectedPlan === 'free') {
       setError('Não é possível fazer downgrade para o plano gratuito');
+      showNotification({
+        type: 'error',
+        title: 'Downgrade não permitido',
+        message: 'Não é possível fazer downgrade para o plano gratuito.',
+        duration: 5000
+      });
       return;
     }
 
@@ -161,14 +181,32 @@ function BillingContent() {
       });
 
       if (response.data.success) {
-        // Redirecionar para página de sucesso ou dashboard
+        showNotification({
+          type: 'success',
+          title: 'Upgrade Concluído!',
+          message: 'Seu plano foi atualizado com sucesso.',
+          duration: 5000
+        });
         router.push('/dashboard?upgrade=success');
       } else {
         setError('Erro ao processar pagamento. Tente novamente.');
+        showNotification({
+          type: 'error',
+          title: 'Erro no Pagamento',
+          message: response.data.message || 'Ocorreu um erro ao processar seu pagamento.',
+          duration: 7000
+        });
       }
     } catch (err: unknown) {
       const error = err as { response?: { data?: { detail?: string } } };
-      setError(error.response?.data?.detail || 'Erro ao processar pagamento');
+      const errorMessage = error.response?.data?.detail || 'Erro ao processar pagamento';
+      setError(errorMessage);
+      showNotification({
+        type: 'error',
+        title: 'Erro no Pagamento',
+        message: errorMessage,
+        duration: 7000
+      });
     } finally {
       setLoading(false);
     }

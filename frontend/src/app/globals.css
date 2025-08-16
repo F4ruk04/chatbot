@@ -369,3 +369,13 @@ html {
 .accordion-content.open {
   max-height: 200px;
 }
+
+/* Animation for notification progress bar */
+@keyframes progress {
+  0% { width: 100%; }
+  100% { width: 0%; }
+}
+
+.animate-progress {
+  animation: progress linear;
+}

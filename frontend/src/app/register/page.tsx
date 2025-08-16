@@ -2,20 +2,21 @@
  * Página de Registro
  * Interface moderna para criação de conta
  */
-
+ 
 /* eslint-disable @typescript-eslint/no-explicit-any */
-
+ 
 'use client';
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { authAPI } from '@/lib/api';
 import { saveAuthData, verifyAuthDataSaved } from '@/lib/auth';
-import { 
-  UserPlus, 
-  Building2, 
-  Shield, 
-  Zap, 
+import { useNotification } from '@/hooks/useNotification';
+import {
+  UserPlus,
+  Building2,
+  Shield,
+  Zap,
   CheckCircle,
   Eye,
   EyeOff,
@@ -35,6 +36,7 @@ export default function RegisterPage() {
   const [error, setError] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const { showNotification } = useNotification();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -43,13 +45,27 @@ export default function RegisterPage() {
 
     // Validações
     if (formData.password !== formData.confirmPassword) {
-      setError('As palavras-passe não coincidem');
+      const msg = 'As palavras-passe não coincidem';
+      setError(msg);
+      showNotification({
+        type: 'error',
+        title: 'Erro de Validação',
+        message: msg,
+        duration: 5000
+      });
       setLoading(false);
       return;
     }
 
     if (formData.password.length < 6) {
-      setError('A palavra-passe deve ter pelo menos 6 caracteres');
+      const msg = 'A palavra-passe deve ter pelo menos 6 caracteres';
+      setError(msg);
+      showNotification({
+        type: 'error',
+        title: 'Erro de Validação',
+        message: msg,
+        duration: 5000
+      });
       setLoading(false);
       return;
     }
@@ -67,6 +83,12 @@ export default function RegisterPage() {
       // Verificar se os dados foram salvos antes de redirecionar
       const checkAuth = () => {
         if (verifyAuthDataSaved()) {
+          showNotification({
+            type: 'success',
+            title: 'Registro Concluído!',
+            message: 'Sua conta foi criada com sucesso. Redirecionando...',
+            duration: 3000
+          });
           router.push('/dashboard');
         } else {
           setTimeout(checkAuth, 100);
@@ -75,7 +97,14 @@ export default function RegisterPage() {
       
       setTimeout(checkAuth, 100);
     } catch (err: any) {
-      setError(err.response?.data?.detail || 'Erro ao criar conta');
+      const errorMessage = err.response?.data?.detail || 'Erro ao criar conta';
+      setError(errorMessage);
+      showNotification({
+        type: 'error',
+        title: 'Erro no Registro',
+        message: errorMessage,
+        duration: 7000
+      });
       setLoading(false);
     }
   };

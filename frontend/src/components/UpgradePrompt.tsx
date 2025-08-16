@@ -1,14 +1,15 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { 
-  Crown, 
-  Zap, 
-  ArrowRight, 
+import {
+  Crown,
+  Zap,
+  ArrowRight,
   X,
   Lock
 } from 'lucide-react';
 import { useState } from 'react';
+import { useNotification } from '@/hooks/useNotification';
 
 interface UpgradePromptProps {
   feature: string;
@@ -28,9 +29,16 @@ export default function UpgradePrompt({
 }: UpgradePromptProps) {
   const router = useRouter();
   const [isVisible, setIsVisible] = useState(true);
+  const { showNotification } = useNotification();
 
   const handleUpgrade = () => {
     router.push(`/billing?plan=${requiredPlan}`);
+    showNotification({
+      type: 'info',
+      title: 'Redirecionando para Upgrade',
+      message: `Você será redirecionado para a página de faturamento para fazer upgrade para o plano ${requiredPlan.toUpperCase()}.`,
+      duration: 5000
+    });
   };
 
   const handleClose = () => {

@@ -1,15 +1,16 @@
 'use client';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { 
-  AlertTriangle, 
-  AlertCircle, 
-  CheckCircle, 
-  Crown, 
+import {
+  AlertTriangle,
+  AlertCircle,
+  CheckCircle,
+  Crown,
   Calendar,
   TrendingUp,
   Zap
 } from 'lucide-react';
+import { useNotification } from '@/hooks/useNotification';
 
 interface SubscriptionStatus {
   plan: string;
@@ -24,6 +25,7 @@ interface SubscriptionStatus {
 
 export default function SubscriptionStatusCard() {
   const router = useRouter();
+  const { showNotification } = useNotification();
   const [status, setStatus] = useState<SubscriptionStatus | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -54,6 +56,12 @@ export default function SubscriptionStatusCard() {
           renewal_date: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
           warning_level: 'LOW'
         });
+        showNotification({
+          type: 'warning',
+          title: 'Dados de assinatura incompletos',
+          message: 'Usando dados padrão para o status da assinatura.',
+          duration: 7000
+        });
       }
     } catch (error: unknown) {
       console.error('Erro ao carregar status:', error);
@@ -78,6 +86,12 @@ export default function SubscriptionStatusCard() {
         warning_level: 'LOW'
       });
       
+      showNotification({
+        type: 'error',
+        title: 'Erro ao carregar assinatura',
+        message: 'Não foi possível carregar o status da sua assinatura. Usando dados padrão.',
+        duration: 7000
+      });
       console.warn('Usando dados padrão devido ao erro:', axiosError.message || 'Erro desconhecido');
     } finally {
       setLoading(false);
@@ -139,11 +153,25 @@ export default function SubscriptionStatusCard() {
 
   if (loading) {
     return (
-      <div className="animate-pulse bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 p-6">
-        <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-3/4 mb-4"></div>
-        <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/2 mb-4"></div>
-        <div className="h-2 bg-gray-200 dark:bg-gray-700 rounded w-full mb-4"></div>
-        <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-2/3"></div>
+      <div className="animate-pulse bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
+        {/* Header skeleton */}
+        <div className="h-24 bg-gradient-to-r from-gray-300 to-gray-400 dark:from-gray-700 dark:to-gray-600 p-6">
+          <div className="h-6 bg-gray-200 dark:bg-gray-600 rounded w-3/4 mb-2"></div>
+          <div className="h-4 bg-gray-200 dark:bg-gray-600 rounded w-1/2"></div>
+        </div>
+        
+        {/* Content skeleton */}
+        <div className="p-6 space-y-6">
+          <div>
+            <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/3 mb-3"></div>
+            <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-full mb-2"></div>
+            <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-2/3"></div>
+          </div>
+          
+          <div className="h-16 bg-gray-100 dark:bg-gray-700 rounded-lg"></div>
+          
+          <div className="h-10 bg-blue-200 dark:bg-blue-900 rounded-lg"></div>
+        </div>
       </div>
     );
   }

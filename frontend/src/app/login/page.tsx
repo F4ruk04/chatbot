@@ -2,9 +2,9 @@
  * Página de Login
  * Interface moderna para autenticação de utilizadores
  */
-
+ 
 /* eslint-disable @typescript-eslint/no-explicit-any */
-
+ 
 'use client';
 
 import { useState } from 'react';
@@ -12,6 +12,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { authAPI } from '@/lib/api';
 import { saveAuthData, verifyAuthDataSaved } from '@/lib/auth';
+import { useNotification } from '@/hooks/useNotification';
 import { Eye, EyeOff, LogIn, Building2, MessageSquare, Zap } from 'lucide-react';
 
 export default function LoginPage() {
@@ -23,6 +24,7 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const { showNotification } = useNotification();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -41,19 +43,39 @@ export default function LoginPage() {
       
       const checkAndRedirect = () => {
         if (verifyAuthDataSaved()) {
+          showNotification({
+            type: 'success',
+            title: 'Login Bem-sucedido!',
+            message: 'Você foi logado com sucesso.',
+            duration: 3000
+          });
           router.push('/dashboard');
         } else if (attempts < maxAttempts) {
           attempts++;
           setTimeout(checkAndRedirect, 50);
         } else {
-          setError('Erro ao salvar dados de autenticação. Tente novamente.');
+          const msg = 'Erro ao salvar dados de autenticação. Tente novamente.';
+          setError(msg);
+          showNotification({
+            type: 'error',
+            title: 'Erro no Login',
+            message: msg,
+            duration: 5000
+          });
           setLoading(false);
         }
       };
       
       checkAndRedirect();
     } catch (err: any) {
-      setError(err.response?.data?.detail || 'Erro ao fazer login');
+      const errorMessage = err.response?.data?.detail || 'Erro ao fazer login';
+      setError(errorMessage);
+      showNotification({
+        type: 'error',
+        title: 'Erro no Login',
+        message: errorMessage,
+        duration: 5000
+      });
       setLoading(false);
     }
   };

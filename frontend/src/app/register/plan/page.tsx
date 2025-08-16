@@ -1,9 +1,13 @@
 'use client';
 
-import { useState, Suspense } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Check } from 'lucide-react';
+import Layout from '@/components/Layout';
+import { Check, ArrowRight } from 'lucide-react';
 import clsx from 'clsx';
+import { authAPI } from '@/lib/api';
+import { saveAuthData } from '@/lib/auth';
+import { useNotification } from '@/hooks/useNotification';
 
 interface Plan {
   id: string;
@@ -14,150 +18,203 @@ interface Plan {
   recommended?: boolean;
 }
 
-const plans: Plan[] = [
+const plans = [
   {
     id: 'free',
     title: 'Gratuito',
     price: '0 MZN',
-    description: 'Para testar a plataforma',
+    description: 'Para testar a plataforma e para negócios com baixo volume de conversas.',
     features: [
       '150 mensagens/mês',
       '1 Conexão WhatsApp',
       'Dashboard Simples',
-      'Inclui nossa marca'
-    ]
+      'Inclui a nossa marca nas respostas',
+    ],
+    ctaText: 'Comece Grátis',
   },
   {
     id: 'pro',
     title: 'Pro',
     price: '2.499 MZN',
-    description: 'Para empresas em crescimento',
+    description: 'A escolha ideal para empresas que buscam profissionalizar o atendimento e vender mais.',
     features: [
       '3.000 mensagens/mês',
       '1 Conexão WhatsApp',
       'Dashboard Avançado com Relatórios',
       'Histórico de conversas (90 dias)',
       'Sem a nossa marca',
-      'Suporte Prioritário via Email'
+      'Suporte Prioritário via Email',
     ],
-    recommended: true
+    ctaText: 'Escolher Plano Pro',
+    popular: true,
   },
   {
     id: 'business',
     title: 'Business',
     price: '6.999 MZN',
-    description: 'Para grandes operações',
+    description: 'Para negócios que exigem o máximo de performance e um suporte personalizado.',
     features: [
       '10.000 mensagens/mês',
       '3 Conexões WhatsApp',
       'Tudo do Plano Pro +',
       'Onboarding Personalizado por vídeo-chamada',
-      'Suporte VIP direto via WhatsApp'
-    ]
-  }
+      'Suporte VIP direto via WhatsApp',
+    ],
+    ctaText: 'Fale Conosco',
+  },
 ];
 
-export default function PlanSelection() {
-  return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <PlanSelectionContent />
-    </Suspense>
-  );
-}
-
-function PlanSelectionContent() {
+export default function RegisterPlanPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [selectedPlan, setSelectedPlan] = useState(searchParams.get('plan') || 'free');
+  const [selectedPlan, setSelectedPlan] = useState('free');
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const { showNotification } = useNotification();
 
-  const handleContinue = async () => {
+  useEffect(() => {
+    const planFromStorage = localStorage.getItem('selectedPlan');
+    const planFromUrl = searchParams.get('plan');
+
+    if (planFromUrl && plans.some(p => p.id === planFromUrl)) {
+      setSelectedPlan(planFromUrl);
+    } else if (planFromStorage && plans.some(p => p.id === planFromStorage)) {
+      setSelectedPlan(planFromStorage);
+    }
+  }, [searchParams]);
+
+  const handleRegisterAndSelectPlan = async () => {
     setLoading(true);
+    setError('');
     try {
-      // Salvar plano selecionado no localStorage para usar no registro
-      localStorage.setItem('selectedPlan', selectedPlan);
-      router.push(`/register?plan=${selectedPlan}`);
-    } catch (error) {
-      console.error('Erro ao selecionar plano:', error);
+      const userData = JSON.parse(localStorage.getItem('registerData') || '{}');
+      if (!userData.email || !userData.password || !userData.nome) {
+        const msg = 'Dados de registro incompletos. Por favor, volte e preencha todos os campos.';
+        setError(msg);
+        showNotification({
+          type: 'error',
+          title: 'Erro no Registro',
+          message: msg,
+          duration: 7000
+        });
+        setLoading(false);
+        return;
+      }
+
+      const response = await authAPI.register({
+        email: userData.email,
+        nome: userData.nome,
+        password: userData.password,
+      });
+
+      saveAuthData(response.access_token, response.user_id, response.user_name);
+      localStorage.removeItem('registerData');
+      localStorage.removeItem('selectedPlan'); // Limpar após uso
+
+      showNotification({
+        type: 'success',
+        title: 'Registro Concluído!',
+        message: 'Sua conta foi criada com sucesso. Bem-vindo!',
+        duration: 5000
+      });
+
+      // Redirecionar para o dashboard ou página de checkout se for plano pago
+      if (selectedPlan === 'free') {
+        router.push('/dashboard?welcome=true');
+      } else {
+        router.push(`/billing?plan=${selectedPlan}`);
+      }
+    } catch (err: any) {
+      const errorMessage = err.response?.data?.detail || 'Erro ao registrar e selecionar plano.';
+      setError(errorMessage);
+      showNotification({
+        type: 'error',
+        title: 'Erro no Registro',
+        message: errorMessage,
+        duration: 7000
+      });
+      console.error('Erro de registro:', err);
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center max-w-3xl mx-auto mb-12">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">
-            Escolha o Plano Ideal
-          </h1>
-          <p className="text-xl text-gray-600">
-            Comece grátis e faça upgrade conforme seu negócio cresce
-          </p>
-        </div>
+    <Layout>
+      <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 dark:bg-gray-900 py-12 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-4xl w-full space-y-8">
+          <div>
+            <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900 dark:text-white">
+              Escolha seu Plano
+            </h2>
+            <p className="mt-2 text-center text-sm text-gray-600 dark:text-gray-400">
+              Você pode mudar a qualquer momento.
+            </p>
+          </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
-          {plans.map((plan) => (
-            <div
-              key={plan.id}
-              className={clsx(
-                'bg-white rounded-2xl shadow-lg p-8 border-2 transition-all duration-200 transform hover:scale-105',
-                {
-                  'border-green-500 ring-2 ring-green-500 ring-opacity-50':
-                    selectedPlan === plan.id,
-                  'border-transparent': selectedPlan !== plan.id
-                }
-              )}
-            >
-              {plan.recommended && (
-                <div className="bg-green-500 text-white text-sm font-medium px-3 py-1 rounded-full inline-block mb-4">
-                  Recomendado
-                </div>
-              )}
-
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                {plan.title}
-              </h3>
-              <p className="text-3xl font-bold text-gray-900 mb-4">{plan.price}</p>
-              <p className="text-gray-600 mb-6">{plan.description}</p>
-
-              <ul className="space-y-4 mb-8">
-                {plan.features.map((feature, index) => (
-                  <li key={index} className="flex items-start">
-                    <Check className="h-5 w-5 text-green-500 mr-2 flex-shrink-0" />
-                    <span className="text-gray-600">{feature}</span>
-                  </li>
-                ))}
-              </ul>
-
-              <button
-                onClick={() => setSelectedPlan(plan.id)}
-                className={clsx(
-                  'w-full py-3 px-4 rounded-lg font-medium transition-colors',
-                  {
-                    'bg-green-600 text-white hover:bg-green-700':
-                      selectedPlan === plan.id,
-                    'bg-gray-100 text-gray-900 hover:bg-gray-200':
-                      selectedPlan !== plan.id
-                  }
-                )}
-              >
-                {selectedPlan === plan.id ? 'Selecionado' : 'Selecionar'}
-              </button>
+          {error && (
+            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+              <strong className="font-bold">Erro:</strong>
+              <span className="block sm:inline"> {error}</span>
             </div>
-          ))}
-        </div>
+          )}
 
-        <div className="text-center">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {plans.map((plan) => (
+              <div
+                key={plan.id}
+                className={clsx(
+                  "relative rounded-lg shadow-lg bg-white dark:bg-gray-800 p-6 border-2 cursor-pointer",
+                  selectedPlan === plan.id
+                    ? "border-blue-500 ring-2 ring-blue-500 ring-opacity-50"
+                    : "border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600"
+                )}
+                onClick={() => setSelectedPlan(plan.id)}
+              >
+                {plan.popular && (
+                  <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
+                    <span className="inline-block bg-blue-500 text-white text-xs font-semibold py-1 px-3 rounded-full">
+                      Mais Popular
+                    </span>
+                  </div>
+                )}
+                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">{plan.title}</h3>
+                <p className="text-3xl font-bold text-gray-900 dark:text-white mb-4">{plan.price} <span className="text-base font-normal text-gray-500 dark:text-gray-400">/mês</span></p>
+                <p className="text-gray-600 dark:text-gray-400 text-sm mb-4">{plan.description}</p>
+                <ul className="space-y-2 text-sm text-gray-700 dark:text-gray-300">
+                  {plan.features.map((feature, index) => (
+                    <li key={index} className="flex items-center">
+                      <Check className="h-4 w-4 text-green-500 mr-2 flex-shrink-0" />
+                      {feature}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+
           <button
-            onClick={handleContinue}
+            onClick={handleRegisterAndSelectPlan}
             disabled={loading}
-            className="inline-flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed"
+            className={clsx(
+              "w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-lg font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500",
+              loading && "opacity-50 cursor-not-allowed"
+            )}
           >
-            {loading ? 'Carregando...' : 'Continuar com o Plano Selecionado'}
+            {loading ? (
+              <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+            ) : (
+              <>
+                Continuar com o Plano {plans.find(p => p.id === selectedPlan)?.title}
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </>
+            )}
           </button>
         </div>
       </div>
-    </div>
+    </Layout>
   );
 }

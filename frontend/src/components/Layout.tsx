@@ -2,7 +2,7 @@
  * Componente de Layout
  * Layout principal da aplicação com navegação moderna
  */
-
+ 
 'use client';
 
 import { ReactNode, useEffect, useState } from 'react';
@@ -10,6 +10,7 @@ import Link from 'next/link';
 import { useRouter, usePathname } from 'next/navigation';
 import { getAuthData, logout } from '@/lib/auth';
 import { useClientTheme } from '@/hooks/useClientTheme';
+import { NotificationProvider } from '@/contexts/NotificationContext';
 import {
   LogOut,
   Home,
@@ -200,7 +201,9 @@ export default function Layout({ children }: LayoutProps) {
       {/* Conteúdo principal */}
       <main className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
         <div className="animate-fade-in">
-          {children}
+          <NotificationProvider>
+            {children}
+          </NotificationProvider>
         </div>
       </main>
     </div>

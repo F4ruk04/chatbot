@@ -2,14 +2,15 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { 
-  AlertTriangle, 
-  AlertCircle, 
-  X, 
+import {
+  AlertTriangle,
+  AlertCircle,
+  X,
   TrendingUp,
   Zap
 } from 'lucide-react';
 import { usePermissions } from '@/hooks/usePermissions';
+import { useNotification } from '@/hooks/useNotification';
 
 interface UsageAlertProps {
   className?: string;
@@ -17,13 +18,14 @@ interface UsageAlertProps {
   hideDelay?: number;
 }
 
-export default function UsageAlert({ 
-  className = '', 
-  autoHide = false, 
-  hideDelay = 10000 
+export default function UsageAlert({
+  className = '',
+  autoHide = false,
+  hideDelay = 10000
 }: UsageAlertProps) {
   const router = useRouter();
   const { permissions } = usePermissions();
+  const { showNotification } = useNotification();
   const [isVisible, setIsVisible] = useState(true);
   const [dismissed, setDismissed] = useState(false);
 
@@ -58,6 +60,12 @@ export default function UsageAlert({
 
   const handleUpgrade = () => {
     router.push('/billing');
+    showNotification({
+      type: 'info',
+      title: 'Redirecionando para Upgrade',
+      message: 'Você será redirecionado para a página de faturamento para fazer upgrade do seu plano.',
+      duration: 5000
+    });
   };
 
   // Determinar tipo de alerta mais crítico

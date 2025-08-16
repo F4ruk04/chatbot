@@ -5,13 +5,14 @@ import { useRouter } from 'next/navigation';
 import Layout from '@/components/Layout';
 import AuthGuard from '@/components/AuthGuard';
 import SubscriptionStatusCard from '@/components/SubscriptionStatusCard';
+import DashboardChart from '@/components/DashboardChart';
 import { dashboardAPI, DashboardStats, CompanyStats } from '@/lib/api';
 import { useFeatures } from '@/hooks/useFeatures';
-import { 
-  Building2, 
-  MessageSquare, 
-  TrendingUp, 
-  Users, 
+import {
+  Building2,
+  MessageSquare,
+  TrendingUp,
+  Users,
   Calendar,
   ArrowUpRight,
   ArrowDownRight,
@@ -208,36 +209,8 @@ export default function DashboardPage() {
                   )}
                 </div>
 
-                {/* Gráfico de atividade recente */}
-                <div className="bg-white dark:bg-gray-900 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 p-6">
-                  <div className="flex items-center justify-between mb-6">
-                    <div>
-                      <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-                        Atividade Recente
-                      </h3>
-                      <p className="text-sm text-gray-600 dark:text-gray-400">
-                        Mensagens dos últimos 7 dias
-                      </p>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
-                      <span className="text-sm text-gray-600 dark:text-gray-400">Mensagens</span>
-                    </div>
-                  </div>
-                  <div className="h-64 flex items-end justify-between space-x-2">
-                    {[12, 19, 15, 25, 22, 30, 28].map((value, index) => (
-                      <div key={index} className="flex-1 flex flex-col items-center">
-                        <div 
-                          className="w-full bg-gradient-to-t from-blue-600 to-blue-400 rounded-t-lg transition-all duration-300 hover:from-blue-700 hover:to-blue-500"
-                          style={{ height: `${(value / 30) * 100}%` }}
-                        ></div>
-                        <span className="text-xs text-gray-500 dark:text-gray-400 mt-2">
-                          {['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'][index]}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
+                {/* Gráfico de atividade recente - Usando componente real */}
+                <DashboardChart />
 
                 {/* Cards de ação rápida (Relatórios) */}
                 {checkFeature('reports') && (

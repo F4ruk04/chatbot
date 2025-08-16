@@ -128,7 +128,7 @@ export default function PricingSection() {
               </ul>
 
               <SmartPricingButton
-                planId={plan.title}
+                planId={plan.title.toLowerCase().replace('gratuito', 'free')}
                 planTitle={plan.title}
                 ctaText={plan.ctaText}
                 popular={plan.popular}

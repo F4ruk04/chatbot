@@ -31,27 +31,56 @@ api.interceptors.request.use(
   }
 );
 
+// Flag para prevenir múltiplos redirecionamentos
+let isRedirecting = false;
+
 // Interceptor para lidar com respostas de erro
 api.interceptors.response.use(
   (response) => {
     return response;
   },
   (error) => {
+    // Handle network errors
+    if (!error.response) {
+      console.error('Network error:', error);
+    }
+    
     if (error.response?.status === 401) {
-      // Token expirado ou inválido - apenas limpar cookies
-      // Não redirecionar automaticamente para evitar loops
-      Cookies.remove('access_token');
-      Cookies.remove('user_id');
-      Cookies.remove('user_name');
+      // Token expirado ou inválido - limpar cookies
+      const cookieOptions = {
+        path: '/',
+        sameSite: 'lax' as const,
+        secure: process.env.NODE_ENV === 'production',
+      };
       
-      // Só redirecionar se não estiver já na página de login
-      if (typeof window !== 'undefined' && window.location.pathname !== '/login') {
-        // Adicionar um pequeno delay para evitar redirecionamentos muito rápidos
+      Cookies.remove('access_token', cookieOptions);
+      Cookies.remove('user_id', cookieOptions);
+      Cookies.remove('user_name', cookieOptions);
+      
+      // Prevenir loops de redirecionamento
+      const currentPath = typeof window !== 'undefined' ? window.location.pathname : '';
+      const isAuthPage = ['/login', '/register', '/'].includes(currentPath);
+      
+      if (!isAuthPage && !isRedirecting && typeof window !== 'undefined') {
+        isRedirecting = true;
+        
+        // Adicionar delay e resetar flag após redirecionamento
         setTimeout(() => {
           window.location.href = '/login';
+          // Reset flag após 2 segundos para permitir futuras tentativas
+          setTimeout(() => {
+            isRedirecting = false;
+          }, 2000);
         }, 100);
       }
+    } else if (error.response?.status === 403) {
+      console.error('Access forbidden:', error.response.data?.detail || 'You do not have permission to access this resource');
+    } else if (error.response?.status === 400) {
+      console.error('Bad request:', error.response.data?.detail || 'Invalid request');
+    } else if (error.response?.status >= 500) {
+      console.error('Server error:', error.response.data?.detail || 'Internal server error');
     }
+    
     return Promise.reject(error);
   }
 );
