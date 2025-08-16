@@ -1,8 +1,8 @@
 'use client';
 
 import { Check } from 'lucide-react';
-import Link from 'next/link';
 import clsx from 'clsx';
+import SmartPricingButton from './SmartPricingButton';
 
 interface PricingFeature {
   text: string;
@@ -127,17 +127,12 @@ export default function PricingSection() {
                 ))}
               </ul>
 
-              <Link
-                href={`/register`}
-                className={clsx(
-                  "w-full py-3 px-6 rounded-lg font-semibold transition-colors block text-center",
-                  plan.popular 
-                    ? "bg-blue-500 text-white hover:bg-blue-600"
-                    : "border-2 border-blue-500 text-blue-500 hover:bg-blue-50"
-                )}
-              >
-                {plan.ctaText}
-              </Link>
+              <SmartPricingButton
+                planId={plan.title}
+                planTitle={plan.title}
+                ctaText={plan.ctaText}
+                popular={plan.popular}
+              />
             </div>
           ))}
         </div>

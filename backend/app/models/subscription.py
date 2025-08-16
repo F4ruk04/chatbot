@@ -30,3 +30,7 @@ class Subscription(Base):
     messages_quota = Column(Integer)
     messages_used = Column(Integer, default=0)
     last_payment_id = Column(Integer, ForeignKey("payments.id"), nullable=True)
+    
+    # Flags de notificação
+    notified_80 = Column(Boolean, default=False)
+    notified_100 = Column(Boolean, default=False)
