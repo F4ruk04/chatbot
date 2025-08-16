@@ -20,7 +20,6 @@ interface UpgradePromptProps {
 }
 
 export default function UpgradePrompt({ 
-  feature, 
   message, 
   requiredPlan = 'pro',
   onClose,

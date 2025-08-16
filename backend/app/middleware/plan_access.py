@@ -43,7 +43,7 @@ PLAN_FEATURES = {
         'advanced_reports',
         'priority_support',
         'custom_branding',
-        'unlimited_connections',
+        'multiple_connections',
         'custom_api',
         'vip_support',
         'custom_onboarding'
@@ -59,12 +59,12 @@ PLAN_LIMITS = {
     },
     'pro': {
         'messages_per_month': 3000,
-        'whatsapp_connections': 3,
+        'whatsapp_connections': 1,
         'companies': 5
     },
     'business': {
         'messages_per_month': 10000,
-        'whatsapp_connections': -1,  # Ilimitado
+        'whatsapp_connections': 3,
         'companies': -1  # Ilimitado
     }
 }

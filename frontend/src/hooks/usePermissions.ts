@@ -38,8 +38,9 @@ export function usePermissions() {
       const response = await api.get('/api/permissions/permissions');
       setPermissions(response.data);
       setError(null);
-    } catch (err: any) {
-      console.error('Erro ao carregar permissões:', err);
+    } catch (err: unknown) {
+      const error = err as { response?: { status?: number }; message?: string };
+      console.error('Erro ao carregar permissões:', error);
       setError('Erro ao carregar permissões');
       
       // Fallback para dados padrão

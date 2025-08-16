@@ -62,7 +62,6 @@ export default function UsageAlert({
 
   // Determinar tipo de alerta mais crítico
   const isCritical = messageUsage.percentage >= 100 || companyAlert;
-  const isWarning = messageUsage.percentage >= 80 && messageUsage.percentage < 100;
 
   return (
     <div className={`rounded-lg border p-4 ${className} ${

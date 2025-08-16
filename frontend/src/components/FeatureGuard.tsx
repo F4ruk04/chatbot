@@ -6,22 +6,18 @@ import UpgradePrompt from './UpgradePrompt';
 
 interface FeatureGuardProps {
   feature: string;
-  requiredPlan?: 'pro' | 'business';
   children: ReactNode;
   fallback?: ReactNode;
   showUpgradePrompt?: boolean;
   upgradePromptVariant?: 'modal' | 'banner' | 'inline';
-  disabled?: boolean;
 }
 
 export default function FeatureGuard({
   feature,
-  requiredPlan = 'pro',
   children,
   fallback,
   showUpgradePrompt = true,
-  upgradePromptVariant = 'inline',
-  disabled = false
+  upgradePromptVariant = 'inline'
 }: FeatureGuardProps) {
   const { hasFeature, getUpgradeMessage, loading } = usePermissions();
 
@@ -52,6 +48,9 @@ export default function FeatureGuard({
   // Mostrar prompt de upgrade
   const message = getUpgradeMessage(feature);
   
+  // Determinar plano necessário baseado na funcionalidade
+  const requiredPlan = feature.includes('business') || feature.includes('unlimited') || feature.includes('custom') ? 'business' : 'pro';
+  
   return (
     <UpgradePrompt
       feature={feature}
@@ -75,7 +74,6 @@ export function useFeatureGuard(feature: string) {
 // Componente para desabilitar botões/links
 interface ProtectedButtonProps {
   feature: string;
-  requiredPlan?: 'pro' | 'business';
   children: ReactNode;
   className?: string;
   onClick?: () => void;
@@ -85,7 +83,6 @@ interface ProtectedButtonProps {
 
 export function ProtectedButton({
   feature,
-  requiredPlan = 'pro',
   children,
   className = '',
   onClick,

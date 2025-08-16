@@ -57,7 +57,7 @@ const plans: Plan[] = [
     description: 'Para empresas em crescimento',
     features: [
       '3.000 mensagens/mês',
-      '3 Conexões WhatsApp',
+      '1 Conexão WhatsApp',
       'Dashboard avançado',
       'Relatórios detalhados',
       'Suporte prioritário',
@@ -75,7 +75,7 @@ const plans: Plan[] = [
     description: 'Para grandes operações',
     features: [
       '10.000 mensagens/mês',
-      'Conexões ilimitadas',
+      '3 Conexões WhatsApp',
       'Dashboard personalizado',
       'API personalizada',
       'Suporte 24/7',
