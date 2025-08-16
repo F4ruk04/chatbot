@@ -48,6 +48,22 @@ PLAN_FEATURES: Dict[str, list[Feature]] = {
     ]
 }
 
+# Mapeamento de limites por plano (ex: mensagens, conexões WhatsApp)
+PLAN_LIMITS: Dict[str, Dict[str, int]] = {
+    SubscriptionPlan.FREE.value: {
+        "messages_quota": 150,
+        "whatsapp_connections": 1
+    },
+    SubscriptionPlan.PRO.value: {
+        "messages_quota": 3000,
+        "whatsapp_connections": 1
+    },
+    SubscriptionPlan.BUSINESS.value: {
+        "messages_quota": 10000,
+        "whatsapp_connections": 3
+    }
+}
+
 class FeatureService:
     @staticmethod
     def has_feature(plan: Optional[str], feature: Feature) -> bool:

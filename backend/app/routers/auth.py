@@ -9,6 +9,7 @@ from pydantic import BaseModel, EmailStr
 from app.database import get_db
 from app.models.user import User
 from app.utils.auth import get_password_hash, verify_password, create_access_token
+from app.services.feature_service import PLAN_LIMITS # Import PLAN_LIMITS
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
@@ -63,6 +64,10 @@ def register_user(user_data: UserRegister, db: Session = Depends(get_db)):
         from app.models.subscription import Subscription, SubscriptionPlan, SubscriptionStatus
         from datetime import datetime, timedelta
 
+        # Obter limites do plano FREE
+        free_plan_limits = PLAN_LIMITS.get(SubscriptionPlan.FREE.value, {})
+        messages_quota = free_plan_limits.get("messages_quota", 150) # Default to 150 if not found
+
         # Criar assinatura FREE para novo usuário
         start = datetime.utcnow()
         end = start + timedelta(days=30)
@@ -72,7 +77,7 @@ def register_user(user_data: UserRegister, db: Session = Depends(get_db)):
             status=SubscriptionStatus.ACTIVE.value,
             current_period_start=start,
             current_period_end=end,
-            messages_quota=150,
+            messages_quota=messages_quota,
             messages_used=0
         )
         db.add(free_subscription)
@@ -134,4 +139,3 @@ def login_user(user_data: UserLogin, db: Session = Depends(get_db)):
         user_id=user.id,
         user_name=user.nome
     )
-

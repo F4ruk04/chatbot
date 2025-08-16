@@ -5,6 +5,7 @@ from ..database import get_db
 from ..models.subscription import Subscription, SubscriptionStatus, SubscriptionPlan
 from ..models.user import User
 from ..utils.auth import get_current_user
+from ..services.feature_service import PLAN_LIMITS # Import PLAN_LIMITS
 from datetime import datetime
 
 router = APIRouter()
@@ -24,8 +25,11 @@ async def get_subscription_status(
         ).first()
         
         if not subscription:
-            # Se não há subscription, criar uma FREE automaticamente
+            # Se não há subscription, criar uma FREE automaticamente com limites do PLAN_LIMITS
             from datetime import timedelta
+            
+            free_plan_limits = PLAN_LIMITS.get(SubscriptionPlan.FREE.value, {})
+            messages_quota = free_plan_limits.get("messages_quota", 150) # Default to 150 if not found
             
             start = datetime.utcnow()
             end = start + timedelta(days=30)
@@ -36,7 +40,7 @@ async def get_subscription_status(
                 status=SubscriptionStatus.ACTIVE.value,
                 current_period_start=start,
                 current_period_end=end,
-                messages_quota=150,
+                messages_quota=messages_quota,
                 messages_used=0
             )
             
@@ -61,8 +65,11 @@ async def get_subscription_status(
         }
         
     except Exception as e:
-        # Em caso de erro, retornar dados padrão para o plano FREE
+        # Em caso de erro, retornar dados padrão para o plano FREE com limites do PLAN_LIMITS
         from datetime import timedelta
+        
+        free_plan_limits = PLAN_LIMITS.get(SubscriptionPlan.FREE.value, {})
+        messages_quota = free_plan_limits.get("messages_quota", 150) # Default to 150 if not found
         
         end_date = datetime.utcnow() + timedelta(days=30)
         
@@ -70,7 +77,7 @@ async def get_subscription_status(
             "plan": "free",
             "status": "active",
             "messages_used": 0,
-            "messages_quota": 150,
+            "messages_quota": messages_quota,
             "usage_percent": 0,
             "days_remaining": 30,
             "renewal_date": end_date.isoformat(),
