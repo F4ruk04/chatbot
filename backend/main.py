@@ -32,14 +32,23 @@ allowed_origins = [
     "http://localhost:3000",
     "http://127.0.0.1:3000",
     "https://chatbot-frontend-pied.vercel.app",  # URL específica do Vercel
-    "*"  # Permitir todas as origens temporariamente para debug
 ]
+# Inclui FRONTEND_URL configurável
+from app.config import settings as app_settings
+if app_settings.frontend_url and app_settings.frontend_url not in allowed_origins:
+    allowed_origins.append(app_settings.frontend_url)
+# Em desenvolvimento, permitir todas as origens para debug
+if os.getenv("RAILWAY_ENVIRONMENT") != "production":
+    allowed_origins.append("*")
 
 # Adicionar origem do Railway se estiver em produção
 if os.getenv("RAILWAY_ENVIRONMENT"):
     railway_url = os.getenv("RAILWAY_STATIC_URL")
     if railway_url:
         allowed_origins.append(f"https://{railway_url}")
+# Em produção, não usar '*' quando allow_credentials=True
+if os.getenv("RAILWAY_ENVIRONMENT") == "production" and "*" in allowed_origins:
+    allowed_origins = [o for o in allowed_origins if o != "*"]
 
 app.add_middleware(
     CORSMiddleware,
