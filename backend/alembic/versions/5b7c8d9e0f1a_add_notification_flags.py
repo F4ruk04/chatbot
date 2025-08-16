@@ -1,7 +1,7 @@
 """Add notification flags to subscriptions
 
-Revision ID: add_notification_flags
-Revises: 
+Revision ID: 5b7c8d9e0f1a
+Revises: 4a8b9c2d1e3f
 Create Date: 2024-01-01 12:00:00.000000
 
 """
@@ -10,8 +10,8 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'add_notification_flags'
-down_revision = None
+revision = '5b7c8d9e0f1a'
+down_revision = '4a8b9c2d1e3f'
 branch_labels = None
 depends_on = None
 
