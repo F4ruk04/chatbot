@@ -3,8 +3,6 @@
  * Interface moderna para autenticação de utilizadores
  */
  
-/* eslint-disable @typescript-eslint/no-explicit-any */
- 
 'use client';
 
 import { useState } from 'react';
@@ -67,8 +65,9 @@ export default function LoginPage() {
       };
       
       checkAndRedirect();
-    } catch (err: any) {
-      const errorMessage = err.response?.data?.detail || 'Erro ao fazer login';
+    } catch (err: unknown) {
+      const axiosError = err as { response?: { data?: { detail?: string } } };
+      const errorMessage = axiosError.response?.data?.detail || 'Erro ao fazer login';
       setError(errorMessage);
       showNotification({
         type: 'error',

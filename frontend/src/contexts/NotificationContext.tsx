@@ -11,13 +11,13 @@ export interface Notification {
   duration?: number;
 }
 
-interface NotificationContextType {
+export interface NotificationContextType {
   notifications: Notification[];
   showNotification: (notification: Omit<Notification, 'id'>) => void;
   removeNotification: (id: string) => void;
 }
 
-const NotificationContext = createContext<NotificationContextType | undefined>(undefined);
+export const NotificationContext = createContext<NotificationContextType | undefined>(undefined);
 
 export function NotificationProvider({ children }: { children: ReactNode }) {
   const [notifications, setNotifications] = useState<Notification[]>([]);
@@ -29,7 +29,7 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
     setNotifications(prev => [...prev, newNotification]);
     
     // Auto remove after duration (default 5 seconds)
-    const duration = notification.duration || 5000;
+    const duration = newNotification.duration === undefined ? 5000 : newNotification.duration;
     if (duration > 0) {
       setTimeout(() => {
         removeNotification(id);
@@ -44,42 +44,42 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
   return (
     <NotificationContext.Provider value={{ notifications, showNotification, removeNotification }}>
       {children}
-      <NotificationContainer 
-        notifications={notifications} 
-        onRemove={removeNotification} 
+      <NotificationContainer
+        notifications={notifications}
+        onRemove={removeNotification}
       />
     </NotificationContext.Provider>
   );
 }
 
-function NotificationContainer({ 
-  notifications, 
-  onRemove 
-}: { 
-  notifications: Notification[]; 
-  onRemove: (id: string) => void; 
+function NotificationContainer({
+  notifications,
+  onRemove
+}: {
+  notifications: Notification[];
+  onRemove: (id: string) => void;
 }) {
   if (notifications.length === 0) return null;
 
   return (
     <div className="fixed top-4 right-4 z-50 space-y-2 w-full max-w-sm">
       {notifications.map(notification => (
-        <NotificationItem 
-          key={notification.id} 
-          notification={notification} 
-          onRemove={onRemove} 
+        <NotificationItem
+          key={notification.id}
+          notification={notification}
+          onRemove={onRemove}
         />
       ))}
     </div>
   );
 }
 
-function NotificationItem({ 
-  notification, 
-  onRemove 
-}: { 
-  notification: Notification; 
-  onRemove: (id: string) => void; 
+function NotificationItem({
+  notification,
+  onRemove
+}: {
+  notification: Notification;
+  onRemove: (id: string) => void;
 }) {
   const getIcon = () => {
     switch (notification.type) {
@@ -128,10 +128,10 @@ function NotificationItem({
       {notification.duration !== 0 && (
         <div className="mt-3">
           <div className="h-1 w-full bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
-            <div 
+            <div
               className="h-full bg-gray-300 dark:bg-gray-600 rounded-full animate-progress"
-              style={{ 
-                animationDuration: `${notification.duration || 5000}ms` 
+              style={{
+                animationDuration: `${notification.duration || 5000}ms`
               }}
             ></div>
           </div>

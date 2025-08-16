@@ -3,8 +3,6 @@
  * Interface moderna para criação de conta
  */
  
-/* eslint-disable @typescript-eslint/no-explicit-any */
- 
 'use client';
 
 import { useState } from 'react';
@@ -96,8 +94,9 @@ export default function RegisterPage() {
       };
       
       setTimeout(checkAuth, 100);
-    } catch (err: any) {
-      const errorMessage = err.response?.data?.detail || 'Erro ao criar conta';
+    } catch (err: unknown) {
+      const axiosError = err as { response?: { data?: { detail?: string } } };
+      const errorMessage = axiosError.response?.data?.detail || 'Erro ao criar conta';
       setError(errorMessage);
       showNotification({
         type: 'error',

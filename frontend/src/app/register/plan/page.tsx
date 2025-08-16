@@ -124,8 +124,9 @@ export default function RegisterPlanPage() {
       } else {
         router.push(`/billing?plan=${selectedPlan}`);
       }
-    } catch (err: any) {
-      const errorMessage = err.response?.data?.detail || 'Erro ao registrar e selecionar plano.';
+    } catch (err: unknown) {
+      const axiosError = err as { response?: { data?: { detail?: string } } };
+      const errorMessage = axiosError.response?.data?.detail || 'Erro ao registrar e selecionar plano.';
       setError(errorMessage);
       showNotification({
         type: 'error',
