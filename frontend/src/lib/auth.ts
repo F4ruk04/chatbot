@@ -71,9 +71,19 @@ export const isAuthenticated = (): boolean => {
  * Fazer logout (remover dados de autenticação)
  */
 export const logout = () => {
-  Cookies.remove('access_token');
-  Cookies.remove('user_id');
-  Cookies.remove('user_name');
+  const cookieOptions = {
+    path: '/',
+    sameSite: 'lax' as const,
+    secure: process.env.NODE_ENV === 'production',
+  };
+  Cookies.remove('access_token', cookieOptions);
+  Cookies.remove('user_id', cookieOptions);
+  Cookies.remove('user_name', cookieOptions);
+
+  // Fallback de segurança: limpar manualmente via set com data expirada
+  Cookies.set('access_token', '', { ...cookieOptions, expires: new Date(0) });
+  Cookies.set('user_id', '', { ...cookieOptions, expires: new Date(0) });
+  Cookies.set('user_name', '', { ...cookieOptions, expires: new Date(0) });
 };
 
 /**

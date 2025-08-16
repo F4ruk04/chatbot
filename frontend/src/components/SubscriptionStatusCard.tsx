@@ -24,9 +24,10 @@ export default function SubscriptionStatusCard() {
 
   const fetchSubscriptionStatus = async () => {
     try {
-      const response = await fetch('/api/subscription/status');
-      const data = await response.json();
-      setStatus(data);
+      // Use o cliente axios configurado para incluir Authorization
+      const { api } = await import('@/lib/api');
+      const response = await api.get('/subscription/status');
+      setStatus(response.data);
     } catch (error) {
       console.error('Erro ao carregar status:', error);
       setError('Erro ao carregar status da assinatura');

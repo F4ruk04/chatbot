@@ -48,7 +48,12 @@ export default function Layout({ children }: LayoutProps) {
 
   const handleLogout = () => {
     logout();
-    router.push('/login');
+    // Redirecionar de forma síncrona evita telas intermediárias
+    router.replace('/login');
+    // Fallback: força navegação caso o router tenha delay
+    if (typeof window !== 'undefined') {
+      window.location.href = '/login';
+    }
   };
 
   const navigation = [
