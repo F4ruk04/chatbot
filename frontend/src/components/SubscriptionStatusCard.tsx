@@ -26,7 +26,7 @@ export default function SubscriptionStatusCard() {
     try {
       // Use o cliente axios configurado para incluir Authorization
       const { api } = await import('@/lib/api');
-      const response = await api.get('/subscription/status');
+      const response = await api.get('/api/subscription/status');
       setStatus(response.data);
     } catch (error) {
       console.error('Erro ao carregar status:', error);

@@ -67,13 +67,12 @@ app.add_middleware(
     expose_headers=["*"],
 )
 
-# Incluir routers
+# Incluir routers sem prefixo (mantido para compatibilidade)
 app.include_router(auth.router)
 app.include_router(companies.router)
 app.include_router(whatsapp.router)
 app.include_router(dashboard.router)
 app.include_router(payments.router)
-app.include_router(subscriptions.router)
 
 
 @app.get("/")
@@ -124,6 +123,7 @@ app.include_router(companies.router, prefix="/api/companies", tags=["companies"]
 app.include_router(whatsapp.router, prefix="/api/whatsapp", tags=["whatsapp"])
 app.include_router(dashboard.router, prefix="/api/dashboard", tags=["dashboard"])
 app.include_router(payments.router, prefix="/api/payments", tags=["payments"])
+app.include_router(subscriptions.router, prefix="/api/subscription", tags=["subscriptions"])
 app.include_router(health.router, prefix="/health", tags=["health"])
 
 

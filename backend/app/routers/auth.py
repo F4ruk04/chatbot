@@ -39,55 +39,70 @@ def register_user(user_data: UserRegister, db: Session = Depends(get_db)):
     """
     Endpoint para registo de novo utilizador
     """
-    # Verificar se o email já existe
-    existing_user = db.query(User).filter(User.email == user_data.email).first()
-    if existing_user:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Email já registado"
+    try:
+        # Verificar se o email já existe
+        existing_user = db.query(User).filter(User.email == user_data.email).first()
+        if existing_user:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Email já registado"
+            )
+        
+        # Criar novo utilizador
+        hashed_password = get_password_hash(user_data.password)
+        new_user = User(
+            email=user_data.email,
+            nome=user_data.nome,
+            password_hash=hashed_password,
+            plan="free"
         )
-    
-    # Criar novo utilizador
-    hashed_password = get_password_hash(user_data.password)
-    new_user = User(
-        email=user_data.email,
-        nome=user_data.nome,
-        password_hash=hashed_password,
-        plan="free"
-    )
-    
-    db.add(new_user)
-    db.commit()
-    db.refresh(new_user)
+        
+        db.add(new_user)
+        db.flush()  # Flush para obter o ID sem commit ainda
+        
+        from app.models.subscription import Subscription, SubscriptionPlan, SubscriptionStatus
+        from datetime import datetime, timedelta
 
-    from app.models.subscription import Subscription, SubscriptionPlan, SubscriptionStatus
-    from datetime import datetime, timedelta
-
-    # Criar assinatura FREE para novo usuário
-    start = datetime.utcnow()
-    end = start + timedelta(days=30)
-    free_subscription = Subscription(
-        user_id=new_user.id,
-        plan=SubscriptionPlan.FREE.value,
-        status=SubscriptionStatus.ACTIVE.value,
-        current_period_start=start,
-        current_period_end=end,
-        messages_quota=150,
-        messages_used=0
-    )
-    db.add(free_subscription)
-    db.commit()
-    db.refresh(free_subscription)
-    
-    # Criar token de acesso
-    access_token = create_access_token(data={"sub": str(new_user.id)})
-    
-    return Token(
-        access_token=access_token,
-        token_type="bearer",
-        user_id=new_user.id,
-        user_name=new_user.nome
-    )
+        # Criar assinatura FREE para novo usuário
+        start = datetime.utcnow()
+        end = start + timedelta(days=30)
+        free_subscription = Subscription(
+            user_id=new_user.id,
+            plan=SubscriptionPlan.FREE.value,
+            status=SubscriptionStatus.ACTIVE.value,
+            current_period_start=start,
+            current_period_end=end,
+            messages_quota=150,
+            messages_used=0
+        )
+        db.add(free_subscription)
+        
+        # Commit tudo junto em uma transação
+        db.commit()
+        db.refresh(new_user)
+        db.refresh(free_subscription)
+        
+        # Criar token de acesso
+        access_token = create_access_token(data={"sub": str(new_user.id)})
+        
+        return Token(
+            access_token=access_token,
+            token_type="bearer",
+            user_id=new_user.id,
+            user_name=new_user.nome
+        )
+        
+    except HTTPException:
+        # Re-raise HTTPExceptions (como email já existe)
+        db.rollback()
+        raise
+    except Exception as e:
+        # Rollback em caso de qualquer outro erro
+        db.rollback()
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Erro interno ao criar conta: {str(e)}"
+        )
 
 
 @router.post("/login", response_model=Token)
