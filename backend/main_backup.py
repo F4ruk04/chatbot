@@ -7,7 +7,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import RedirectResponse
 from app.database import engine, Base
-from app.routers import auth, companies, whatsapp, dashboard, health, payments, subscriptions
+from app.routers import auth, companies, whatsapp, dashboard, health, payments, subscriptions, permissions
 from app.services.redis_service import init_redis, close_redis
 import os
 
@@ -97,7 +97,8 @@ def api_info():
             "auth": "/api/auth",
             "companies": "/api/companies",
             "whatsapp": "/api/whatsapp",
-            "dashboard": "/api/dashboard"
+            "dashboard": "/api/dashboard",
+            "permissions": "/api/permissions"
         },
         "frontend_landing_page": "https://chatbot-frontend-pied.vercel.app"
     }
@@ -124,6 +125,7 @@ app.include_router(whatsapp.router, prefix="/api/whatsapp", tags=["whatsapp"])
 app.include_router(dashboard.router, prefix="/api/dashboard", tags=["dashboard"])
 app.include_router(payments.router, prefix="/api/payments", tags=["payments"])
 app.include_router(subscriptions.router, prefix="/api/subscription", tags=["subscriptions"])
+app.include_router(permissions.router, prefix="/api/permissions", tags=["permissions"])
 app.include_router(health.router, prefix="/health", tags=["health"])
 
 
