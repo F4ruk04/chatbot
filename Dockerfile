@@ -1,4 +1,4 @@
-# Dockerfile simplificado - só backend para Railway
+# Dockerfile para Railway - Backend FastAPI
 FROM python:3.11-slim
 
 # Instalar dependências do sistema
@@ -17,17 +17,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copiar código do backend
 COPY backend/ ./
 
-# Copiar script de inicialização
-COPY start.sh ./
-RUN chmod +x start.sh
-
-# Criar usuário não-root para segurança
-RUN useradd --create-home --shell /bin/bash app
-RUN chown -R app:app /app
-USER app
-
 # Expor porta
 EXPOSE 8000
 
-# Comando para iniciar a aplicação
-CMD ["./start.sh"]
+# Executar migrações e iniciar aplicação
+CMD ["sh", "-c", "alembic upgrade head || echo 'Migrations failed, continuing...' && python -m uvicorn main:app --host 0.0.0.0 --port ${PORT:-8000}"]
