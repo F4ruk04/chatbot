@@ -31,7 +31,8 @@ async def init_redis(max_retries=5, retry_delay=5):
         try:
             logger.debug(f"Tentativa {attempt + 1} de {max_retries}")
             # Usar diretamente a URL do Redis que já contém todas as credenciais
-            redis = await aioredis.from_url(
+            # from_url retorna um cliente assíncrono pronto para uso; não usar await aqui
+            redis = aioredis.from_url(
                 settings.redis_url,
                 encoding="utf-8",
                 decode_responses=True,
@@ -41,7 +42,7 @@ async def init_redis(max_retries=5, retry_delay=5):
             )
             # Testa a conexão
             await redis.ping()
-            logger.info(f"Conexão com Redis estabelecida com sucesso em {settings.redis_host}:{settings.redis_port}")
+            logger.info("Conexão com Redis estabelecida com sucesso")
             return redis
         except ConnectionError as e:
             if attempt == max_retries - 1:
