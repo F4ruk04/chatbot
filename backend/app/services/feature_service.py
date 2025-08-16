@@ -13,18 +13,24 @@ class Feature(str, Enum):
     MULTI_LANGUAGE = "multi_language"
     CUSTOM_INTEGRATION = "custom_integration"
     FILE_ATTACHMENTS = "file_attachments"
+    BASIC_DASHBOARD = "basic_dashboard"
+    ADVANCED_DASHBOARD = "advanced_dashboard"
+    REPORTS = "reports"
 
 # Mapeamento de recursos por plano
 PLAN_FEATURES: Dict[str, list[Feature]] = {
     SubscriptionPlan.FREE.value: [
-        Feature.CHATBOT_TRAINING
+        Feature.CHATBOT_TRAINING,
+        Feature.BASIC_DASHBOARD
     ],
     SubscriptionPlan.PRO.value: [
         Feature.CHATBOT_TRAINING,
         Feature.CUSTOM_BRANDING,
         Feature.ADVANCED_ANALYTICS,
         Feature.MULTI_LANGUAGE,
-        Feature.FILE_ATTACHMENTS
+        Feature.FILE_ATTACHMENTS,
+        Feature.ADVANCED_DASHBOARD,
+        Feature.REPORTS
     ],
     SubscriptionPlan.BUSINESS.value: [
         Feature.CHATBOT_TRAINING,
@@ -36,7 +42,9 @@ PLAN_FEATURES: Dict[str, list[Feature]] = {
         Feature.PRIORITY_SUPPORT,
         Feature.CUSTOM_DOMAIN,
         Feature.TEAM_MANAGEMENT,
-        Feature.CUSTOM_INTEGRATION
+        Feature.CUSTOM_INTEGRATION,
+        Feature.ADVANCED_DASHBOARD,
+        Feature.REPORTS
     ]
 }
 
