@@ -1,4 +1,4 @@
-# Dockerfile para Railway - Backend FastAPI
+# Dockerfile para Railway - Backend FastAPI (versão shell)
 FROM python:3.11-slim
 
 # Instalar dependências do sistema
@@ -17,8 +17,11 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copiar código do backend
 COPY backend/ ./
 
+# Tornar script executável
+RUN chmod +x start_railway.sh
+
 # Expor porta
 EXPOSE 8000
 
-# Usar script Python para inicialização
-CMD ["python", "railway_start.py"]
+# Usar script shell para inicialização
+CMD ["./start_railway.sh"]

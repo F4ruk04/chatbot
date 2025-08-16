@@ -138,7 +138,7 @@ app.include_router(health.router, prefix="/health", tags=["health"])
 # Incluir routers opcionais (com tratamento de erro)
 try:
     from app.routers import permissions
-    app.include_router(permissions.router, prefix="/api/permissions", tags=["permissions"])
+    app.include_router(permissions.router, prefix="/api/permissions", tags=["permissions")
 except ImportError:
     print("Warning: permissions router not found")
 
@@ -163,9 +163,22 @@ app.include_router(payments.router)
 
 if __name__ == "__main__":
     import uvicorn
+    
+    # Obter porta do ambiente com tratamento de erro
+    try:
+        port_str = os.getenv("PORT", "8000")
+        port = int(port_str)
+        if not (1 <= port <= 65535):
+            print("Warning: PORT environment variable is not a valid port number (1-65535), defaulting to 8000")
+        port = 8000
+    except (ValueError, TypeError):
+        port = 8000
+    
+    print(f"🚀 Iniciando servidor na porta {port}")
+    
     uvicorn.run(
         "main:app",
         host="0.0.0.0",
-        port=int(os.getenv("PORT", 8000)),
-        reload=True
+        port=port,
+        reload=os.getenv("RAILWAY_ENVIRONMENT") != "production"
     )
