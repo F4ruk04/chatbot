@@ -454,9 +454,7 @@ export default function DashboardPage() {
               <p className="text-purple-100 text-sm">
                 Gere relatórios detalhados de suas atividades
               </p>
-                </div>
             </div>
-          </div>
           </div>
         </main>
       </AuthGuard>
