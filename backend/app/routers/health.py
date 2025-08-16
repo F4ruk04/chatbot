@@ -4,6 +4,7 @@ from ..database import get_db
 
 router = APIRouter()
 
+@router.get("")
 @router.get("/")
 async def health_check(db: Session = Depends(get_db)):
     """
