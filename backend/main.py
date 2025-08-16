@@ -138,7 +138,7 @@ app.include_router(health.router, prefix="/health", tags=["health"])
 # Incluir routers opcionais (com tratamento de erro)
 try:
     from app.routers import permissions
-    app.include_router(permissions.router, prefix="/api/permissions", tags=["permissions")
+    app.include_router(permissions.router, prefix="/api/permissions", tags=["permissions"])
 except ImportError:
     print("Warning: permissions router not found")
 
