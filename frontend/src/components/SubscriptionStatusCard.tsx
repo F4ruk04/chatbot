@@ -1,6 +1,15 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { AlertTriangle, AlertCircle, CheckCircle } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { 
+  AlertTriangle, 
+  AlertCircle, 
+  CheckCircle, 
+  Crown, 
+  Calendar,
+  TrendingUp,
+  Zap
+} from 'lucide-react';
 
 interface SubscriptionStatus {
   plan: string;
@@ -14,6 +23,7 @@ interface SubscriptionStatus {
 }
 
 export default function SubscriptionStatusCard() {
+  const router = useRouter();
   const [status, setStatus] = useState<SubscriptionStatus | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -36,27 +46,32 @@ export default function SubscriptionStatusCard() {
     }
   };
 
-  if (loading) {
-    return (
-      <div className="animate-pulse bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-        <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-3/4 mb-4"></div>
-        <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/2"></div>
-      </div>
-    );
-  }
+  const getPlanDisplayName = (plan: string) => {
+    const planNames = {
+      'free': 'Plano Gratuito',
+      'pro': 'Plano Pro',
+      'business': 'Plano Business'
+    };
+    return planNames[plan as keyof typeof planNames] || `Plano ${plan}`;
+  };
 
-  if (error) {
-    return (
-      <div className="bg-red-50 dark:bg-red-900/20 rounded-lg p-4 border border-red-200 dark:border-red-800">
-        <div className="flex items-center text-red-700 dark:text-red-400">
-          <AlertCircle className="h-5 w-5 mr-2" />
-          <span>{error}</span>
-        </div>
-      </div>
-    );
-  }
+  const getPlanColor = (plan: string) => {
+    const colors = {
+      'free': 'from-gray-500 to-gray-600',
+      'pro': 'from-blue-500 to-blue-600',
+      'business': 'from-purple-500 to-purple-600'
+    };
+    return colors[plan as keyof typeof colors] || 'from-gray-500 to-gray-600';
+  };
 
-  if (!status) return null;
+  const formatRenewalDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('pt-PT', {
+      day: '2-digit',
+      month: 'long',
+      year: 'numeric'
+    });
+  };
 
   const getStatusColor = (warning_level: string) => {
     switch (warning_level) {
@@ -72,81 +87,162 @@ export default function SubscriptionStatusCard() {
   const getStatusIcon = (warning_level: string) => {
     switch (warning_level) {
       case 'HIGH':
-        return <AlertCircle className="h-5 w-5 mr-2" />;
+        return <AlertCircle className="h-4 w-4" />;
       case 'MEDIUM':
-        return <AlertTriangle className="h-5 w-5 mr-2" />;
+        return <AlertTriangle className="h-4 w-4" />;
       default:
-        return <CheckCircle className="h-5 w-5 mr-2" />;
+        return <CheckCircle className="h-4 w-4" />;
     }
   };
 
-  return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-      <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-        Status da Assinatura
-      </h3>
-      
-      <div className="space-y-4">
-        {/* Plano atual */}
-        <div>
-          <span className="text-sm text-gray-500 dark:text-gray-400">Plano:</span>
-          <p className="font-medium text-gray-900 dark:text-white capitalize">{status.plan}</p>
-        </div>
+  const handleUpgradeClick = () => {
+    router.push('/billing');
+  };
 
-        {/* Uso de mensagens */}
+  if (loading) {
+    return (
+      <div className="animate-pulse bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 p-6">
+        <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-3/4 mb-4"></div>
+        <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/2 mb-4"></div>
+        <div className="h-2 bg-gray-200 dark:bg-gray-700 rounded w-full mb-4"></div>
+        <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-2/3"></div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="bg-red-50 dark:bg-red-900/20 rounded-xl p-6 border border-red-200 dark:border-red-800">
+        <div className="flex items-center text-red-700 dark:text-red-400">
+          <AlertCircle className="h-5 w-5 mr-2 flex-shrink-0" />
+          <span className="text-sm">{error}</span>
+        </div>
+      </div>
+    );
+  }
+
+  if (!status) return null;
+
+  return (
+    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
+      {/* Header com plano atual */}
+      <div className={`bg-gradient-to-r ${getPlanColor(status.plan)} p-6 text-white`}>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-3">
+            <div className="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
+              <Crown className="h-5 w-5" />
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold">
+                {getPlanDisplayName(status.plan)}
+              </h3>
+              <p className="text-sm opacity-90 capitalize">
+                Status: {status.status}
+              </p>
+            </div>
+          </div>
+          {status.plan !== 'business' && (
+            <button
+              onClick={handleUpgradeClick}
+              className="bg-white/20 hover:bg-white/30 backdrop-blur-sm px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 flex items-center space-x-1"
+            >
+              <TrendingUp className="h-4 w-4" />
+              <span>Upgrade</span>
+            </button>
+          )}
+        </div>
+      </div>
+
+      {/* Conteúdo principal */}
+      <div className="p-6 space-y-6">
+        {/* Contador de mensagens com barra de progresso */}
         <div>
-          <div className="flex items-center mb-2">
-            <span className="text-sm text-gray-500 dark:text-gray-400">
-              Uso de mensagens:
-            </span>
-            <span className={`ml-auto font-medium ${getStatusColor(status.warning_level)}`}>
-              {status.messages_used} / {status.messages_quota}
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center space-x-2">
+              <Zap className="h-4 w-4 text-gray-500 dark:text-gray-400" />
+              <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                Mensagens Utilizadas
+              </span>
+            </div>
+            <span className={`text-sm font-semibold ${getStatusColor(status.warning_level)}`}>
+              {status.messages_used.toLocaleString()} / {status.messages_quota.toLocaleString()}
             </span>
           </div>
-          <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+          
+          {/* Barra de progresso visual */}
+          <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3 overflow-hidden">
             <div
-              className={`rounded-full h-2 transition-all ${
+              className={`h-full transition-all duration-500 ease-out rounded-full ${
                 status.warning_level === 'HIGH'
-                  ? 'bg-red-500'
+                  ? 'bg-gradient-to-r from-red-500 to-red-600'
                   : status.warning_level === 'MEDIUM'
-                  ? 'bg-yellow-500'
-                  : 'bg-green-500'
+                  ? 'bg-gradient-to-r from-yellow-500 to-yellow-600'
+                  : 'bg-gradient-to-r from-green-500 to-green-600'
               }`}
               style={{ width: `${Math.min(status.usage_percent, 100)}%` }}
             ></div>
           </div>
-        </div>
-
-        {/* Dias restantes */}
-        <div>
-          <span className="text-sm text-gray-500 dark:text-gray-400">
-            Renovação em:
-          </span>
-          <p className="font-medium text-gray-900 dark:text-white">
-            {status.days_remaining} dias
-          </p>
-        </div>
-
-        {/* Alertas */}
-        {status.warning_level !== 'LOW' && (
-          <div className={`flex items-center mt-4 ${getStatusColor(status.warning_level)}`}>
-            {getStatusIcon(status.warning_level)}
-            <span className="text-sm">
-              {status.warning_level === 'HIGH'
-                ? 'Você está próximo do limite de mensagens!'
-                : 'Considere fazer upgrade do seu plano.'}
+          
+          {/* Percentual */}
+          <div className="flex justify-between items-center mt-2">
+            <span className="text-xs text-gray-500 dark:text-gray-400">
+              {status.usage_percent.toFixed(1)}% utilizado
             </span>
+            <span className="text-xs text-gray-500 dark:text-gray-400">
+              {(status.messages_quota - status.messages_used).toLocaleString()} restantes
+            </span>
+          </div>
+        </div>
+
+        {/* Data de renovação */}
+        <div className="flex items-center space-x-3 p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
+          <div className="w-8 h-8 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center">
+            <Calendar className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+          </div>
+          <div>
+            <p className="text-sm font-medium text-gray-900 dark:text-white">
+              Renovação do Plano
+            </p>
+            <p className="text-xs text-gray-600 dark:text-gray-400">
+              {formatRenewalDate(status.renewal_date)} ({status.days_remaining} dias)
+            </p>
+          </div>
+        </div>
+
+        {/* Alertas de uso */}
+        {status.warning_level !== 'LOW' && (
+          <div className={`flex items-start space-x-3 p-3 rounded-lg ${
+            status.warning_level === 'HIGH' 
+              ? 'bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800' 
+              : 'bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800'
+          }`}>
+            <div className={`flex-shrink-0 ${getStatusColor(status.warning_level)}`}>
+              {getStatusIcon(status.warning_level)}
+            </div>
+            <div>
+              <p className={`text-sm font-medium ${getStatusColor(status.warning_level)}`}>
+                {status.warning_level === 'HIGH' 
+                  ? 'Limite quase atingido!' 
+                  : 'Atenção ao uso'}
+              </p>
+              <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
+                {status.warning_level === 'HIGH'
+                  ? 'Você está próximo do limite de mensagens. Considere fazer upgrade.'
+                  : 'Monitore seu uso para evitar interrupções no serviço.'}
+              </p>
+            </div>
           </div>
         )}
 
-        {/* Botão de Upgrade */}
-        {status.warning_level !== 'LOW' && (
-          <a
-            href={`/pricing?from=${status.plan}`}
-            className="mt-4 w-full inline-flex justify-center items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+        {/* Botão de Upgrade - sempre visível para planos não-business */}
+        {status.plan !== 'business' && (
+          <button
+            onClick={handleUpgradeClick}
+            className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-medium py-3 px-4 rounded-lg transition-all duration-200 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 flex items-center justify-center space-x-2"
           >
-            Fazer Upgrade
-          </a>
+            <TrendingUp className="h-4 w-4" />
+            <span>Fazer Upgrade do Plano</span>
+          </button>
         )}
       </div>
     </div>

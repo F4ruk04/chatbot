@@ -159,60 +159,92 @@ export default function DashboardPage() {
             </p>
           </div>
 
-          {/* Status da Assinatura */}
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-            <div className="lg:col-span-1">
+          {/* Status da Assinatura e Estatísticas */}
+          <div className="grid grid-cols-1 xl:grid-cols-4 gap-6">
+            <div className="xl:col-span-1">
               <SubscriptionStatusCard />
             </div>
             
             {/* Estatísticas principais */}
-            <div className="lg:col-span-3">
+            <div className="xl:col-span-3">
               {stats && (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
                   <StatCard
                     title="Total de Empresas"
                     value={stats.total_companies}
                     icon={Building2}
-                color="blue"
-                trend="up"
-                trendValue="+12% este mês"
-              />
-              <StatCard
-                title="Total de Mensagens"
-                value={stats.total_messages}
-                icon={MessageSquare}
-                color="green"
-                trend="up"
-                trendValue="+8% esta semana"
-              />
-              <StatCard
-                title="Conversas Ativas"
-                value={stats.active_conversations}
-                icon={Users}
-                color="purple"
-                trend="up"
-                trendValue="+15% hoje"
-              />
-              <StatCard
-                title="Mensagens Hoje"
-                value={stats.messages_today}
-                icon={Activity}
-                color="orange"
-              />
-              <StatCard
-                title="Esta Semana"
-                value={stats.messages_this_week}
-                icon={TrendingUp}
-                color="indigo"
-              />
-              <StatCard
-                title="Este Mês"
-                value={stats.messages_this_month}
-                icon={BarChart3}
-                color="red"
-              />
+                    color="blue"
+                    trend="up"
+                    trendValue="+12% este mês"
+                  />
+                  <StatCard
+                    title="Total de Mensagens"
+                    value={stats.total_messages}
+                    icon={MessageSquare}
+                    color="green"
+                    trend="up"
+                    trendValue="+8% esta semana"
+                  />
+                  <StatCard
+                    title="Conversas Ativas"
+                    value={stats.active_conversations}
+                    icon={Users}
+                    color="purple"
+                    trend="up"
+                    trendValue="+15% hoje"
+                  />
+                  <StatCard
+                    title="Mensagens Hoje"
+                    value={stats.messages_today}
+                    icon={Activity}
+                    color="orange"
+                  />
+                  <StatCard
+                    title="Esta Semana"
+                    value={stats.messages_this_week}
+                    icon={TrendingUp}
+                    color="indigo"
+                  />
+                  <StatCard
+                    title="Este Mês"
+                    value={stats.messages_this_month}
+                    icon={BarChart3}
+                    color="red"
+                  />
+                </div>
+              )}
             </div>
-          )}
+          </div>
+
+          {/* Banner de Upgrade - Visível apenas para planos gratuitos */}
+          <div className="bg-gradient-to-r from-blue-600 via-blue-700 to-purple-700 rounded-xl p-6 text-white relative overflow-hidden">
+            <div className="absolute inset-0 bg-black/10"></div>
+            <div className="relative z-10 flex flex-col lg:flex-row lg:items-center lg:justify-between">
+              <div className="mb-4 lg:mb-0">
+                <h3 className="text-xl lg:text-2xl font-bold mb-2">
+                  🚀 Desbloqueie todo o potencial do seu negócio
+                </h3>
+                <p className="text-blue-100 text-sm lg:text-base">
+                  Upgrade para Pro ou Business e tenha acesso a mais mensagens, relatórios avançados e suporte prioritário.
+                </p>
+              </div>
+              <div className="flex flex-col sm:flex-row gap-3">
+                <button
+                  onClick={() => router.push('/billing?plan=pro')}
+                  className="bg-white text-blue-700 hover:bg-blue-50 font-semibold py-3 px-6 rounded-lg transition-all duration-200 transform hover:scale-105 flex items-center justify-center space-x-2"
+                >
+                  <TrendingUp className="h-4 w-4" />
+                  <span>Fazer Upgrade</span>
+                </button>
+                <button
+                  onClick={() => router.push('/pricing')}
+                  className="border-2 border-white/30 text-white hover:bg-white/10 font-medium py-3 px-6 rounded-lg transition-all duration-200 flex items-center justify-center space-x-2"
+                >
+                  <span>Ver Planos</span>
+                </button>
+              </div>
+            </div>
+          </div>
 
           {/* Gráfico de atividade recente */}
           <div className="bg-white dark:bg-gray-900 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 p-6">
