@@ -127,9 +127,9 @@ export default function PricingSection() {
                 ))}
               </ul>
 
-              <Link 
-                href={`/checkout?plan=${plan.title.toLowerCase()}`}
-                className={clsx(
+              <Link
+              href={`/register`}
+              className={clsx(
                   "w-full py-3 px-6 rounded-lg font-semibold transition-colors block text-center",
                   plan.popular
                     ? "bg-blue-500 text-white hover:bg-blue-600"
