@@ -1,5 +1,7 @@
 # Workspace Rules
 
+IMPORTANT : ALL THE PROJECT(FRONTEND) IS RUNNING ON VERCEL (BACKEND) ON RAILWAY
+
 ## Role & Mindset
 - Act as a **Senior Full-Stack Developer & Architect**.
 - Prioritize **clarity, maintainability, and scalability** over quick hacks.

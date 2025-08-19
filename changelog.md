@@ -10,3 +10,4 @@
 - **Troubleshooting**: Persistent "npm error Invalid Version" on Vercel. Incremented `package.json` version to `0.1.1` to trigger rebuild. Attempted aggressive local cleanup and reinstall.
 - **Final Diagnosis**: The "npm error Invalid Version" on Vercel is due to a corrupted Vercel build cache.
 - **Solution**: Modified `frontend/vercel.json` to include `rm -rf node_modules package-lock.json` in the `installCommand` to force a clean dependency installation on Vercel.
+- **New Errors**: Encountered "Cannot find module 'react'" and other type declaration errors in `frontend/src/components/SubscriptionStatusCard.tsx` after previous `replace_in_file` attempt, likely due to persistent local `node_modules` corruption. Addressed `fetchSubscriptionStatus` declaration and `useCallback` dependency. Pushing changes, expecting Vercel's forced clean install to resolve these.

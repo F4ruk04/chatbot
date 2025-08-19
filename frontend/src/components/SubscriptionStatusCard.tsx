@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import {
   AlertTriangle,
@@ -30,11 +30,7 @@ export default function SubscriptionStatusCard() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
-  useEffect(() => {
-    fetchSubscriptionStatus();
-  }, []);
-
-  const fetchSubscriptionStatus = async () => {
+  const fetchSubscriptionStatus = useCallback(async () => {
     try {
       // Use o cliente axios configurado para incluir Authorization
       const { api } = await import('@/lib/api');
@@ -96,7 +92,11 @@ export default function SubscriptionStatusCard() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [showNotification]);
+
+  useEffect(() => {
+    fetchSubscriptionStatus();
+  }, [fetchSubscriptionStatus]);
 
   const getPlanDisplayName = (plan: string) => {
     const planNames = {
