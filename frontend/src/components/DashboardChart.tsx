@@ -99,7 +99,7 @@ export default function DashboardChart({ companyId, className = '' }: DashboardC
     setTrend(trendValue);
   };
 
-  const processChartData = (apiData: any) => {
+  const processChartData = (apiData: { date: string; count: number }[]) => {
     // Process real API data
     const days = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'];
     const data: ChartData[] = [];
@@ -107,7 +107,7 @@ export default function DashboardChart({ companyId, className = '' }: DashboardC
     let max = 0;
 
     // Assuming API returns array of { date: string, count: number }
-    apiData.forEach((item: any) => {
+    apiData.forEach((item) => {
       const date = new Date(item.date);
       const messages = item.count || 0;
       
