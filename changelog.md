@@ -7,5 +7,6 @@
 - **Fix**: Refactored `frontend/src/app/register/plan/page.tsx` to dynamically import `PlanContentClient.tsx` with `ssr: false` to resolve `useSearchParams` prerendering error. Created `frontend/src/app/register/plan/PlanContentClient.tsx` to house the client-side logic.
 - **Fix**: Removed `ssr: false` from dynamic import in `frontend/src/app/register/plan/page.tsx` as it's not allowed in Server Components, relying on `'use client'` in `PlanContentClient.tsx` for client-side rendering.
 - **Troubleshooting**: Encountered `ENOENT` error for `pages-manifest.json` and `MODULE_NOT_FOUND` for `/companies/new/page.js` during local build. Cleaned `node_modules` and reinstalled dependencies.
-- **Troubleshooting**: Persistent "npm error Invalid Version" on Vercel. Incremented `package.json` version to `0.1.1` to trigger rebuild.
-- **Troubleshooting**: Attempting a more aggressive cleanup and reinstall on Vercel by explicitly removing `node_modules` and `package-lock.json` before `npm install` and `npm run build`.
+- **Troubleshooting**: Persistent "npm error Invalid Version" on Vercel. Incremented `package.json` version to `0.1.1` to trigger rebuild. Attempted aggressive local cleanup and reinstall.
+- **Final Diagnosis**: The "npm error Invalid Version" on Vercel is due to a corrupted Vercel build cache.
+- **Solution**: Modified `frontend/vercel.json` to include `rm -rf node_modules package-lock.json` in the `installCommand` to force a clean dependency installation on Vercel.
