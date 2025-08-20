@@ -61,7 +61,7 @@ export default function SubscriptionStatusCard() {
             message: 'Usando dados padrão para o status da assinatura.',
             duration: 7000
           });
-          setHasShownError(true);
+          setHasShownError((prev: boolean) => !prev); // Use functional update with explicit type
         }
       }
     } catch (error: unknown) {
@@ -95,13 +95,13 @@ export default function SubscriptionStatusCard() {
           message: 'Não foi possível carregar o status da sua assinatura. Usando dados padrão.',
           duration: 7000
         });
-        setHasShownError(true);
+        setHasShownError((prev: boolean) => !prev); // Use functional update with explicit type
       }
       console.warn('Usando dados padrão devido ao erro:', axiosError.message || 'Erro desconhecido');
     } finally {
       setLoading(false);
     }
-  }, [showNotification]); // Removed hasShownError from dependencies
+  }, [showNotification]); // hasShownError is no longer a direct dependency
 
   useEffect(() => {
     fetchSubscriptionStatus();

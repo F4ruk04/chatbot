@@ -8,6 +8,8 @@
 - **Fix**: Resolved potential routing conflict in `backend/main.py` by removing duplicate inclusions of routers without prefixes. This ensures that the `/api/subscription` endpoint is correctly registered.
 - **Fix**: Resolved "Cannot find module 'react'" and other TypeScript errors in `frontend/src/app/register/plan/PlanContentClient.tsx` and `frontend/src/components/DashboardChart.tsx` by ensuring all necessary imports are present and code is correctly structured. Removed unused `Layout` import and `Plan` interface from `PlanContentClient.tsx`. Removed unused `maxValue` state and fixed `useEffect` dependency for `fetchChartData` in `DashboardChart.tsx`.
 - **Fix**: Addressed "erro ao carregar dados do dashboard" by adding a new endpoint `/api/dashboard/messages-chart` in `backend/app/routers/dashboard.py` to handle requests for aggregated message data across all companies, matching the frontend's expected API call when no specific `companyId` is provided.
+- **Fix**: Corrected API call paths in `frontend/src/lib/api.ts` to include the `/api` prefix for all endpoints, ensuring requests match backend routing (e.g., `/api/dashboard/` instead of `/dashboard/`).
+- **Fix**: Resolved "Parameter 'prev' implicitly has an 'any' type" TypeScript error in `frontend/src/components/SubscriptionStatusCard.tsx` by explicitly typing the `prev` parameter in `setHasShownError` functional updates.
 
 ## Project Summary (Prior to 2025-08-20)
 
