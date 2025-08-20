@@ -127,46 +127,32 @@ except ImportError:
     print("Warning: Redis service not available")
 
 # Incluir routers principais
-app.include_router(auth.router, prefix="/api/auth", tags=["auth"])
-app.include_router(companies.router, prefix="/api/companies", tags=["companies"])
-app.include_router(whatsapp.router, prefix="/api/whatsapp", tags=["whatsapp"])
-app.include_router(dashboard.router, prefix="/api/dashboard", tags=["dashboard"])
-app.include_router(payments.router, prefix="/api/payments", tags=["payments"])
-app.include_router(subscriptions.router, prefix="/api/subscription", tags=["subscriptions"])
-app.include_router(health.router, prefix="/health", tags=["health"])
+app.include_router(auth.router, prefix="/api", tags=["auth"])
+app.include_router(companies.router, prefix="/api", tags=["companies"])
+app.include_router(whatsapp.router, prefix="/api", tags=["whatsapp"])
+app.include_router(dashboard.router, prefix="/api", tags=["dashboard"])
+app.include_router(payments.router, prefix="/api", tags=["payments"])
+app.include_router(subscriptions.router, prefix="/api", tags=["subscriptions"])
+app.include_router(health.router, prefix="/health", tags=["health"]) # /health does not have an internal prefix
 
 # Incluir routers opcionais (com tratamento de erro)
 try:
     from app.routers import permissions
-    app.include_router(permissions.router, prefix="/api/permissions", tags=["permissions"])
+    app.include_router(permissions.router, prefix="/api", tags=["permissions"])
 except ImportError:
     print("Warning: permissions router not found")
 
 try:
     from app.routers import usage
-    app.include_router(usage.router, prefix="/api/usage", tags=["usage"])
+    app.include_router(usage.router, prefix="/api", tags=["usage"])
 except ImportError:
     print("Warning: usage router not found")
 
 try:
     from app.routers import admin
-    app.include_router(admin.router, prefix="/api/admin", tags=["admin"])
+    app.include_router(admin.router, prefix="/api", tags=["admin"])
 except ImportError:
     print("Warning: admin router not found")
-
-@app.get("/debug-routes")
-def debug_routes():
-    """
-    Temporary endpoint to list all registered routes for debugging.
-    """
-    routes_list = []
-    for route in app.routes:
-        routes_list.append({
-            "path": route.path,
-            "name": route.name,
-            "methods": list(route.methods) if hasattr(route, 'methods') else []
-        }) # Closing bracket for the dictionary
-    return {"routes": routes_list}
 
 if __name__ == "__main__":
     import uvicorn
@@ -177,7 +163,7 @@ if __name__ == "__main__":
         port = int(port_str)
         if not (1 <= port <= 65535):
             print("Warning: PORT environment variable is not a valid port number (1-65535), defaulting to 8000")
-        port = 8000
+            port = 8000 # Ensure port is set to default if invalid
     except (ValueError, TypeError):
         port = 8000
     
