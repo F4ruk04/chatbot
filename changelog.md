@@ -10,6 +10,7 @@
 - **Fix**: Addressed "erro ao carregar dados do dashboard" by adding a new endpoint `/api/dashboard/messages-chart` in `backend/app/routers/dashboard.py` to handle requests for aggregated message data across all companies, matching the frontend's expected API call when no specific `companyId` is provided.
 - **Fix**: Corrected API call paths in `frontend/src/lib/api.ts` to include the `/api` prefix for all endpoints, ensuring requests match backend routing (e.g., `/api/dashboard/` instead of `/dashboard/`).
 - **Fix**: Resolved "Parameter 'prev' implicitly has an 'any' type" TypeScript error in `frontend/src/components/SubscriptionStatusCard.tsx` by explicitly typing the `prev` parameter in `setHasShownError` functional updates.
+- **Fix**: Corrected `SyntaxError` in `backend/main.py` by fixing a missing closing bracket in the `debug_routes` endpoint.
 
 ## Project Summary (Prior to 2025-08-20)
 

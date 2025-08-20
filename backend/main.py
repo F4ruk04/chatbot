@@ -154,6 +154,20 @@ try:
 except ImportError:
     print("Warning: admin router not found")
 
+@app.get("/debug-routes")
+def debug_routes():
+    """
+    Temporary endpoint to list all registered routes for debugging.
+    """
+    routes_list = []
+    for route in app.routes:
+        routes_list.append({
+            "path": route.path,
+            "name": route.name,
+            "methods": list(route.methods) if hasattr(route, 'methods') else []
+        }) # Closing bracket for the dictionary
+    return {"routes": routes_list}
+
 if __name__ == "__main__":
     import uvicorn
     
