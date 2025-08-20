@@ -101,11 +101,11 @@ export default function SubscriptionStatusCard() {
     } finally {
       setLoading(false);
     }
-  }, [showNotification, hasShownError]);
+  }, [showNotification]); // Removed hasShownError from dependencies
 
   useEffect(() => {
     fetchSubscriptionStatus();
-  }, [fetchSubscriptionStatus]);
+  }, [fetchSubscriptionStatus]); // fetchSubscriptionStatus is now stable
 
   const getPlanDisplayName = (plan: string) => {
     const planNames = {
