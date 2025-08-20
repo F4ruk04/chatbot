@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { Activity, TrendingUp, Calendar } from 'lucide-react';
 
 interface ChartData {
@@ -19,15 +19,10 @@ export default function DashboardChart({ companyId, className = '' }: DashboardC
   const [chartData, setChartData] = useState<ChartData[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [maxValue, setMaxValue] = useState(100);
   const [totalMessages, setTotalMessages] = useState(0);
   const [trend, setTrend] = useState(0);
 
-  useEffect(() => {
-    fetchChartData();
-  }, [companyId]);
-
-  const fetchChartData = async () => {
+  const fetchChartData = useCallback(async () => {
     try {
       setLoading(true);
       const { api } = await import('@/lib/api');
@@ -54,7 +49,11 @@ export default function DashboardChart({ companyId, className = '' }: DashboardC
     } finally {
       setLoading(false);
     }
-  };
+  }, [companyId]); // Added companyId as dependency
+
+  useEffect(() => {
+    fetchChartData();
+  }, [fetchChartData]); // fetchChartData is now stable
 
   const generateSampleData = () => {
     const days = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'];
@@ -94,7 +93,6 @@ export default function DashboardChart({ companyId, className = '' }: DashboardC
     const trendValue = previous > 0 ? ((recent - previous) / previous) * 100 : 0;
 
     setChartData(data);
-    setMaxValue(max);
     setTotalMessages(total);
     setTrend(trendValue);
   };
@@ -133,7 +131,6 @@ export default function DashboardChart({ companyId, className = '' }: DashboardC
     const trendValue = previous > 0 ? ((recent - previous) / previous) * 100 : 0;
 
     setChartData(data);
-    setMaxValue(max);
     setTotalMessages(total);
     setTrend(trendValue);
   };

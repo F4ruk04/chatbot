@@ -2,21 +2,11 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import Layout from '@/components/Layout';
 import { Check, ArrowRight } from 'lucide-react';
 import clsx from 'clsx';
 import { authAPI } from '@/lib/api';
 import { saveAuthData } from '@/lib/auth';
 import { useNotification } from '@/hooks/useNotification';
-
-interface Plan {
-  id: string;
-  title: string;
-  price: string;
-  description: string;
-  features: string[];
-  recommended?: boolean;
-}
 
 const plans = [
   {
