@@ -13,6 +13,7 @@
 - **New Errors (Runtime)**: "Cannot show subscription status" and "Error creating account" on the deployed site.
 - **Diagnosis (Backend Runtime)**: Backend API calls are failing, likely due to unapplied database migrations or database connectivity issues on Railway. The `RAILWAY_DEPLOY_READY.md` indicates `start.sh` runs migrations.
 - **Solution (Backend Runtime)**: User needs to manually ensure PostgreSQL database is correctly provisioned and connected on Railway, and trigger a redeploy of the backend application to ensure `start.sh` runs and applies migrations.
+- **Fix (Frontend UI)**: Implemented `hasShownError` state in `frontend/src/components/SubscriptionStatusCard.tsx` to prevent repeated display of error notifications when API calls fail.
 
 ## Resumo do Projeto: SaaS Chatbot Inteligente
 

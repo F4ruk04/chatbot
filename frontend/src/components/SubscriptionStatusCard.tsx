@@ -29,6 +29,7 @@ export default function SubscriptionStatusCard() {
   const [status, setStatus] = useState<SubscriptionStatus | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [hasShownError, setHasShownError] = useState(false); // New state to track if error notification has been shown
 
   const fetchSubscriptionStatus = useCallback(async () => {
     try {
@@ -40,6 +41,7 @@ export default function SubscriptionStatusCard() {
       const data = response.data;
       if (data && data.plan && data.status) {
         setStatus(data);
+        setHasShownError(false); // Reset error flag on success
       } else {
         // Dados padrão se a resposta estiver incompleta
         setStatus({
@@ -52,12 +54,15 @@ export default function SubscriptionStatusCard() {
           renewal_date: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
           warning_level: 'LOW'
         });
-        showNotification({
-          type: 'warning',
-          title: 'Dados de assinatura incompletos',
-          message: 'Usando dados padrão para o status da assinatura.',
-          duration: 7000
-        });
+        if (!hasShownError) { // Show warning only once
+          showNotification({
+            type: 'warning',
+            title: 'Dados de assinatura incompletos',
+            message: 'Usando dados padrão para o status da assinatura.',
+            duration: 7000
+          });
+          setHasShownError(true);
+        }
       }
     } catch (error: unknown) {
       console.error('Erro ao carregar status:', error);
@@ -67,6 +72,7 @@ export default function SubscriptionStatusCard() {
       // Se for erro 401, não mostrar erro (usuário não autenticado)
       if (axiosError.response?.status === 401) {
         setError('');
+        setHasShownError(false); // Do not show error for 401
         return;
       }
       
@@ -82,17 +88,20 @@ export default function SubscriptionStatusCard() {
         warning_level: 'LOW'
       });
       
-      showNotification({
-        type: 'error',
-        title: 'Erro ao carregar assinatura',
-        message: 'Não foi possível carregar o status da sua assinatura. Usando dados padrão.',
-        duration: 7000
-      });
+      if (!hasShownError) { // Show error only once
+        showNotification({
+          type: 'error',
+          title: 'Erro ao carregar assinatura',
+          message: 'Não foi possível carregar o status da sua assinatura. Usando dados padrão.',
+          duration: 7000
+        });
+        setHasShownError(true);
+      }
       console.warn('Usando dados padrão devido ao erro:', axiosError.message || 'Erro desconhecido');
     } finally {
       setLoading(false);
     }
-  }, [showNotification]);
+  }, [showNotification, hasShownError]);
 
   useEffect(() => {
     fetchSubscriptionStatus();
