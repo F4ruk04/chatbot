@@ -50,7 +50,8 @@ export default function CompaniesPage() {
       const data = await companiesAPI.getAll();
       setCompanies(data);
     } catch (err: any) {
-      setError('Erro ao carregar empresas');
+      const errorMessage = err.response?.data?.detail || 'Erro ao carregar empresas';
+      setError(errorMessage);
       console.error(err);
     } finally {
       setLoading(false);
@@ -423,4 +424,3 @@ export default function CompaniesPage() {
     </Layout>
   );
 }
-

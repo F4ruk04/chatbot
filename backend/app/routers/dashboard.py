@@ -50,6 +50,9 @@ class MessageStats(BaseModel):
     message_count: int
 
 
+from fastapi import APIRouter, Depends, HTTPException, status
+import traceback
+
 @router.get("/", response_model=DashboardStats)
 def get_dashboard_stats(
     current_user: User = Depends(get_current_user),
@@ -58,74 +61,81 @@ def get_dashboard_stats(
     """
     Endpoint para obter estatísticas gerais do dashboard
     """
-    # Obter todas as empresas do utilizador
-    user_companies = db.query(Company).filter(Company.owner_id == current_user.id).all()
-    company_ids = [company.id for company in user_companies]
-    
-    if not company_ids:
+    try:
+        # Obter todas as empresas do utilizador
+        user_companies = db.query(Company).filter(Company.owner_id == current_user.id).all()
+        company_ids = [company.id for company in user_companies]
+        
+        if not company_ids:
+            return DashboardStats(
+                total_companies=0,
+                total_messages=0,
+                messages_today=0,
+                messages_this_week=0,
+                messages_this_month=0,
+                active_conversations=0
+            )
+        
+        # Calcular datas
+        today = datetime.now().date()
+        week_ago = today - timedelta(days=7)
+        month_ago = today - timedelta(days=30)
+        
+        # Total de empresas
+        total_companies = len(user_companies)
+        
+        # Total de mensagens
+        total_messages = db.query(Message).filter(
+            Message.company_id.in_(company_ids)
+        ).count()
+        
+        # Mensagens hoje
+        messages_today = db.query(Message).filter(
+            and_(
+                Message.company_id.in_(company_ids),
+                func.date(Message.created_at) == today
+            )
+        ).count()
+        
+        # Mensagens esta semana
+        messages_this_week = db.query(Message).filter(
+            and_(
+                Message.company_id.in_(company_ids),
+                func.date(Message.created_at) >= week_ago
+            )
+        ).count()
+        
+        # Mensagens este mês
+        messages_this_month = db.query(Message).filter(
+            and_(
+                Message.company_id.in_(company_ids),
+                func.date(Message.created_at) >= month_ago
+            )
+        ).count()
+        
+        # Conversas ativas (clientes únicos que enviaram mensagem nos últimos 7 dias)
+        active_conversations = db.query(Message.sender_phone).filter(
+            and_(
+                Message.company_id.in_(company_ids),
+                func.date(Message.created_at) >= week_ago,
+                Message.is_from_customer == True
+            )
+        ).distinct().count()
+        
         return DashboardStats(
-            total_companies=0,
-            total_messages=0,
-            messages_today=0,
-            messages_this_week=0,
-            messages_this_month=0,
-            active_conversations=0
+            total_companies=total_companies,
+            total_messages=total_messages,
+            messages_today=messages_today,
+            messages_this_week=messages_this_week,
+            messages_this_month=messages_this_month,
+            active_conversations=active_conversations
         )
-    
-    # Calcular datas
-    today = datetime.now().date()
-    week_ago = today - timedelta(days=7)
-    month_ago = today - timedelta(days=30)
-    
-    # Total de empresas
-    total_companies = len(user_companies)
-    
-    # Total de mensagens
-    total_messages = db.query(Message).filter(
-        Message.company_id.in_(company_ids)
-    ).count()
-    
-    # Mensagens hoje
-    messages_today = db.query(Message).filter(
-        and_(
-            Message.company_id.in_(company_ids),
-            func.date(Message.created_at) == today
+    except Exception as e:
+        traceback.print_exc()
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Erro ao carregar estatísticas do dashboard: {e}"
         )
-    ).count()
-    
-    # Mensagens esta semana
-    messages_this_week = db.query(Message).filter(
-        and_(
-            Message.company_id.in_(company_ids),
-            func.date(Message.created_at) >= week_ago
-        )
-    ).count()
-    
-    # Mensagens este mês
-    messages_this_month = db.query(Message).filter(
-        and_(
-            Message.company_id.in_(company_ids),
-            func.date(Message.created_at) >= month_ago
-        )
-    ).count()
-    
-    # Conversas ativas (clientes únicos que enviaram mensagem nos últimos 7 dias)
-    active_conversations = db.query(Message.sender_phone).filter(
-        and_(
-            Message.company_id.in_(company_ids),
-            func.date(Message.created_at) >= week_ago,
-            Message.is_from_customer == True
-        )
-    ).distinct().count()
-    
-    return DashboardStats(
-        total_companies=total_companies,
-        total_messages=total_messages,
-        messages_today=messages_today,
-        messages_this_week=messages_this_week,
-        messages_this_month=messages_this_month,
-        active_conversations=active_conversations
-    )
 
 
 @router.get("/companies", response_model=List[CompanyStats])
@@ -136,44 +146,52 @@ def get_companies_stats(
     """
     Endpoint para obter estatísticas por empresa
     """
-    # Obter empresas do utilizador com estatísticas
-    companies_stats = []
-    
-    user_companies = db.query(Company).filter(Company.owner_id == current_user.id).all()
-    today = datetime.now().date()
-    
-    for company in user_companies:
-        # Total de mensagens da empresa
-        total_messages = db.query(Message).filter(
-            Message.company_id == company.id
-        ).count()
+    try:
+        # Obter empresas do utilizador com estatísticas
+        companies_stats = []
         
-        # Mensagens hoje
-        messages_today = db.query(Message).filter(
-            and_(
-                Message.company_id == company.id,
-                func.date(Message.created_at) == today
-            )
-        ).count()
+        user_companies = db.query(Company).filter(Company.owner_id == current_user.id).all()
+        today = datetime.now().date()
         
-        # Última mensagem
-        last_message = db.query(Message).filter(
-            Message.company_id == company.id
-        ).order_by(Message.created_at.desc()).first()
+        for company in user_companies:
+            # Total de mensagens da empresa
+            total_messages = db.query(Message).filter(
+                Message.company_id == company.id
+            ).count()
+            
+            # Mensagens hoje
+            messages_today = db.query(Message).filter(
+                and_(
+                    Message.company_id == company.id,
+                    func.date(Message.created_at) == today
+                )
+            ).count()
+            
+            # Última mensagem
+            last_message = db.query(Message).filter(
+                Message.company_id == company.id
+            ).order_by(Message.created_at.desc()).first()
+            
+            last_message_date = None
+            if last_message:
+                last_message_date = last_message.created_at
+            
+            companies_stats.append(CompanyStats(
+                company_id=company.id,
+                company_name=company.nome,
+                total_messages=total_messages,
+                messages_today=messages_today,
+                last_message_date=last_message_date
+            ))
         
-        last_message_date = None
-        if last_message:
-            last_message_date = last_message.created_at
-        
-        companies_stats.append(CompanyStats(
-            company_id=company.id,
-            company_name=company.nome,
-            total_messages=total_messages,
-            messages_today=messages_today,
-            last_message_date=last_message_date
-        ))
-    
-    return companies_stats
+        return companies_stats
+    except Exception as e:
+        traceback.print_exc()
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Erro ao carregar estatísticas das empresas: {e}"
+        )
+
 
 @router.get("/messages-chart", response_model=List[MessageStats])
 def get_messages_chart_data_all_companies(
@@ -184,34 +202,42 @@ def get_messages_chart_data_all_companies(
     """
     Endpoint para obter dados do gráfico de mensagens por dia para todas as empresas do usuário
     """
-    user_companies = db.query(Company).filter(Company.owner_id == current_user.id).all()
-    company_ids = [company.id for company in user_companies]
+    try:
+        user_companies = db.query(Company).filter(Company.owner_id == current_user.id).all()
+        company_ids = [company.id for company in user_companies]
 
-    if not company_ids:
-        return []
+        if not company_ids:
+            return []
 
-    end_date = datetime.now().date()
-    start_date = end_date - timedelta(days=days)
+        end_date = datetime.now().date()
+        start_date = end_date - timedelta(days=days)
 
-    messages_by_date = db.query(
-        func.date(Message.created_at).label('date'),
-        func.count(Message.id).label('count')
-    ).filter(
-        and_(
-            Message.company_id.in_(company_ids),
-            func.date(Message.created_at) >= start_date,
-            func.date(Message.created_at) <= end_date
+        messages_by_date = db.query(
+            func.date(Message.created_at).label('date'),
+            func.count(Message.id).label('count')
+        ).filter(
+            and_(
+                Message.company_id.in_(company_ids),
+                func.date(Message.created_at) >= start_date,
+                func.date(Message.created_at) <= end_date
+            )
+        ).group_by(func.date(Message.created_at)).all()
+
+        chart_data = []
+        for date_count in messages_by_date:
+            chart_data.append(MessageStats(
+                date=date_count.date.isoformat(),
+                message_count=date_count.count
+            ))
+        
+        return chart_data
+    except Exception as e:
+        traceback.print_exc()
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Erro ao carregar dados do gráfico de mensagens: {e}"
         )
-    ).group_by(func.date(Message.created_at)).all()
 
-    chart_data = []
-    for date_count in messages_by_date:
-        chart_data.append(MessageStats(
-            date=date_count.date.isoformat(),
-            message_count=date_count.count
-        ))
-    
-    return chart_data
 
 @router.get("/messages-chart/{company_id}", response_model=List[MessageStats])
 def get_messages_chart_data_single_company(
@@ -223,39 +249,46 @@ def get_messages_chart_data_single_company(
     """
     Endpoint para obter dados do gráfico de mensagens por dia para uma empresa específica
     """
-    # Verificar se a empresa pertence ao utilizador
-    company = db.query(Company).filter(
-        and_(
-            Company.id == company_id,
-            Company.owner_id == current_user.id
+    try:
+        # Verificar se a empresa pertence ao utilizador
+        company = db.query(Company).filter(
+            and_(
+                Company.id == company_id,
+                Company.owner_id == current_user.id
+            )
+        ).first()
+        
+        if not company:
+            return []
+        
+        # Calcular data de início
+        end_date = datetime.now().date()
+        start_date = end_date - timedelta(days=days)
+        
+        # Obter contagem de mensagens por dia
+        messages_by_date = db.query(
+            func.date(Message.created_at).label('date'),
+            func.count(Message.id).label('count')
+        ).filter(
+            and_(
+                Message.company_id == company_id,
+                func.date(Message.created_at) >= start_date,
+                func.date(Message.created_at) <= end_date
+            )
+        ).group_by(func.date(Message.created_at)).all()
+        
+        # Converter para formato de resposta
+        chart_data = []
+        for date_count in messages_by_date:
+            chart_data.append(MessageStats(
+                date=date_count.date.isoformat(),
+                message_count=date_count.count
+            ))
+        
+        return chart_data
+    except Exception as e:
+        traceback.print_exc()
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Erro ao carregar dados do gráfico de mensagens para a empresa {company_id}: {e}"
         )
-    ).first()
-    
-    if not company:
-        return []
-    
-    # Calcular data de início
-    end_date = datetime.now().date()
-    start_date = end_date - timedelta(days=days)
-    
-    # Obter contagem de mensagens por dia
-    messages_by_date = db.query(
-        func.date(Message.created_at).label('date'),
-        func.count(Message.id).label('count')
-    ).filter(
-        and_(
-            Message.company_id == company_id,
-            func.date(Message.created_at) >= start_date,
-            func.date(Message.created_at) <= end_date
-        )
-    ).group_by(func.date(Message.created_at)).all()
-    
-    # Converter para formato de resposta
-    chart_data = []
-    for date_count in messages_by_date:
-        chart_data.append(MessageStats(
-            date=date_count.date.isoformat(),
-            message_count=date_count.count
-        ))
-    
-    return chart_data

@@ -47,8 +47,9 @@ export default function DashboardPage() {
       
       setStats(dashboardStats);
       setCompaniesStats(compStats);
-    } catch (err: Error | unknown) {
-      setError('Erro ao carregar dados do dashboard');
+    } catch (err: any) {
+      const errorMessage = err.response?.data?.detail || 'Erro ao carregar dados do dashboard';
+      setError(errorMessage);
       console.error(err);
     } finally {
       setLoading(false);

@@ -18,7 +18,6 @@ interface DashboardChartProps {
 export default function DashboardChart({ companyId, className = '' }: DashboardChartProps) {
   const [chartData, setChartData] = useState<ChartData[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
   const [totalMessages, setTotalMessages] = useState(0);
   const [trend, setTrend] = useState(0);
 

@@ -14,6 +14,8 @@
 - **Critical Fix**: Resolved persistent 404 errors on backend by correcting duplicated prefixes in `backend/main.py`. Changed `app.include_router` calls to use `prefix="/api"` (or `"/health"` for health router) to prevent routes from being registered as e.g., `/api/auth/auth/register`.
 - **Chore**: Removed temporary `/debug-routes` endpoint from `backend/main.py`.
 - **Fix**: Corrected `IndentationError` in `backend/main.py` after removing the debug endpoint.
+- **Ongoing Diagnosis**: "Erro ao carregar dados do dashboard" persists. All code-level fixes for routing and frontend API calls have been applied. The issue is now likely environmental or a deeper backend runtime error. Detailed Railway logs are required for further diagnosis.
+- **Enhancement**: Added robust error handling and logging to `get_companies_stats`, `get_messages_chart_data_all_companies`, and `get_messages_chart_data_single_company` functions in `backend/app/routers/dashboard.py` to provide more specific error messages and tracebacks in Railway logs.
 
 ## Project Summary (Prior to 2025-08-20)
 
