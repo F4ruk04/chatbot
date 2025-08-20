@@ -28,22 +28,22 @@ export default function SubscriptionStatusCard() {
   const { showNotification } = useNotification();
   const [status, setStatus] = useState<SubscriptionStatus | null>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
-  const [hasShownError, setHasShownError] = useState(false); // New state to track if error notification has been shown
+  const [subscriptionError, setSubscriptionError] = useState<string | null>(null);
+  const [hasShownNotification, setHasShownNotification] = useState(false); // Renamed and re-purposed
 
   const fetchSubscriptionStatus = useCallback(async () => {
     try {
-      // Use o cliente axios configurado para incluir Authorization
+      setLoading(true);
+      setSubscriptionError(null); // Clear previous errors
+      setHasShownNotification(false); // Reset notification flag on new attempt
+
       const { api } = await import('@/lib/api');
       const response = await api.get('/api/subscription/status');
       
-      // Validar se a resposta tem os campos necessários
       const data = response.data;
       if (data && data.plan && data.status) {
         setStatus(data);
-        setHasShownError(false); // Reset error flag on success
       } else {
-        // Dados padrão se a resposta estiver incompleta
         setStatus({
           plan: 'free',
           status: 'active',
@@ -54,29 +54,28 @@ export default function SubscriptionStatusCard() {
           renewal_date: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
           warning_level: 'LOW'
         });
-        if (!hasShownError) { // Show warning only once
+        if (!hasShownNotification) {
           showNotification({
             type: 'warning',
             title: 'Dados de assinatura incompletos',
             message: 'Usando dados padrão para o status da assinatura.',
             duration: 7000
           });
-          setHasShownError((prev: boolean) => !prev); // Use functional update with explicit type
+          setHasShownNotification(true); // Set to true to prevent repeated notifications
         }
       }
-    } catch (error: unknown) {
-      console.error('Erro ao carregar status:', error);
-      
-      const axiosError = error as { response?: { status?: number }; message?: string };
-      
-      // Se for erro 401, não mostrar erro (usuário não autenticado)
-      if (axiosError.response?.status === 401) {
-        setError('');
-        setHasShownError(false); // Do not show error for 401
-        return;
+    } catch (err: unknown) {
+      let errorMessage = 'Não foi possível carregar o status da sua assinatura. Usando dados padrão.';
+      if (axios.isAxiosError(err)) {
+        if (err.response?.status === 401) {
+          // Do not show error for 401 (unauthenticated, handled by interceptor)
+          setSubscriptionError(null);
+          return;
+        }
+        errorMessage = err.response?.data?.detail || errorMessage;
       }
       
-      // Para outros erros, usar dados padrão em vez de mostrar erro
+      setSubscriptionError(errorMessage);
       setStatus({
         plan: 'free',
         status: 'active',
@@ -88,20 +87,20 @@ export default function SubscriptionStatusCard() {
         warning_level: 'LOW'
       });
       
-      if (!hasShownError) { // Show error only once
+      if (!hasShownNotification) {
         showNotification({
           type: 'error',
           title: 'Erro ao carregar assinatura',
-          message: 'Não foi possível carregar o status da sua assinatura. Usando dados padrão.',
+          message: errorMessage,
           duration: 7000
         });
-        setHasShownError((prev: boolean) => !prev); // Use functional update with explicit type
+        setHasShownNotification(true); // Set to true to prevent repeated notifications
       }
-      console.warn('Usando dados padrão devido ao erro:', axiosError.message || 'Erro desconhecido');
+      console.error('Erro ao carregar status:', err);
     } finally {
       setLoading(false);
     }
-  }, [showNotification]); // hasShownError is no longer a direct dependency
+  }, [showNotification, hasShownNotification]); // Add hasShownNotification to dependencies
 
   useEffect(() => {
     fetchSubscriptionStatus();
@@ -185,12 +184,12 @@ export default function SubscriptionStatusCard() {
     );
   }
 
-  if (error) {
+  if (subscriptionError) {
     return (
       <div className="bg-red-50 dark:bg-red-900/20 rounded-xl p-6 border border-red-200 dark:border-red-800">
         <div className="flex items-center text-red-700 dark:text-red-400">
           <AlertCircle className="h-5 w-5 mr-2 flex-shrink-0" />
-          <span className="text-sm">{error}</span>
+          <span className="text-sm">{subscriptionError}</span>
         </div>
       </div>
     );
