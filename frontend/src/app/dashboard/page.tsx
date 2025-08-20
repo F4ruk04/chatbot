@@ -8,6 +8,7 @@ import SubscriptionStatusCard from '@/components/SubscriptionStatusCard';
 import DashboardChart from '@/components/DashboardChart';
 import { dashboardAPI, DashboardStats, CompanyStats } from '@/lib/api';
 import { useFeatures } from '@/hooks/useFeatures';
+import axios from 'axios';
 import {
   Building2,
   MessageSquare,
@@ -47,8 +48,11 @@ export default function DashboardPage() {
       
       setStats(dashboardStats);
       setCompaniesStats(compStats);
-    } catch (err: any) {
-      const errorMessage = err.response?.data?.detail || 'Erro ao carregar dados do dashboard';
+    } catch (err: unknown) {
+      let errorMessage = 'Erro ao carregar dados do dashboard';
+      if (axios.isAxiosError(err) && err.response?.data?.detail) {
+        errorMessage = err.response.data.detail;
+      }
       setError(errorMessage);
       console.error(err);
     } finally {

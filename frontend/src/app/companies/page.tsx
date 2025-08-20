@@ -23,6 +23,7 @@ import {
   AlertCircle,
   X
 } from 'lucide-react';
+import axios from 'axios';
 
 export default function CompaniesPage() {
   const [companies, setCompanies] = useState<Company[]>([]);
@@ -49,8 +50,11 @@ export default function CompaniesPage() {
       setLoading(true);
       const data = await companiesAPI.getAll();
       setCompanies(data);
-    } catch (err: any) {
-      const errorMessage = err.response?.data?.detail || 'Erro ao carregar empresas';
+    } catch (err: unknown) {
+      let errorMessage = 'Erro ao carregar empresas';
+      if (axios.isAxiosError(err) && err.response?.data?.detail) {
+        errorMessage = err.response.data.detail;
+      }
       setError(errorMessage);
       console.error(err);
     } finally {
@@ -80,8 +84,12 @@ export default function CompaniesPage() {
       setShowForm(false);
       setEditingCompany(null);
       await loadCompanies();
-    } catch (err: any) {
-      setFormError(err.response?.data?.detail || (editingCompany ? 'Erro ao atualizar empresa' : 'Erro ao criar empresa'));
+    } catch (err: unknown) {
+      let formErrorMessage = (editingCompany ? 'Erro ao atualizar empresa' : 'Erro ao criar empresa');
+      if (axios.isAxiosError(err) && err.response?.data?.detail) {
+        formErrorMessage = err.response.data.detail;
+      }
+      setFormError(formErrorMessage);
     } finally {
       setFormLoading(false);
     }
@@ -99,8 +107,12 @@ export default function CompaniesPage() {
       try {
         await companiesAPI.delete(id);
         await loadCompanies();
-      } catch (err: any) {
-        setError('Erro ao deletar empresa');
+      } catch (err: unknown) {
+        let deleteErrorMessage = 'Erro ao deletar empresa';
+        if (axios.isAxiosError(err) && err.response?.data?.detail) {
+          deleteErrorMessage = err.response.data.detail;
+        }
+        setError(deleteErrorMessage);
         console.error(err);
       }
     }
