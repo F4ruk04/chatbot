@@ -1,7 +1,8 @@
 'use client';
 
-import { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { Activity, TrendingUp, Calendar } from 'lucide-react';
+import axios from 'axios';
 
 interface ChartData {
   day: string;
@@ -18,12 +19,14 @@ interface DashboardChartProps {
 export default function DashboardChart({ companyId, className = '' }: DashboardChartProps) {
   const [chartData, setChartData] = useState<ChartData[]>([]);
   const [loading, setLoading] = useState(true);
+  const [chartError, setChartError] = useState<string | null>(null); // Declare error state
   const [totalMessages, setTotalMessages] = useState(0);
   const [trend, setTrend] = useState(0);
 
   const fetchChartData = useCallback(async () => {
     try {
       setLoading(true);
+      setChartError(null); // Clear previous errors
       const { api } = await import('@/lib/api');
       
       // Se tiver companyId, buscar dados específicos da empresa
@@ -41,14 +44,18 @@ export default function DashboardChart({ companyId, className = '' }: DashboardC
         // Fallback para dados de exemplo se a API não retornar dados
         generateSampleData();
       }
-    } catch (err) {
+    } catch (err: unknown) { // Use unknown for better type safety
+      let errorMessage = 'Erro ao carregar dados do gráfico';
+      if (axios.isAxiosError(err) && err.response?.data?.detail) {
+        errorMessage = err.response.data.detail;
+      }
+      setChartError(errorMessage); // Set error state
       console.error('Error fetching chart data:', err);
-      // Use sample data as fallback
-      generateSampleData();
+      generateSampleData(); // Still use sample data as fallback
     } finally {
       setLoading(false);
     }
-  }, [companyId]); // Added companyId as dependency
+  }, [companyId]);
 
   useEffect(() => {
     fetchChartData();
@@ -146,12 +153,12 @@ export default function DashboardChart({ companyId, className = '' }: DashboardC
     );
   }
 
-  if (error) {
+  if (chartError) {
     return (
       <div className={`bg-white dark:bg-gray-900 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 p-6 ${className}`}>
         <div className="text-center py-12">
           <Activity className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-          <p className="text-gray-500 dark:text-gray-400">Erro ao carregar dados do gráfico</p>
+          <p className="text-gray-500 dark:text-gray-400">{chartError}</p>
         </div>
       </div>
     );
