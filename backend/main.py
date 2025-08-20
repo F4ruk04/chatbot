@@ -154,13 +154,6 @@ try:
 except ImportError:
     print("Warning: admin router not found")
 
-# Incluir routers sem prefixo (mantido para compatibilidade)
-app.include_router(auth.router)
-app.include_router(companies.router)
-app.include_router(whatsapp.router)
-app.include_router(dashboard.router)
-app.include_router(payments.router)
-
 if __name__ == "__main__":
     import uvicorn
     
