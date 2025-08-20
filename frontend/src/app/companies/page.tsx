@@ -6,7 +6,7 @@
 
 'use client';
 
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Layout from '@/components/Layout';
 import AuthGuard from '@/components/AuthGuard';
 import { companiesAPI, Company } from '@/lib/api';
