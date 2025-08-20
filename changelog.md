@@ -7,6 +7,7 @@
 - **Diagnosis**: New error "GET /api/subscription/status 404" observed. This indicates the backend endpoint is not found or the backend application is not running/accessible. Verified `backend/main.py` and confirmed `subscriptions` router is correctly included. The issue is likely related to the backend deployment on Railway (e.g., application not running, startup crash, or accessibility issues). Confirmed 404 is returned by the backend itself.
 - **Fix**: Resolved potential routing conflict in `backend/main.py` by removing duplicate inclusions of routers without prefixes. This ensures that the `/api/subscription` endpoint is correctly registered.
 - **Fix**: Resolved "Cannot find module 'react'" and other TypeScript errors in `frontend/src/app/register/plan/PlanContentClient.tsx` and `frontend/src/components/DashboardChart.tsx` by ensuring all necessary imports are present and code is correctly structured. Removed unused `Layout` import and `Plan` interface from `PlanContentClient.tsx`. Removed unused `maxValue` state and fixed `useEffect` dependency for `fetchChartData` in `DashboardChart.tsx`.
+- **Fix**: Addressed "erro ao carregar dados do dashboard" by adding a new endpoint `/api/dashboard/messages-chart` in `backend/app/routers/dashboard.py` to handle requests for aggregated message data across all companies, matching the frontend's expected API call when no specific `companyId` is provided.
 
 ## Project Summary (Prior to 2025-08-20)
 

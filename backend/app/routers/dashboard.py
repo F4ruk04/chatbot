@@ -175,16 +175,53 @@ def get_companies_stats(
     
     return companies_stats
 
+@router.get("/messages-chart", response_model=List[MessageStats])
+def get_messages_chart_data_all_companies(
+    days: int = 30,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """
+    Endpoint para obter dados do gráfico de mensagens por dia para todas as empresas do usuário
+    """
+    user_companies = db.query(Company).filter(Company.owner_id == current_user.id).all()
+    company_ids = [company.id for company in user_companies]
+
+    if not company_ids:
+        return []
+
+    end_date = datetime.now().date()
+    start_date = end_date - timedelta(days=days)
+
+    messages_by_date = db.query(
+        func.date(Message.created_at).label('date'),
+        func.count(Message.id).label('count')
+    ).filter(
+        and_(
+            Message.company_id.in_(company_ids),
+            func.date(Message.created_at) >= start_date,
+            func.date(Message.created_at) <= end_date
+        )
+    ).group_by(func.date(Message.created_at)).all()
+
+    chart_data = []
+    for date_count in messages_by_date:
+        chart_data.append(MessageStats(
+            date=date_count.date.isoformat(),
+            message_count=date_count.count
+        ))
+    
+    return chart_data
 
 @router.get("/messages-chart/{company_id}", response_model=List[MessageStats])
-def get_messages_chart_data(
+def get_messages_chart_data_single_company(
     company_id: int,
     days: int = 30,
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
     """
-    Endpoint para obter dados do gráfico de mensagens por dia
+    Endpoint para obter dados do gráfico de mensagens por dia para uma empresa específica
     """
     # Verificar se a empresa pertence ao utilizador
     company = db.query(Company).filter(
@@ -222,4 +259,3 @@ def get_messages_chart_data(
         ))
     
     return chart_data
-
