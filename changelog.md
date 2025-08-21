@@ -23,6 +23,7 @@
 - **Enhancement**: Added `@types/axios` to devDependencies in `frontend/package.json` for better TypeScript support and IDE autocompletion.
 - **Fix**: Reverted incorrect API endpoint path changes in `frontend/src/lib/api.ts` and restored the correct '/api/' prefix for all API functions. The previous fix was incorrect because the API_BASE_URL does not include '/api', so all endpoints need the full path including '/api/' prefix.
 - **Fix**: Corrected subscription status endpoint path in `frontend/src/components/SubscriptionStatusCard.tsx` to properly include the '/api/' prefix. The component was calling '/subscription/status' instead of '/api/subscription/status', causing 404 Not Found errors.
+- **Fix**: Corrected data processing in `frontend/src/components/DashboardChart.tsx` to properly handle API response format. The component was expecting data wrapped in a `chart_data` property, but the backend returns data directly.
 
 ## Project Summary (Prior to 2025-08-20)
 ### Primary Request and Intent

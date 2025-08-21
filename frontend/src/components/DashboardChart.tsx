@@ -37,8 +37,8 @@ export default function DashboardChart({ companyId, className = '' }: DashboardC
       
       const response = await api.get(endpoint);
       
-      if (response.data && response.data.chart_data) {
-        const data = response.data.chart_data;
+      if (response.data) {
+        const data = response.data;
         processChartData(data);
       } else {
         // Fallback para dados de exemplo se a API não retornar dados
