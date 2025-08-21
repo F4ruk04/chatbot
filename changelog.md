@@ -17,8 +17,14 @@
 - **Ongoing Diagnosis**: "Erro ao carregar dados do dashboard" persists. All code-level fixes for routing and frontend API calls have been applied. The issue is now likely environmental or a deeper backend runtime error. Detailed Railway logs are required for further diagnosis.
 - **Enhancement**: Added robust error handling and logging to `get_companies_stats`, `get_messages_chart_data_all_companies`, and `get_messages_chart_data_single_company` functions in `backend/app/routers/dashboard.py` to provide more specific error messages and tracebacks in Railway logs.
 
-## Project Summary (Prior to 2025-08-20)
 
+## 2025-08-21
+- **Fix**: Resolved "Cannot find name 'axios'" compilation error in `frontend/src/components/SubscriptionStatusCard.tsx` by adding `import axios from 'axios';` to the component.
+- **Enhancement**: Added `@types/axios` to devDependencies in `frontend/package.json` for better TypeScript support and IDE autocompletion.
+- **Verification**: Confirmed that API URL configuration in `vercel.json` correctly sets `NEXT_PUBLIC_API_URL` for Vercel deployments and that `frontend/src/lib/api.ts` properly uses the environment variable.
+- **Verification**: Verified that Dashboard and Companies pages already correctly import and use axios for error handling, requiring no changes.
+
+## Project Summary (Prior to 2025-08-20)
 ### Primary Request and Intent
 The initial task was to resolve "Failed to compile" errors in the frontend. This evolved into troubleshooting and resolving runtime errors on the deployed site, specifically "cannot show subscription status" and "gives error when creating account." The user also requested a comprehensive project summary to be added to the `changelog.md` file.
 
