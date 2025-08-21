@@ -21,7 +21,7 @@
 ## 2025-08-21
 - **Fix**: Resolved "Cannot find name 'axios'" compilation error in `frontend/src/components/SubscriptionStatusCard.tsx` by adding `import axios from 'axios';` to the component.
 - **Enhancement**: Added `@types/axios` to devDependencies in `frontend/package.json` for better TypeScript support and IDE autocompletion.
-- **Fix**: Corrected API endpoint path in `frontend/src/components/SubscriptionStatusCard.tsx` to prevent double prefixing of '/api/' in the URL. The component was making requests to '/api/api/subscription/status' instead of '/api/subscription/status' due to the baseURL already including the '/api' prefix.
+- **Fix**: Corrected multiple API endpoint paths in `frontend/src/lib/api.ts` to prevent double prefixing of '/api/' in the URLs. Functions in companiesAPI, dashboardAPI, messagesAPI, and authAPI were making requests to endpoints like '/api/api/companies/' instead of '/api/companies/' due to the baseURL already including the '/api' prefix.
 - **Verification**: Verified that Dashboard and Companies pages already correctly import and use axios for error handling, requiring no changes.
 
 ## Project Summary (Prior to 2025-08-20)
