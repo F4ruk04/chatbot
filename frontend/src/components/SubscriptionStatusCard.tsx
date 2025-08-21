@@ -39,7 +39,7 @@ export default function SubscriptionStatusCard() {
       setHasShownNotification(false); // Reset notification flag on new attempt
 
       const { api } = await import('@/lib/api');
-      const response = await api.get('/subscription/status');
+      const response = await api.get('/api/subscription/status');
       
       const data = response.data;
       if (data && data.plan && data.status) {
