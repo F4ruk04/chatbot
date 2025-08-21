@@ -21,7 +21,7 @@
 ## 2025-08-21
 - **Fix**: Resolved "Cannot find name 'axios'" compilation error in `frontend/src/components/SubscriptionStatusCard.tsx` by adding `import axios from 'axios';` to the component.
 - **Enhancement**: Added `@types/axios` to devDependencies in `frontend/package.json` for better TypeScript support and IDE autocompletion.
-- **Verification**: Confirmed that API URL configuration in `vercel.json` correctly sets `NEXT_PUBLIC_API_URL` for Vercel deployments and that `frontend/src/lib/api.ts` properly uses the environment variable.
+- **Fix**: Corrected API endpoint path in `frontend/src/components/SubscriptionStatusCard.tsx` to prevent double prefixing of '/api/' in the URL. The component was making requests to '/api/api/subscription/status' instead of '/api/subscription/status' due to the baseURL already including the '/api' prefix.
 - **Verification**: Verified that Dashboard and Companies pages already correctly import and use axios for error handling, requiring no changes.
 
 ## Project Summary (Prior to 2025-08-20)
