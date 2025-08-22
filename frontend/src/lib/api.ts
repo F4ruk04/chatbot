@@ -21,8 +21,10 @@ export const api = axios.create({
 api.interceptors.request.use(
   (config) => {
     const token = Cookies.get('access_token');
+    console.log('Token from cookies:', token);
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
+      console.log('Authorization header set:', config.headers.Authorization);
     }
     return config;
   },
@@ -43,6 +45,7 @@ api.interceptors.response.use(
     // Handle network errors
     if (!error.response) {
       console.error('Network error:', error);
+      console.error('Error config:', error.config);
     }
     
     if (error.response?.status === 401) {
