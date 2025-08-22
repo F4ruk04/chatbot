@@ -15,6 +15,7 @@ export interface AuthUser {
  * Salvar dados de autenticação nos cookies
  */
 export const saveAuthData = (token: string, userId: number, userName: string) => {
+  console.log('Saving auth data:', { token, userId, userName });
   // Configurar cookies com opções mais seguras
   const cookieOptions = {
     expires: 1, // 1 dia
@@ -26,6 +27,13 @@ export const saveAuthData = (token: string, userId: number, userName: string) =>
   Cookies.set('access_token', token, cookieOptions);
   Cookies.set('user_id', userId.toString(), cookieOptions);
   Cookies.set('user_name', userName, cookieOptions);
+  
+  // Verificar se os cookies foram salvos
+  console.log('Cookies after saving:', {
+    access_token: Cookies.get('access_token'),
+    user_id: Cookies.get('user_id'),
+    user_name: Cookies.get('user_name')
+  });
 };
 
 /**
