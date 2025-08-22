@@ -39,6 +39,7 @@ export default function SubscriptionStatusCard() {
       setHasShownNotification(false); // Reset notification flag on new attempt
 
       const { api } = await import('@/lib/api');
+      console.log('API Base URL:', api.defaults.baseURL);
       const response = await api.get('/api/subscription/status');
       
       const data = response.data;
@@ -66,6 +67,7 @@ export default function SubscriptionStatusCard() {
         }
       }
     } catch (err: unknown) {
+      console.error('Subscription status error:', err);
       let errorMessage = 'Não foi possível carregar o status da sua assinatura. Usando dados padrão.';
       // Error handling is done in the api.ts interceptor, so we just need to handle the error here
       if (err instanceof Error) {
