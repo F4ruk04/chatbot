@@ -67,13 +67,9 @@ export default function SubscriptionStatusCard() {
       }
     } catch (err: unknown) {
       let errorMessage = 'Não foi possível carregar o status da sua assinatura. Usando dados padrão.';
-      if (axios.isAxiosError(err)) {
-        if (err.response?.status === 401) {
-          // Do not show error for 401 (unauthenticated, handled by interceptor)
-          setSubscriptionError(null);
-          return;
-        }
-        errorMessage = err.response?.data?.detail || errorMessage;
+      // Error handling is done in the api.ts interceptor, so we just need to handle the error here
+      if (err instanceof Error) {
+        errorMessage = err.message || errorMessage;
       }
       
       setSubscriptionError(errorMessage);

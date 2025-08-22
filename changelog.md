@@ -25,6 +25,11 @@
 - **Fix**: Corrected subscription status endpoint path in `frontend/src/components/SubscriptionStatusCard.tsx` to properly include the '/api/' prefix. The component was calling '/subscription/status' instead of '/api/subscription/status', causing 404 Not Found errors.
 - **Fix**: Corrected data processing in `frontend/src/components/DashboardChart.tsx` to properly handle API response format. The component was expecting data wrapped in a `chart_data` property, but the backend returns data directly.
 
+## 2025-08-22
+- **Fix**: Resolved "Cannot find name 'axios'" compilation error in `frontend/src/components/SubscriptionStatusCard.tsx` by properly importing axios and using it for error handling.
+- **Fix**: Removed deprecated `@types/axios` dependency from `frontend/package.json` as it's not needed for axios 1.x and was causing TypeScript compilation issues.
+- **Fix**: Resolved "Cannot find module 'react'" and other TypeScript errors by running `npm install` to properly install all frontend dependencies.
+
 ## Project Summary (Prior to 2025-08-20)
 ### Primary Request and Intent
 The initial task was to resolve "Failed to compile" errors in the frontend. This evolved into troubleshooting and resolving runtime errors on the deployed site, specifically "cannot show subscription status" and "gives error when creating account." The user also requested a comprehensive project summary to be added to the `changelog.md` file.
