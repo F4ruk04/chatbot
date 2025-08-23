@@ -11,6 +11,20 @@
     - Adicionado fallback visual claro para quando houver erro ou dados incompletos.
     - Garantida a compatibilidade com a interface TypeScript `SubscriptionStatus`.
 
+## [2025-08-23] - Robustecimento do SubscriptionStatusCard e tratamento de erros (Iteração 2)
+
+### Fixed
+*   **Comportamento inconsistente do SubscriptionStatusCard**:
+    - Ajustado `frontend/src/components/SubscriptionStatusCard.tsx` para garantir que o card exiba imediatamente os dados do plano, mesmo se a resposta da API estiver parcial ou incompleta, aplicando valores padrão (`plan: "FREE"`, `status: "inactive"`, `renewal_date: new Date().toISOString()`).
+    - Implementado um bloco `finally` na função `fetchSubscriptionStatus` para assegurar que `setLoading(false)` seja sempre chamado, evitando que o card fique travado em "processando" ou piscando repetidamente.
+    - Reforçado o tratamento de 429 (Too Many Requests) com exponential backoff de até 5 tentativas.
+    - Garantido fallback visual consistente e mensagens claras em caso de falha de conexão ou erro do backend.
+    - Preservada compatibilidade total com a interface TypeScript `SubscriptionStatus`.
+
+### Added
+*   **Logs de depuração temporários (aprimorados)**:
+    - Re-adicionados e aprimorados logs em `frontend/src/components/SubscriptionStatusCard.tsx` para depurar o processamento da resposta da API (`DEBUG: Subscription API raw response data:`, `DEBUG: Processed subscription status:`) e a atualização do estado, bem como o fluxo de carregamento (`DEBUG: Setting loading to false in finally block.`, `DEBUG: SubscriptionStatusCard: Rendering loading state`, `DEBUG: SubscriptionStatusCard: Rendering error state:`, `DEBUG: SubscriptionStatusCard: No status data, rendering default fallback`, `DEBUG: SubscriptionStatusCard: Rendering with final status:`).
+
 ## [2025-08-23] - Melhorias no tratamento de erros e otimização de chamadas de API
 
 ### Fixed
@@ -20,10 +34,6 @@
 *   **Problemas de status da subscrição e 429 Too Many Requests**:
     - Implementado mecanismo de exponential backoff e retries em `frontend/src/components/SubscriptionStatusCard.tsx` para reduzir a frequência de chamadas de API e lidar com erros 429.
     - Corrigido erro de tipo TypeScript no bloco `catch` de `SubscriptionStatusCard.tsx`.
-
-### Added
-*   **Logs de depuração temporários**:
-    - Re-adicionados logs em `frontend/src/components/SubscriptionStatusCard.tsx` para depurar o processamento da resposta da API e a atualização do estado.
 
 ### Removed
 *   **Logs de depuração temporários (anteriores)**:

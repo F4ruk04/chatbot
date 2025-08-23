@@ -57,8 +57,9 @@ export default function SubscriptionStatusCard() {
 
       const { subscriptionAPI } = await import('@/lib/api');
       
-      const data = await subscriptionAPI.getStatus();
-      console.log('DEBUG: Subscription data received:', data); // Re-added debug log
+      const response = await subscriptionAPI.getStatus();
+      const data = response.data; // Access data from the response object
+      console.log('DEBUG: Subscription API raw response data:', data);
       
       // Safely define status with defaults
       const receivedStatus: SubscriptionStatus = {
@@ -72,11 +73,11 @@ export default function SubscriptionStatusCard() {
         warning_level: data?.warning_level || defaultSubscriptionStatus.warning_level,
       };
 
-      console.log('DEBUG: Setting subscription status to:', receivedStatus); // Re-added debug log
+      console.log('DEBUG: Processed subscription status:', receivedStatus);
       setStatus(receivedStatus);
 
       if (!data || !data.plan || !data.status) {
-        console.warn('DEBUG: Incomplete subscription data received, using defaults'); // Re-added debug log
+        console.warn('DEBUG: Incomplete subscription data received, using defaults');
         if (!hasShownNotification) {
           showNotification({
             type: 'warning',
@@ -89,7 +90,7 @@ export default function SubscriptionStatusCard() {
       }
       
     } catch (err: unknown) {
-      console.error('Subscription status error (attempt', retryCount + 1, '):', err);
+      console.error('DEBUG: Subscription status error (attempt', retryCount + 1, '):', err);
       
       let errorMessage = 'Erro ao carregar assinatura - Network Error';
       let shouldRetry = false;
@@ -118,7 +119,7 @@ export default function SubscriptionStatusCard() {
       }
       
       if (shouldRetry && retryCount < maxRetries) {
-        console.log(`Retrying in ${currentRetryDelay}ms... (${retryCount + 1}/${maxRetries})`);
+        console.log(`DEBUG: Retrying in ${currentRetryDelay}ms... (${retryCount + 1}/${maxRetries})`);
         setTimeout(() => {
           fetchSubscriptionStatus(retryCount + 1);
         }, currentRetryDelay);
@@ -138,18 +139,19 @@ export default function SubscriptionStatusCard() {
         setHasShownNotification(true);
       }
     } finally {
+      console.log('DEBUG: Setting loading to false in finally block.');
       setLoading(false); // Always set loading to false
     }
   }, [showNotification, hasShownNotification]);
 
   useEffect(() => {
-    console.log('SubscriptionStatusCard: useEffect triggered');
+    console.log('DEBUG: SubscriptionStatusCard: useEffect triggered');
     fetchSubscriptionStatus();
     
     // Timeout de segurança para evitar loading infinito (redundante with finally, but good fallback)
     const timeoutId = setTimeout(() => {
       if (loading) {
-        console.warn('SubscriptionStatusCard: Loading timeout reached, forcing completion');
+        console.warn('DEBUG: SubscriptionStatusCard: Loading timeout reached, forcing completion');
         setLoading(false);
         if (!status) {
           setStatus(defaultSubscriptionStatus);
@@ -214,7 +216,7 @@ export default function SubscriptionStatusCard() {
   };
 
   if (loading) {
-    console.log('SubscriptionStatusCard: Rendering loading state');
+    console.log('DEBUG: SubscriptionStatusCard: Rendering loading state');
     return (
       <div className="animate-pulse bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
         {/* Header skeleton */}
@@ -240,6 +242,7 @@ export default function SubscriptionStatusCard() {
   }
 
   if (subscriptionError) {
+    console.log('DEBUG: SubscriptionStatusCard: Rendering error state:', subscriptionError);
     return (
       <div className="bg-red-50 dark:bg-red-900/20 rounded-xl p-6 border border-red-200 dark:border-red-800">
         <div className="flex items-center justify-between">
@@ -260,7 +263,7 @@ export default function SubscriptionStatusCard() {
   }
 
   if (!status) {
-    console.log('SubscriptionStatusCard: No status data, rendering default fallback');
+    console.log('DEBUG: SubscriptionStatusCard: No status data, rendering default fallback');
     // This block should ideally not be reached with defaultSubscriptionStatus, but kept as a safeguard
     return (
       <div className="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-6 border border-gray-200 dark:border-gray-700">
@@ -272,7 +275,7 @@ export default function SubscriptionStatusCard() {
     );
   }
 
-  console.log('SubscriptionStatusCard: Rendering with status:', status);
+  console.log('DEBUG: SubscriptionStatusCard: Rendering with final status:', status);
 
   return (
     <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
