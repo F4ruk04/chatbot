@@ -58,7 +58,7 @@ export default function SubscriptionStatusCard() {
       const { subscriptionAPI } = await import('@/lib/api');
       
       const data = await subscriptionAPI.getStatus();
-      console.log('Subscription data received:', data);
+      console.log('DEBUG: Subscription data received:', data); // Re-added debug log
       
       // Safely define status with defaults
       const receivedStatus: SubscriptionStatus = {
@@ -72,11 +72,11 @@ export default function SubscriptionStatusCard() {
         warning_level: data?.warning_level || defaultSubscriptionStatus.warning_level,
       };
 
+      console.log('DEBUG: Setting subscription status to:', receivedStatus); // Re-added debug log
       setStatus(receivedStatus);
-      console.log('Subscription status set successfully:', receivedStatus);
 
       if (!data || !data.plan || !data.status) {
-        console.warn('Incomplete subscription data received, using defaults');
+        console.warn('DEBUG: Incomplete subscription data received, using defaults'); // Re-added debug log
         if (!hasShownNotification) {
           showNotification({
             type: 'warning',

@@ -21,8 +21,12 @@
     - Implementado mecanismo de exponential backoff e retries em `frontend/src/components/SubscriptionStatusCard.tsx` para reduzir a frequência de chamadas de API e lidar com erros 429.
     - Corrigido erro de tipo TypeScript no bloco `catch` de `SubscriptionStatusCard.tsx`.
 
-### Removed
+### Added
 *   **Logs de depuração temporários**:
+    - Re-adicionados logs em `frontend/src/components/SubscriptionStatusCard.tsx` para depurar o processamento da resposta da API e a atualização do estado.
+
+### Removed
+*   **Logs de depuração temporários (anteriores)**:
     - Removidos logs adicionados em `frontend/src/lib/api.ts` para `API_BASE_URL` e headers de requisição.
     - Removidos logs adicionados em `backend/app/utils/auth.py` para token JWT e payload decodificado.
 
