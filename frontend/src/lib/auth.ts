@@ -30,19 +30,9 @@ export const saveAuthData = (token: string, userId: number, userName: string) =>
     path: '/'
   };
   
-  // Em produção, definir o domínio para permitir cookies cross-domain
-  if (process.env.NODE_ENV === 'production') {
-    // Remover o protocolo e definir o domínio base
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || '';
-    if (apiUrl) {
-      try {
-        const url = new URL(apiUrl);
-        cookieOptions.domain = url.hostname;
-      } catch (e) {
-        console.error('Error parsing API URL:', e);
-      }
-    }
-  }
+  // Em produção, não definir domínio específico para evitar problemas cross-domain
+  // Os cookies serão salvos no domínio do frontend (Vercel)
+  // O backend (Railway) receberá os cookies via CORS
   
   Cookies.set('access_token', token, cookieOptions);
   Cookies.set('user_id', userId.toString(), cookieOptions);
@@ -64,7 +54,12 @@ export const verifyAuthDataSaved = (): boolean => {
   const userId = Cookies.get('user_id');
   const userName = Cookies.get('user_name');
   
-  return !!(token && userId && userName);
+  console.log('Verifying auth data:', { token: !!token, userId: !!userId, userName: !!userName });
+  
+  const isValid = !!(token && userId && userName);
+  console.log('Auth data verification result:', isValid);
+  
+  return isValid;
 };
 
 /**

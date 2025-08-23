@@ -36,11 +36,14 @@ export default function LoginPage() {
       saveAuthData(response.access_token, response.user_id, response.user_name);
       
       // Verificar se os cookies foram salvos corretamente antes de redirecionar
-      const maxAttempts = 10;
+      const maxAttempts = 20; // Aumentar tentativas
       let attempts = 0;
       
       const checkAndRedirect = () => {
+        console.log(`Attempt ${attempts + 1} to verify auth data`);
+        
         if (verifyAuthDataSaved()) {
+          console.log('Auth data verified successfully');
           showNotification({
             type: 'success',
             title: 'Login Bem-sucedido!',
@@ -50,8 +53,9 @@ export default function LoginPage() {
           router.push('/dashboard');
         } else if (attempts < maxAttempts) {
           attempts++;
-          setTimeout(checkAndRedirect, 50);
+          setTimeout(checkAndRedirect, 100); // Aumentar delay
         } else {
+          console.error('Failed to verify auth data after', maxAttempts, 'attempts');
           const msg = 'Erro ao salvar dados de autenticação. Tente novamente.';
           setError(msg);
           showNotification({
