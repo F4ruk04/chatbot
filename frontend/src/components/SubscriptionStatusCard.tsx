@@ -73,6 +73,8 @@ export default function SubscriptionStatusCard() {
       // Error handling is done in the api.ts interceptor, so we just need to handle the error here
       if (err instanceof Error) {
         errorMessage = err.message || errorMessage;
+      } else if (typeof err === 'string') {
+        errorMessage = err;
       }
       
       setSubscriptionError(errorMessage);
