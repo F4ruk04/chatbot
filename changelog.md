@@ -1,5 +1,20 @@
 # Changelog
 
+## [2025-08-23] - Melhorias no tratamento de erros e otimização de chamadas de API
+
+### Fixed
+*   **Tratamento de erros no Dashboard**:
+    - Corrigido erro de tipo TypeScript "'err.response.status' is possibly 'undefined'" em `frontend/src/app/dashboard/page.tsx`.
+    - Implementado tratamento robusto para erros de rede e HTTP (400, 401, >=500), garantindo mensagens de erro padrão.
+*   **Problemas de status da subscrição e 429 Too Many Requests**:
+    - Implementado mecanismo de exponential backoff e retries em `frontend/src/components/SubscriptionStatusCard.tsx` para reduzir a frequência de chamadas de API e lidar com erros 429.
+    - Corrigido erro de tipo TypeScript no bloco `catch` de `SubscriptionStatusCard.tsx`.
+
+### Removed
+*   **Logs de depuração temporários**:
+    - Removidos logs adicionados em `frontend/src/lib/api.ts` para `API_BASE_URL` e headers de requisição.
+    - Removidos logs adicionados em `backend/app/utils/auth.py` para token JWT e payload decodificado.
+
 ## [2025-08-23] - Correção de erro de tipo TypeScript no tratamento de erros do dashboard
 
 ### Fixed

@@ -9,7 +9,6 @@ import Cookies from 'js-cookie';
 // Configurar URL base da API
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
-console.log('API_BASE_URL:', API_BASE_URL); // Added log for API_BASE_URL
 
 // Criar instância do Axios
 export const api = axios.create({
@@ -25,12 +24,9 @@ export const api = axios.create({
 api.interceptors.request.use(
   (config) => {
     const token = Cookies.get('access_token');
-    console.log('Axios Interceptor: Token from cookies:', token);
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
-      console.log('Axios Interceptor: Authorization header set:', config.headers.Authorization);
     }
-    console.log('Axios Interceptor: Request config headers:', config.headers); // Added log for all headers
     return config;
   },
   (error) => {

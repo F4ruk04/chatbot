@@ -74,11 +74,9 @@ def get_current_user(
     Obtém o utilizador atual a partir do token JWT
     """
     token = credentials.credentials
-    print(f"DEBUG: get_current_user received token: {token}") # Added debug log
     
     try:
         payload = verify_token(token)
-        print(f"DEBUG: get_current_user decoded payload: {payload}") # Added debug log
         
         user_id: str = payload.get("sub")
         if user_id is None:

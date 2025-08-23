@@ -33,8 +33,9 @@ export default function SubscriptionStatusCard() {
   const [hasShownNotification, setHasShownNotification] = useState(false); // Renamed and re-purposed
 
   const fetchSubscriptionStatus = useCallback(async (retryCount = 0) => {
-    const maxRetries = 3;
-    const retryDelay = 1000; // 1 segundo
+    const maxRetries = 5; // Aumentar o número máximo de retries
+    const baseRetryDelay = 1000; // 1 segundo
+    const currentRetryDelay = baseRetryDelay * Math.pow(2, retryCount); // Exponential backoff
 
     try {
       if (retryCount === 0) {
@@ -86,32 +87,42 @@ export default function SubscriptionStatusCard() {
     } catch (err: unknown) {
       console.error('Subscription status error (attempt', retryCount + 1, '):', err);
       
-      // Se ainda há tentativas disponíveis, tentar novamente
-      if (retryCount < maxRetries) {
-        console.log(`Retrying in ${retryDelay}ms... (${retryCount + 1}/${maxRetries})`);
-        setTimeout(() => {
-          fetchSubscriptionStatus(retryCount + 1);
-        }, retryDelay);
-        return; // Não definir erro ainda, aguardar retry
-      }
-      
-      // Se esgotaram as tentativas, mostrar erro e dados padrão
       let errorMessage = 'Erro ao carregar assinatura - Network Error';
+      let shouldRetry = false;
       
-      if (err instanceof Error) {
-        if (err.message.includes('Network Error')) {
+      if (axios.isAxiosError(err)) {
+        const response = err.response; // Narrow the type here
+        if (!response) { // Network error
           errorMessage = 'Erro de conexão. Verifique sua internet e tente novamente.';
-        } else if (err.message.includes('401')) {
+          shouldRetry = true;
+        } else if (response.status === 429) {
+          errorMessage = 'Muitas requisições. Por favor, aguarde e tente novamente.';
+          shouldRetry = true;
+        } else if (response.status === 401) {
           errorMessage = 'Sessão expirada. Faça login novamente.';
-        } else if (err.message.includes('500')) {
+        } else if (response.status >= 500) {
           errorMessage = 'Erro interno do servidor. Tente novamente em alguns minutos.';
+        } else if (response.data?.detail) {
+          errorMessage = response.data.detail;
         } else {
-          errorMessage = err.message || errorMessage;
+          errorMessage = `Erro HTTP: ${response.status || 'desconhecido'}`;
         }
+      } else if (err instanceof Error) {
+        errorMessage = err.message;
       } else if (typeof err === 'string') {
         errorMessage = err;
       }
       
+      // Se ainda há tentativas disponíveis e deve-se tentar novamente
+      if (shouldRetry && retryCount < maxRetries) {
+        console.log(`Retrying in ${currentRetryDelay}ms... (${retryCount + 1}/${maxRetries})`);
+        setTimeout(() => {
+          fetchSubscriptionStatus(retryCount + 1);
+        }, currentRetryDelay);
+        return; // Não definir erro ainda, aguardar retry
+      }
+      
+      // Se esgotaram as tentativas ou não deve-se tentar novamente, mostrar erro e dados padrão
       setSubscriptionError(errorMessage);
       
       // Sempre definir dados padrão em caso de erro
