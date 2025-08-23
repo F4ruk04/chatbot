@@ -14,10 +14,10 @@ const nextConfig: NextConfig = {
     return [
       {
         source: '/api/:path*',
-        destination: `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/:path*`,
+        destination: `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/:path*`,
       },
     ];
-  },
+ },
 
   // Redirecionamentos (removido o redirecionamento de '/' para '/login')
   // async redirects() {
@@ -28,7 +28,7 @@ const nextConfig: NextConfig = {
   //       permanent: false,
   //     },
   //   ];
-  // },
+ // },
   
   // Headers CORS para produção
   async headers() {

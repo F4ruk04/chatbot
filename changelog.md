@@ -1,5 +1,12 @@
 # Changelog
 
+## [2025-08-23] - Fix API URL configuration issues
+
+### Fixed
+*   Corrigido problema de configuração de URL da API que causava erros de rede
+*   Ajustado a regra de reescrita no next.config.ts para evitar caminhos de API duplicados
+*   Corrigida a configuração do ambiente para evitar erros de "not found"
+
 ## [2025-08-23] - Fix dashboard "not found" issue in production
 
 ### Fixed
