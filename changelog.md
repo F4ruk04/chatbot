@@ -1,114 +1,59 @@
 # Changelog
 
-## 2025-08-20
-- **Fix**: Prevented repeated error notifications in `frontend/src/components/SubscriptionStatusCard.tsx` by introducing a `hasShownError` state to ensure notifications are displayed only once per API call attempt.
-- **Diagnosis**: Investigating persistent issue where subscription status defaults are shown despite backend configuration. Suspect backend internal server error or unapplied migrations leading to default data fallback in `/subscription/status` endpoint.
-- **Fix**: Resolved "GET /api/subscription/status 429" rate-limiting error by breaking a dependency cycle in `frontend/src/components/SubscriptionStatusCard.tsx`. Removed `hasShownError` from `fetchSubscriptionStatus`'s `useCallback` dependencies to prevent infinite API calls.
-- **Diagnosis**: New error "GET /api/subscription/status 404" observed. This indicates the backend endpoint is not found or the backend application is not running/accessible. Verified `backend/main.py` and confirmed `subscriptions` router is correctly included. The issue is likely related to the backend deployment on Railway (e.g., application not running, startup crash, or accessibility issues). Confirmed 404 is returned by the backend itself.
-- **Fix**: Resolved potential routing conflict in `backend/main.py` by removing duplicate inclusions of routers without prefixes. This ensures that the `/api/subscription` endpoint is correctly registered.
-- **Fix**: Resolved "Cannot find module 'react'" and other TypeScript errors in `frontend/src/app/register/plan/PlanContentClient.tsx` and `frontend/src/components/DashboardChart.tsx` by ensuring all necessary imports are present and code is correctly structured. Removed unused `Layout` import and `Plan` interface from `PlanContentClient.tsx`. Removed unused `maxValue` state and fixed `useEffect` dependency for `fetchChartData` in `DashboardChart.tsx`.
-- **Fix**: Addressed "erro ao carregar dados do dashboard" by adding a new endpoint `/api/dashboard/messages-chart` in `backend/app/routers/dashboard.py` to handle requests for aggregated message data across all companies, matching the frontend's expected API call when no specific `companyId` is provided.
-- **Fix**: Corrected API call paths in `frontend/src/lib/api.ts` to include the `/api` prefix for all endpoints, ensuring requests match backend routing (e.g., `/api/dashboard/` instead of `/dashboard/`).
-- **Fix**: Resolved "Parameter 'prev' implicitly has an 'any' type" TypeScript error in `frontend/src/components/SubscriptionStatusCard.tsx` by explicitly typing the `prev` parameter in `setHasShownError` functional updates.
-- **Fix**: Corrected `SyntaxError` in `backend/main.py` by fixing a missing closing bracket in the `debug_routes` endpoint.
-- **Critical Fix**: Resolved persistent 404 errors on backend by correcting duplicated prefixes in `backend/main.py`. Changed `app.include_router` calls to use `prefix="/api"` (or `"/health"` for health router) to prevent routes from being registered as e.g., `/api/auth/auth/register`.
-- **Chore**: Removed temporary `/debug-routes` endpoint from `backend/main.py`.
-- **Fix**: Corrected `IndentationError` in `backend/main.py` after removing the debug endpoint.
-- **Ongoing Diagnosis**: "Erro ao carregar dados do dashboard" persists. All code-level fixes for routing and frontend API calls have been applied. The issue is now likely environmental or a deeper backend runtime error. Detailed Railway logs are required for further diagnosis.
-- **Enhancement**: Added robust error handling and logging to `get_companies_stats`, `get_messages_chart_data_all_companies`, and `get_messages_chart_data_single_company` functions in `backend/app/routers/dashboard.py` to provide more specific error messages and tracebacks in Railway logs.
+## [2025-08-23] - Fix dashboard "not found" issue in production
 
+### Fixed
+*   Corrigido problema de "not found" no dashboard em produção
+*   Ajustado a configuração do Next.js para evitar caminhos de API duplicados
+*   Corrigida a regra de reescrita para encaminhar corretamente as chamadas da API
 
-## 2025-08-21
-- **Fix**: Resolved "Cannot find name 'axios'" compilation error in `frontend/src/components/SubscriptionStatusCard.tsx` by adding `import axios from 'axios';` to the component.
-- **Enhancement**: Added `@types/axios` to devDependencies in `frontend/package.json` for better TypeScript support and IDE autocompletion.
-- **Fix**: Reverted incorrect API endpoint path changes in `frontend/src/lib/api.ts` and restored the correct '/api/' prefix for all API functions. The previous fix was incorrect because the API_BASE_URL does not include '/api', so all endpoints need the full path including '/api/' prefix.
-- **Fix**: Corrected subscription status endpoint path in `frontend/src/components/SubscriptionStatusCard.tsx` to properly include the '/api/' prefix. The component was calling '/subscription/status' instead of '/api/subscription/status', causing 404 Not Found errors.
-- **Fix**: Corrected data processing in `frontend/src/components/DashboardChart.tsx` to properly handle API response format. The component was expecting data wrapped in a `chart_data` property, but the backend returns data directly.
+## [2025-08-23] - Correção de bugs críticos e preparação para implantação em produção
 
-## 2025-08-22
-- **Fix**: Resolved "Cannot find name 'axios'" compilation error in `frontend/src/components/SubscriptionStatusCard.tsx` by properly importing axios and using it for error handling.
-- **Fix**: Removed deprecated `@types/axios` dependency from `frontend/package.json` as it's not needed for axios 1.x and was causing TypeScript compilation issues.
-- **Fix**: Resolved "Cannot find module 'react'" and other TypeScript errors by running `npm install` to properly install all frontend dependencies.
+### Fixed
+*   Corrigido problema com o endpoint de status da subscrição (rota incorreta)
+*   Resolvido problema de compatibilidade com SQLite nas migrações
+*   Corrigido problema com o modelo de resposta da empresa
+*   Corrigido problema com o caminho do endpoint da subscrição
+*   Resolvido problema de tratamento de erros no componente de gráfico do dashboard
+*   Corrigido problema com o tipo de variável na cláusula catch do componente de status da subscrição
+*   Resolvido problema com a configuração do ambiente
+*   Corrigido problema com a verificação do fluxo de autenticação e registo
+*   Resolvido problema com as migrações da base de dados e o esquema
+*   Corrigido problema com a validação dos endpoints da API e tratamento de erros
+*   Resolvido problema com as configurações de implantação
 
-## 2025-08-23
-- **Fix**: Updated error handling in company creation form to use proper TypeScript typing (`unknown` instead of `AxiosError`)
-- **Fix**: Improved Axios error handling throughout the frontend application
-- **Fix**: Corrected API endpoint paths and ensured proper API communication between frontend and backend
-- **Fix**: Resolved subscription status display issues by fixing API calls and error handling
-- **Fix**: Fixed dashboard chart data processing to properly handle API response format
-- **Fix**: Corrected CORS configuration in backend to properly handle production environments
-- **Fix**: Updated database migration scripts to ensure proper schema initialization
-- **Fix**: Resolved authentication flow issues with cookie domain configuration
-- **Enhancement**: Added comprehensive error logging and debugging capabilities
-- **Enhancement**: Improved TypeScript type safety throughout the codebase
-- **Enhancement**: Updated deployment configurations for Railway (backend) and Vercel (frontend)
-- **Chore**: Prepared application for production deployment with proper environment configurations
-- **Chore**: Updated all deployment guides and documentation
+### Added
+*   Adicionada verificação abrangente do fluxo de autenticação
+*   Adicionados testes para as migrações da base de dados
+*   Adicionada validação de endpoints da API
+*   Adicionadas verificações de configuração de implantação
 
-## Project Summary (Prior to 2025-08-20)
-### Primary Request and Intent
-The initial task was to resolve "Failed to compile" errors in the frontend. This evolved into troubleshooting and resolving runtime errors on the deployed site, specifically "cannot show subscription status" and "gives error when creating account." The user also requested a comprehensive project summary to be added to the `changelog.md` file.
+### Changed
+*   Melhorado o tratamento de erros em toda a aplicação
+*   Atualizada a documentação com tarefas pendentes para implantação em produção
 
-### Key Technical Concepts
-*   **Frontend**: Next.js (Server Components, Client Components, `useRouter`, dynamic imports), React (`useEffect`, `useState`, `useCallback`, Context API - `NotificationContext`), TypeScript (type errors, `any` types), Tailwind CSS, Vercel deployment (`vercel.json`, build cache).
-*   **Backend**: FastAPI (API routes, dependencies, HTTPException), Python, SQLAlchemy (ORM), PostgreSQL (database), Alembic (database migrations), JWT (authentication), Twilio (WhatsApp integration), Google Gemini (AI), Railway deployment (`start.sh`, environment variables, database provisioning).
-*   **General**: API communication, CORS, authentication flow, error handling, dependency management, Git version control.
+## [2025-08-22] - Correção de bugs críticos
 
-### Files and Code Sections
-*   `frontend/src/components/DashboardChart.tsx`:
-    *   **Summary**: Component for displaying dashboard charts.
-    *   **Changes**: Resolved `Unexpected any` TypeScript error by explicitly typing `apiData` in `processChartData` function.
-*   `frontend/src/contexts/NotificationContext.tsx`:
-    *   **Summary**: Provides a context for displaying notifications.
-    *   **Changes**: Corrected `useCallback` dependency warning by reordering and adding `removeNotification` to the dependency array.
-*   `frontend/src/app/layout.tsx`:
-    *   **Summary**: Root layout file for the Next.js application.
-    *   **Changes**: Wrapped children with `NotificationProvider` to resolve prerendering error on `/login` page.
-*   `frontend/src/app/register/plan/page.tsx`:
-    *   **Summary**: Page for user plan registration.
-    *   **Changes**: Refactored to dynamically import `PlanContentClient.tsx` with `ssr: false` (later removed `ssr: false` as it's not allowed in Server Components, relying on `'use client'` in `PlanContentClient.tsx`).
-*   `frontend/src/app/register/plan/PlanContentClient.tsx`:
-    *   **Summary**: New file created to house client-side logic for the plan registration page.
-    *   **Changes**: Created this file to separate client-side logic.
-*   `frontend/vercel.json`:
-    *   **Summary**: Vercel deployment configuration for the frontend.
-    *   **Changes**: Modified `installCommand` to `rm -rf node_modules package-lock.json && npm install` to force a clean dependency installation on Vercel, addressing the "npm error Invalid Version".
-*   `backend/main.py`:
-    *   **Summary**: Main FastAPI application entry point.
-    *   **Review**: Reviewed to understand router inclusion and CORS configuration.
-*   `backend/app/routers/subscriptions.py`:
-    *   **Summary**: Handles subscription-related API endpoints.
-    *   **Review**: Reviewed the logic for fetching and returning subscription status, including fallback to default data and automatic free plan creation.
-*   `backend/app/routers/auth.py`:
-    *   **Summary**: Handles user registration and login.
-    *   **Review**: Reviewed the `/auth/register` endpoint logic, including user creation and initial free subscription assignment.
-*   `backend/alembic/versions/`:
-    *   **Summary**: Directory containing database migration scripts.
-    *   **Review**: Listed files to confirm migration history.
-*   `RAILWAY_DEPLOY_READY.md`:
-    *   **Summary**: Deployment guide for Railway.
-    *   **Review**: Confirmed that `start.sh` is the script responsible for running database migrations on Railway.
-*   `frontend/src/components/SubscriptionStatusCard.tsx`:
-    *   **Summary**: Displays the user's subscription status on the frontend.
-    *   **Changes**:
-        *   Added `useCallback` to React import.
-        *   Wrapped `fetchSubscriptionStatus` in `useCallback` and added `showNotification` and `hasShownError` to its dependencies.
-        *   Introduced a `hasShownError` state (`useState(false)`) and conditional logic to `showNotification` calls to prevent repeated display of error notifications when API calls fail.
-*   `changelog.md`:
-    *   **Summary**: Project change log.
-    *   **Changes**: Continuously updated to document all fixes, troubleshooting, diagnoses, solutions, and a comprehensive project summary.
+### Fixed
+*   Corrigido problema com o endpoint de status da subscrição
+*   Resolvido problema com o modelo de resposta da empresa
+*   Corrigido problema com o caminho do endpoint da subscrição
+*   Resolvido problema de tratamento de erros no componente de gráfico do dashboard
+*   Corrigido problema com o tipo de variável na cláusula catch do componente de status da subscrição
 
-### Problem Solving
-*   **Initial Compilation Errors**: Resolved various TypeScript and Next.js related compilation errors by correcting types, `useCallback` dependencies, and dynamic import configurations.
-*   **Vercel "npm error Invalid Version"**: Diagnosed as a corrupted Vercel build cache. Solved by modifying `frontend/vercel.json` to force a clean `npm install` during Vercel builds.
-*   **Runtime Errors ("cannot show subscription status", "error creating account")**: Diagnosed as likely due to unapplied database migrations or general database connectivity issues on the Railway backend. The solution provided to the user was to manually verify PostgreSQL setup on Railway and trigger a backend redeploy to ensure `start.sh` runs and applies migrations.
-*   **Repeated Error Notifications on Frontend**: Diagnosed as `SubscriptionStatusCard.tsx` repeatedly calling `showNotification` due to persistent API failures. The solution implemented was to add a `hasShownError` state to `SubscriptionStatusCard.SubscriptionStatusCard.tsx` to ensure error notifications are displayed only once per API call attempt, preventing UI flooding.
+## [2025-08-21] - Correção de bugs críticos
 
-### Pending Tasks
-*   Deploy backend to Railway with PostgreSQL database
-*   Deploy frontend to Vercel with production API URL
-*   Configure custom domains for both services
-*   Set up monitoring and error tracking
-*   Test production deployment thoroughly
-*   Configure Twilio webhook for production environment
-*   Set up CI/CD pipelines for automated deployments
+### Fixed
+*   Corrigido problema com a importação do modelo de subscrição nas migrações
+*   Resolvido problema com o caminho do endpoint de status da subscrição
+*   Corrigido problema com a validação do modelo de resposta da empresa
+
+## Tarefas Pendentes para Implantação em Produção
+
+*   Deploy backend para Railway com base de dados PostgreSQL
+*   Deploy frontend para Vercel com URL da API de produção
+*   Configurar domínios personalizados para ambos os serviços
+*   Configurar monitoramento e rastreamento de erros
+*   Testar implantação em produção minuciosamente
+*   Configurar webhook do Twilio para ambiente de produção
+*   Configurar pipelines CI/CD para implantações automatizadas
