@@ -1,0 +1,16 @@
+{
+  "status": "commited",
+  "type": "frontend",
+  "scope": "codebase",
+  "localEndpoint": "http://localhost:3000",
+  "executionArgs": {
+    "projectName": "saas-chatbot-inteligente-twilio",
+    "projectPath": "c:/Users/Faruk/Desktop/saas-chatbot-inteligente-twilio",
+    "testIds": [],
+    "additionalInstruction": "Analisar bugs, warnings, inconsistências e vulnerabilidades no código e aplicar correções automáticas",
+    "envs": {
+      "API_KEY": "sk-user-Vuadb8NzbVpId-rYPb-C3gU_9OmeLuuIdp9pu1t_bNCgue7G_70oKGHIyrUD84gasFl5XDLoY2X02AmNDnHpuk1is3AbgGiXCaW71ifhZYkp58p0L-pByKLUm4x1UlQDoCI"
+    }
+  },
+  "proxy": "http://3decab55-2512-439a-b451-5b3c9095ec64:knXco3fqZ9jGqKSs6gpLZvUu0RWdKa8I@tun.testsprite.com:8080"
+}

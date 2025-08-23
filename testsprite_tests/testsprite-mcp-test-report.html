@@ -1,0 +1,551 @@
+
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>Markdown Preview</title>
+      <style>
+        body {
+          font-family: sans-serif;
+          padding: 40px;
+          line-height: 1.6;
+          background: #fdfdfd;
+          color: #333;
+        }
+        pre {
+          background: #f4f4f4;
+          padding: 10px;
+          border-radius: 5px;
+          overflow-x: auto;
+        }
+        code {
+          font-family: monospace;
+          background: #eee;
+          padding: 2px 4px;
+        }
+        table {
+          border-collapse: collapse;
+          width: 100%;
+          margin-top: 20px;
+        }
+        th, td {
+          border: 1px solid #ccc;
+          padding: 8px 12px;
+          text-align: left;
+        }
+        th {
+          background-color: #f2f2f2;
+          font-weight: bold;
+        }
+      </style>
+    </head>
+    <body>
+      <h1>TestSprite AI Testing Report(MCP)</h1>
+<hr>
+<h2>1️⃣ Document Metadata</h2>
+<ul>
+<li><strong>Project Name:</strong> saas-chatbot-inteligente-twilio</li>
+<li><strong>Version:</strong> 0.1.2</li>
+<li><strong>Date:</strong> 2025-08-23</li>
+<li><strong>Prepared by:</strong> TestSprite AI Team</li>
+</ul>
+<hr>
+<h2>2️⃣ Requirement Validation Summary</h2>
+<h3>Requirement: User Registration</h3>
+<ul>
+<li><strong>Description:</strong> Verify that a user can successfully register with valid details and that error handling works when required fields are missing.</li>
+</ul>
+<h4>Test 1</h4>
+<ul>
+<li><strong>Test ID:</strong> TC001</li>
+<li><strong>Test Name:</strong> User Registration Success</li>
+<li><strong>Test Code:</strong> <a href="./TC001_User_Registration_Success.py">code_file</a></li>
+<li><strong>Test Error:</strong>
+Browser Console Logs:
+[ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE (at http://localhost:3000/<em>next/static/chunks/node_modules_next_dist_01fcdebf.</em>.js:0:0)
+[ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE (at http://localhost:3000/<em>next/static/chunks/src_app_favicon_ico_mjs_f9cadd25.</em>.js:0:0)
+[ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE (at http://localhost:3000/<em>next/static/chunks/src_lib_api_ts_16304b0c.</em>.js:0:0)
+[ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE (at http://localhost:3000/<em>next/static/chunks/src_3e6db321.</em>.js:0:0)
+[ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE (at http://localhost:3000/<em>next/static/chunks/node_modules_47aee636.</em>.js:0:0)</li>
+<li><strong>Test Visualization and Result:</strong> https://www.testsprite.com/dashboard/mcp/tests/2ecfccf2-3efd-4e4e-8fa9-955f2016e59a/b1fb3f88-f557-461e-8285-93fff2511aed</li>
+<li><strong>Status:</strong> ❌ Failed</li>
+<li><strong>Severity:</strong> High</li>
+<li><strong>Analysis / Findings:</strong> The test failed because the frontend application did not load any required JS resources due to network errors (net::ERR_EMPTY_RESPONSE). This prevented the User Registration page and its functionality from rendering and executing properly.</li>
+</ul>
+<hr>
+<h4>Test 2</h4>
+<ul>
+<li><strong>Test ID:</strong> TC002</li>
+<li><strong>Test Name:</strong> User Registration with Missing Required Fields</li>
+<li><strong>Test Code:</strong> <a href="./TC002_User_Registration_with_Missing_Required_Fields.py">code_file</a></li>
+<li><strong>Test Error:</strong>
+Browser Console Logs:
+[ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE (at http://localhost:3000/_next/static/chunks/<em>d057e1bb.</em>.js:0:0)
+[ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE (at http://localhost:3000/<em>next/static/chunks/node_modules_next_dist_01fcdebf.</em>.js:0:0)
+[ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE (at http://localhost:3000/<em>next/static/chunks/src_app_layout_tsx_68b267f5.</em>.js:0:0)
+[ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE (at http://localhost:3000/<em>next/static/chunks/src_lib_api_ts_16304b0c.</em>.js:0:0)
+[ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE (at http://localhost:3000/<em>next/static/chunks/src_3e6db321.</em>.js:0:0)</li>
+<li><strong>Test Visualization and Result:</strong> https://www.testsprite.com/dashboard/mcp/tests/2ecfccf2-3efd-4e4e-8fa9-955f2016e59a/65a31fb0-997a-4c81-9799-cf2c111f5845</li>
+<li><strong>Status:</strong> ❌ Failed</li>
+<li><strong>Severity:</strong> High</li>
+<li><strong>Analysis / Findings:</strong> The test failed as the frontend failed to load essential JS chunks, causing the registration form validation and error handling UI not to render or respond.</li>
+</ul>
+<hr>
+<h3>Requirement: User Login</h3>
+<ul>
+<li><strong>Description:</strong> Supports user login with valid/invalid credentials.</li>
+</ul>
+<h4>Test 1</h4>
+<ul>
+<li><strong>Test ID:</strong> TC003</li>
+<li><strong>Test Name:</strong> User Login Success</li>
+<li><strong>Test Code:</strong> <a href="./TC003_User_Login_Success.py">code_file</a></li>
+<li><strong>Test Error:</strong>
+Browser Console Logs:
+[ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE (at http://localhost:3000/<em>next/static/chunks/node_modules_next_dist_01fcdebf.</em>.js:0:0)
+[ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE (at http://localhost:3000/<em>next/static/chunks/src_app_favicon_ico_mjs_f9cadd25.</em>.js:0:0)
+[ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE (at http://localhost:3000/<em>next/static/chunks/src_lib_api_ts_16304b0c.</em>.js:0:0)
+[ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE (at http://localhost:3000/<em>next/static/chunks/src_3e6db321.</em>.js:0:0)
+[ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE (at http://localhost:3000/<em>next/static/chunks/node_modules_47aee636.</em>.js:0:0)</li>
+<li><strong>Test Visualization and Result:</strong> https://www.testsprite.com/dashboard/mcp/tests/2ecfccf2-3efd-4e4e-8fa9-955f2016e59a/54ba6826-5a2b-4bc2-b67b-bd11f614e7a4</li>
+<li><strong>Status:</strong> ❌ Failed</li>
+<li><strong>Severity:</strong> High</li>
+<li><strong>Analysis / Findings:</strong> User Login failed due to the frontend application's JavaScript resources failing to load, preventing the login form and authentication logic from functioning.</li>
+</ul>
+<hr>
+<h4>Test 2</h4>
+<ul>
+<li><strong>Test ID:</strong> TC004</li>
+<li><strong>Test Name:</strong> User Login Failure with Incorrect Credentials</li>
+<li><strong>Test Code:</strong> <a href="./TC004_User_Login_Failure_with_Incorrect_Credentials.py">code_file</a></li>
+<li><strong>Test Error:</strong> Failed to go to the start URL. Err: Error executing action go_to_url: Page.goto: Timeout 60000ms exceeded.
+Call log:
+<ul>
+<li>navigating to &quot;http://localhost:3000/&quot;, waiting until &quot;load&quot;</li>
+</ul>
+</li>
+<li><strong>Test Visualization and Result:</strong> https://www.testsprite.com/dashboard/mcp/tests/2ecfccf2-3efd-4e4e-8fa9-955f2016e59a/53339dc1-326b-4663-8157-4b5dd4dae209</li>
+<li><strong>Status:</strong> ❌ Failed</li>
+<li><strong>Severity:</strong> High</li>
+<li><strong>Analysis / Findings:</strong> The test failed because the frontend URL failed to load within the allowed timeout period. This prevented accessing the login page and thus unable to verify login failure handling with incorrect credentials.</li>
+</ul>
+<hr>
+<h3>Requirement: User Logout</h3>
+<ul>
+<li><strong>Description:</strong> Allows a logged-in user to log out successfully.</li>
+</ul>
+<h4>Test 1</h4>
+<ul>
+<li><strong>Test ID:</strong> TC005</li>
+<li><strong>Test Name:</strong> User Logout Success</li>
+<li><strong>Test Code:</strong> <a href="./TC005_User_Logout_Success.py">code_file</a></li>
+<li><strong>Test Error:</strong>
+Browser Console Logs:
+[ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE (at http://localhost:3000/_next/static/chunks/<em>d057e1bb.</em>.js:0:0)
+[ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE (at http://localhost:3000/<em>next/static/chunks/src_app_layout_tsx_68b267f5.</em>.js:0:0)
+[ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE (at http://localhost:3000/<em>next/static/chunks/node_modules_next_dist_01fcdebf.</em>.js:0:0)
+[ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE (at http://localhost:3000/<em>next/static/chunks/src_app_favicon_ico_mjs_f9cadd25.</em>.js:0:0)
+[ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE (at http://localhost:3000/<em>next/static/chunks/src_lib_api_ts_16304b0c.</em>.js:0:0)</li>
+<li><strong>Test Visualization and Result:</strong> https://www.testsprite.com/dashboard/mcp/tests/2ecfccf2-3efd-4e4e-8fa9-955f2016e59a/5a872da2-f9ae-4ec6-976c-8d6dd15d69ac</li>
+<li><strong>Status:</strong> ❌ Failed</li>
+<li><strong>Severity:</strong> High</li>
+<li><strong>Analysis / Findings:</strong> User Logout test failed due to the frontend’s static JS resources not loading, making it impossible to load the page where logout functionality is performed.</li>
+</ul>
+<hr>
+<h3>Requirement: User Profile Management</h3>
+<ul>
+<li><strong>Description:</strong> Allows a logged-in user to edit and save profile information.</li>
+</ul>
+<h4>Test 1</h4>
+<ul>
+<li><strong>Test ID:</strong> TC006</li>
+<li><strong>Test Name:</strong> User Profile Edit and Save</li>
+<li><strong>Test Code:</strong> <a href="./TC006_User_Profile_Edit_and_Save.py">code_file</a></li>
+<li><strong>Test Error:</strong>
+Browser Console Logs:
+[ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE (at http://localhost:3000/<em>next/static/chunks/src_app_layout_tsx_68b267f5.</em>.js:0:0)
+[ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE (at http://localhost:3000/<em>next/static/chunks/node_modules_next_dist_01fcdebf.</em>.js:0:0)
+[ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE (at http://localhost:3000/<em>next/static/chunks/src_app_favicon_ico_mjs_f9cadd25.</em>.js:0:0)
+[ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE (at http://localhost:3000/<em>next/static/chunks/src_lib_api_ts_16304b0c.</em>.js:0:0)
+[ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE (at http://localhost:3000/<em>next/static/chunks/src_3e6db321.</em>.js:0:0)
+[ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE (at http://localhost:3000/<em>next/static/chunks/node_modules_47aee636.</em>.js:0:0)</li>
+<li><strong>Test Visualization and Result:</strong> https://www.testsprite.com/dashboard/mcp/tests/2ecfccf2-3efd-4e4e-8fa9-955f2016e59a/4c7f324a-a866-4709-98ee-c2352f9944c4</li>
+<li><strong>Status:</strong> ❌ Failed</li>
+<li><strong>Severity:</strong> High</li>
+<li><strong>Analysis / Findings:</strong> Frontend resources failed to load causing user profile editing interface and save functionality to be non-functional.</li>
+</ul>
+<hr>
+<h3>Requirement: Company Management</h3>
+<ul>
+<li><strong>Description:</strong> Allows creation, editing, and validation of company information.</li>
+</ul>
+<h4>Test 1</h4>
+<ul>
+<li><strong>Test ID:</strong> TC007</li>
+<li><strong>Test Name:</strong> Create New Company Successfully</li>
+<li><strong>Test Code:</strong> <a href="./TC007_Create_New_Company_Successfully.py">code_file</a></li>
+<li><strong>Test Error:</strong>
+Browser Console Logs:
+[ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE (at http://localhost:3000/_next/static/chunks/<em>01f48b92.</em>.js:0:0)</li>
+<li><strong>Test Visualization and Result:</strong> https://www.testsprite.com/dashboard/mcp/tests/2ecfccf2-3efd-4e4e-8fa9-955f2016e59a/578b4851-93f1-4515-868a-c797ef5be56c</li>
+<li><strong>Status:</strong> ❌ Failed</li>
+<li><strong>Severity:</strong> High</li>
+<li><strong>Analysis / Findings:</strong> Creation of new company failed due to frontend chunk files not loading, preventing the form and creation logic from executing.</li>
+</ul>
+<hr>
+<h4>Test 2</h4>
+<ul>
+<li><strong>Test ID:</strong> TC008</li>
+<li><strong>Test Name:</strong> Edit Existing Company Information</li>
+<li><strong>Test Code:</strong> <a href="./TC008_Edit_Existing_Company_Information.py">code_file</a></li>
+<li><strong>Test Error:</strong>
+Browser Console Logs:
+[ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE (at http://localhost:3000/<em>next/static/chunks/node_modules_next_dist_01fcdebf.</em>.js:0:0)
+[ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE (at http://localhost:3000/<em>next/static/chunks/src_app_favicon_ico_mjs_f9cadd25.</em>.js:0:0)
+[ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE (at http://localhost:3000/<em>next/static/chunks/src_lib_api_ts_16304b0c.</em>.js:0:0)
+[ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE (at http://localhost:3000/<em>next/static/chunks/src_3e6db321.</em>.js:0:0)
+[ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE (at http://localhost:3000/<em>next/static/chunks/node_modules_47aee636.</em>.js:0:0)
+[ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE (at http://localhost:3000/_next/static/chunks/node_modules_next_dist_client_components_builtin_global-error_da3ded25.js:0:0)</li>
+<li><strong>Test Visualization and Result:</strong> https://www.testsprite.com/dashboard/mcp/tests/2ecfccf2-3efd-4e4e-8fa9-955f2016e59a/bf922a31-7549-49cf-9797-ba9f65a1b1bf</li>
+<li><strong>Status:</strong> ❌ Failed</li>
+<li><strong>Severity:</strong> High</li>
+<li><strong>Analysis / Findings:</strong> Frontend failed to load properly, resulting in inability to access or interact with the company editing interface.</li>
+</ul>
+<hr>
+<h4>Test 3</h4>
+<ul>
+<li><strong>Test ID:</strong> TC009</li>
+<li><strong>Test Name:</strong> Attempt Company Creation with Invalid Data</li>
+<li><strong>Test Code:</strong> <a href="./TC009_Attempt_Company_Creation_with_Invalid_Data.py">code_file</a></li>
+<li><strong>Test Error:</strong>
+Browser Console Logs:
+[ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE (at http://localhost:3000/_next/static/chunks/<em>d057e1bb.</em>.js:0:0)
+[ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE (at http://localhost:3000/<em>next/static/chunks/src_app_layout_tsx_68b267f5.</em>.js:0:0)
+[ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE (at http://localhost:3000/<em>next/static/chunks/src_app_favicon_ico_mjs_f9cadd25.</em>.js:0:0)
+[ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE (at http://localhost:3000/<em>next/static/chunks/src_lib_api_ts_16304b0c.</em>.js:0:0)
+[ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE (at http://localhost:3000/<em>next/static/chunks/node_modules_47aee636.</em>.js:0:0)
+[ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE (at http://localhost:3000/<em>next/static/chunks/src_app_page_tsx_da3ded25.</em>.js:0:0)</li>
+<li><strong>Test Visualization and Result:</strong> https://www.testsprite.com/dashboard/mcp/tests/2ecfccf2-3efd-4e4e-8fa9-955f2016e59a/72243e94-077d-424e-a44a-08909289342b</li>
+<li><strong>Status:</strong> ❌ Failed</li>
+<li><strong>Severity:</strong> High</li>
+<li><strong>Analysis / Findings:</strong> The frontend application did not load, preventing any client-side validation or error handling for invalid company creation data.</li>
+</ul>
+<hr>
+<h3>Requirement: Subscription Management</h3>
+<ul>
+<li><strong>Description:</strong> Allows users to view and manage subscription plans, including upgrades and downgrades.</li>
+</ul>
+<h4>Test 1</h4>
+<ul>
+<li><strong>Test ID:</strong> TC010</li>
+<li><strong>Test Name:</strong> View and Manage Subscription Plans</li>
+<li><strong>Test Code:</strong> <a href="./TC010_View_and_Manage_Subscription_Plans.py">code_file</a></li>
+<li><strong>Test Error:</strong> Failed to go to the start URL. Err: Error executing action go_to_url: Page.goto: Timeout 60000ms exceeded.
+Call log:
+<ul>
+<li>navigating to &quot;http://localhost:3000/&quot;, waiting until &quot;load&quot;</li>
+</ul>
+</li>
+<li><strong>Test Visualization and Result:</strong> https://www.testsprite.com/dashboard/mcp/tests/2ecfccf2-3efd-4e4e-8fa9-955f2016e59a/94e360fc-4f1f-4dc5-b58c-13d00d0e9979</li>
+<li><strong>Status:</strong> ❌ Failed</li>
+<li><strong>Severity:</strong> High</li>
+<li><strong>Analysis / Findings:</strong> Page load timeout blocked access to subscription plan management UI, preventing verification of plan viewing and subscription changes.</li>
+</ul>
+<hr>
+<h4>Test 2</h4>
+<ul>
+<li><strong>Test ID:</strong> TC011</li>
+<li><strong>Test Name:</strong> Subscription Management Edge Case: Downgrade with Insufficient Quota</li>
+<li><strong>Test Code:</strong> <a href="./TC011_Subscription_Management_Edge_Case_Downgrade_with_Insufficient_Quota.py">code_file</a></li>
+<li><strong>Test Error:</strong>
+Browser Console Logs:
+[ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE (at http://localhost:3000/_next/static/chunks/<em>d057e1bb.</em>.js:0:0)
+[ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE (at http://localhost:3000/<em>next/static/chunks/src_app_layout_tsx_68b267f5.</em>.js:0:0)
+[ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE (at http://localhost:3000/<em>next/static/chunks/node_modules_next_dist_01fcdebf.</em>.js:0:0)
+[ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE (at http://localhost:3000/<em>next/static/chunks/src_lib_api_ts_16304b0c.</em>.js:0:0)
+[ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE (at http://localhost:3000/<em>next/static/chunks/node_modules_47aee636.</em>.js:0:0)</li>
+<li><strong>Test Visualization and Result:</strong> https://www.testsprite.com/dashboard/mcp/tests/2ecfccf2-3efd-4e4e-8fa9-955f2016e59a/acb32689-4875-4193-b9ef-6cf5ccab8491</li>
+<li><strong>Status:</strong> ❌ Failed</li>
+<li><strong>Severity:</strong> High</li>
+<li><strong>Analysis / Findings:</strong> Frontend files failed to load, blocking access to subscription downgrade UI and logic that enforce quota restrictions.</li>
+</ul>
+<hr>
+<h3>Requirement: Payment Processing</h3>
+<ul>
+<li><strong>Description:</strong> Handles payment processing via PayPal and manages payment failures.</li>
+</ul>
+<h4>Test 1</h4>
+<ul>
+<li><strong>Test ID:</strong> TC012</li>
+<li><strong>Test Name:</strong> Process Payment with PayPal Successfully</li>
+<li><strong>Test Code:</strong> <a href="./TC012_Process_Payment_with_PayPal_Successfully.py">code_file</a></li>
+<li><strong>Test Error:</strong>
+Browser Console Logs:
+[ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE (at http://localhost:3000/_next/static/chunks/<em>d057e1bb.</em>.js:0:0)
+[ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE (at http://localhost:3000/<em>next/static/chunks/src_app_layout_tsx_68b267f5.</em>.js:0:0)
+[ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE (at http://localhost:3000/<em>next/static/chunks/node_modules_next_dist_01fcdebf.</em>.js:0:0)
+[ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE (at http://localhost:3000/<em>next/static/chunks/src_lib_api_ts_16304b0c.</em>.js:0:0)
+[ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE (at http://localhost:3000/<em>next/static/chunks/src_3e6db321.</em>.js:0:0)</li>
+<li><strong>Test Visualization and Result:</strong> https://www.testsprite.com/dashboard/mcp/tests/2ecfccf2-3efd-4e4e-8fa9-955f2016e59a/cd41daed-5e88-404c-9c46-97168faa4720</li>
+<li><strong>Status:</strong> ❌ Failed</li>
+<li><strong>Severity:</strong> High</li>
+<li><strong>Analysis / Findings:</strong> Frontend resource loading failure disabled access to payment processing interface and PayPal integration flows.</li>
+</ul>
+<hr>
+<h4>Test 2</h4>
+<ul>
+<li><strong>Test ID:</strong> TC013</li>
+<li><strong>Test Name:</strong> Payment Handling Failure Scenario</li>
+<li><strong>Test Code:</strong> <a href="./TC013_Payment_Handling_Failure_Scenario.py">code_file</a></li>
+<li><strong>Test Error:</strong> Failed to go to the start URL. Err: Error executing action go_to_url: Page.goto: Timeout 60000ms exceeded.
+Call log:
+<ul>
+<li>navigating to &quot;http://localhost:3000/&quot;, waiting until &quot;load&quot;</li>
+</ul>
+</li>
+<li><strong>Test Visualization and Result:</strong> https://www.testsprite.com/dashboard/mcp/tests/2ecfccf2-3efd-4e4e-8fa9-955f2016e59a/96535d0e-6869-4992-8e70-83a7d4c5e681</li>
+<li><strong>Status:</strong> ❌ Failed</li>
+<li><strong>Severity:</strong> High</li>
+<li><strong>Analysis / Findings:</strong> Test could not start because the frontend login page failed to load within the timeout, preventing access to payment failure handling UI.</li>
+</ul>
+<hr>
+<h3>Requirement: Payment Transaction History</h3>
+<ul>
+<li><strong>Description:</strong> Allows users to view their past payment transactions.</li>
+</ul>
+<h4>Test 1</h4>
+<ul>
+<li><strong>Test ID:</strong> TC014</li>
+<li><strong>Test Name:</strong> View Payment Transaction History</li>
+<li><strong>Test Code:</strong> <a href="./TC014_View_Payment_Transaction_History.py">code_file</a></li>
+<li><strong>Test Error:</strong>
+Browser Console Logs:
+[ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE (at http://localhost:3000/_next/static/chunks/<em>d057e1bb.</em>.js:0:0)
+[ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE (at http://localhost:3000/<em>next/static/chunks/src_app_layout_tsx_68b267f5.</em>.js:0:0)
+[ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE (at http://localhost:3000/<em>next/static/chunks/node_modules_next_dist_01fcdebf.</em>.js:0:0)
+[ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE (at http://localhost:3000/<em>next/static/chunks/src_app_favicon_ico_mjs_f9cadd25.</em>.js:0:0)</li>
+<li><strong>Test Visualization and Result:</strong> https://www.testsprite.com/dashboard/mcp/tests/2ecfccf2-3efd-4e4e-8fa9-955f2016e59a/462ba783-7ef4-47fe-a582-0c0fd0d072ae</li>
+<li><strong>Status:</strong> ❌ Failed</li>
+<li><strong>Severity:</strong> High</li>
+<li><strong>Analysis / Findings:</strong> Frontend resources failures prevented loading the payment transaction history page and related UI elements.</li>
+</ul>
+<hr>
+<h3>Requirement: Dashboard Metrics</h3>
+<ul>
+<li><strong>Description:</strong> Displays dashboard metrics according to the user's subscription plan.</li>
+</ul>
+<h4>Test 1</h4>
+<ul>
+<li><strong>Test ID:</strong> TC015</li>
+<li><strong>Test Name:</strong> Dashboard Metrics Display According to User Plan</li>
+<li><strong>Test Code:</strong> <a href="./TC015_Dashboard_Metrics_Display_According_to_User_Plan.py">code_file</a></li>
+<li><strong>Test Error:</strong> Failed to go to the start URL. Err: Error executing action go_to_url: Page.goto: Timeout 60000ms exceeded.
+Call log:
+<ul>
+<li>navigating to &quot;http://localhost:3000/&quot;, waiting until &quot;load&quot;</li>
+</ul>
+</li>
+<li><strong>Test Visualization and Result:</strong> https://www.testsprite.com/dashboard/mcp/tests/2ecfccf2-3efd-4e4e-8fa9-955f2016e59a/0a8943ff-9cea-4c30-9c1c-59ad3d6531a8</li>
+<li><strong>Status:</strong> ❌ Failed</li>
+<li><strong>Severity:</strong> High</li>
+<li><strong>Analysis / Findings:</strong> Page load timed out preventing access to dashboard metrics reflecting user subscription plans.</li>
+</ul>
+<hr>
+<h3>Requirement: Dashboard Access Control</h3>
+<ul>
+<li><strong>Description:</strong> Verifies correct limited display or feature restrictions on the dashboard for free or low-tier users.</li>
+</ul>
+<h4>Test 1</h4>
+<ul>
+<li><strong>Test ID:</strong> TC016</li>
+<li><strong>Test Name:</strong> Dashboard Access with Limited or Free Plan</li>
+<li><strong>Test Code:</strong> <a href="./TC016_Dashboard_Access_with_Limited_or_Free_Plan.py">code_file</a></li>
+<li><strong>Test Error:</strong> Failed to go to the start URL. Err: Error executing action go_to_url: Page.goto: Timeout 60000ms exceeded.
+Call log:
+<ul>
+<li>navigating to &quot;http://localhost:3000/&quot;, waiting until &quot;load&quot;</li>
+</ul>
+</li>
+<li><strong>Test Visualization and Result:</strong> https://www.testsprite.com/dashboard/mcp/tests/2ecfccf2-3efd-4e4e-8fa9-955f2016e59a/893da8d4-9711-4e8e-bb9c-8f88a1a56e21</li>
+<li><strong>Status:</strong> ❌ Failed</li>
+<li><strong>Severity:</strong> High</li>
+<li><strong>Analysis / Findings:</strong> Timeout and failure loading frontend dashboard blocked verification of access restrictions and limited-feature displays for free/low-tier plans.</li>
+</ul>
+<hr>
+<h3>Requirement: WhatsApp Integration</h3>
+<ul>
+<li><strong>Description:</strong> Verifies sending and receiving WhatsApp messages via chatbot integration.</li>
+</ul>
+<h4>Test 1</h4>
+<ul>
+<li><strong>Test ID:</strong> TC017</li>
+<li><strong>Test Name:</strong> Send WhatsApp Message via Chatbot Integration</li>
+<li><strong>Test Code:</strong> <a href="./TC017_Send_WhatsApp_Message_via_Chatbot_Integration.py">code_file</a></li>
+<li><strong>Test Error:</strong>
+Browser Console Logs:
+[ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE (at http://localhost:3000/<em>next/static/chunks/node_modules_next_dist_01fcdebf.</em>.js:0:0)
+[ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE (at http://localhost:3000/<em>next/static/chunks/src_app_favicon_ico_mjs_f9cadd25.</em>.js:0:0)
+[ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE (at http://localhost:3000/<em>next/static/chunks/src_lib_api_ts_16304b0c.</em>.js:0:0)
+[ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE (at http://localhost:3000/<em>next/static/chunks/src_3e6db321.</em>.js:0:0)
+[ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE (at http://localhost:3000/<em>next/static/chunks/node_modules_47aee636.</em>.js:0:0)
+[ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE (at http://localhost:3000/<em>next/static/chunks/src_app_page_tsx_da3ded25.</em>.js:0:0)</li>
+<li><strong>Test Visualization and Result:</strong> https://www.testsprite.com/dashboard/mcp/tests/2ecfccf2-3efd-4e4e-8fa9-955f2016e59a/2ec0e522-46de-4e51-897e-2f8319c6d105</li>
+<li><strong>Status:</strong> ❌ Failed</li>
+<li><strong>Severity:</strong> High</li>
+<li><strong>Analysis / Findings:</strong> Frontend application failed to load required scripts, preventing ability to send WhatsApp messages via chatbot integration.</li>
+</ul>
+<hr>
+<h4>Test 2</h4>
+<ul>
+<li><strong>Test ID:</strong> TC018</li>
+<li><strong>Test Name:</strong> Receive WhatsApp Message and Chatbot Response</li>
+<li><strong>Test Code:</strong> <a href="./TC018_Receive_WhatsApp_Message_and_Chatbot_Response.py">code_file</a></li>
+<li><strong>Test Error:</strong>
+Browser Console Logs:
+[ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE (at http://localhost:3000/<em>next/static/chunks/node_modules_next_dist_01fcdebf.</em>.js:0:0)
+[ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE (at http://localhost:3000/<em>next/static/chunks/src_app_favicon_ico_mjs_f9cadd25.</em>.js:0:0)
+[ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE (at http://localhost:3000/<em>next/static/chunks/src_lib_api_ts_16304b0c.</em>.js:0:0)
+[ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE (at http://localhost:3000/<em>next/static/chunks/src_3e6db321.</em>.js:0:0)
+[ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE (at http://localhost:3000/<em>next/static/chunks/node_modules_47aee636.</em>.js:0:0)</li>
+<li><strong>Test Visualization and Result:</strong> https://www.testsprite.com/dashboard/mcp/tests/2ecfccf2-3efd-4e4e-8fa9-955f2016e59a/a2f23b57-fe68-40aa-9853-87e1a380c0b8</li>
+<li><strong>Status:</strong> ❌ Failed</li>
+<li><strong>Severity:</strong> High</li>
+<li><strong>Analysis / Findings:</strong> Frontend failure to load blocked testing the reception of WhatsApp messages and chatbot processing.</li>
+</ul>
+<hr>
+<h3>Requirement: Route Access Control</h3>
+<ul>
+<li><strong>Description:</strong> Ensures all protected routes redirect unauthenticated users to the login page.</li>
+</ul>
+<h4>Test 1</h4>
+<ul>
+<li><strong>Test ID:</strong> TC019</li>
+<li><strong>Test Name:</strong> Route Access Control Without Authentication</li>
+<li><strong>Test Code:</strong> <a href="./TC019_Route_Access_Control_Without_Authentication.py">code_file</a></li>
+<li><strong>Test Error:</strong>
+Browser Console Logs:
+[ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE (at http://localhost:3000/<em>next/static/chunks/src_app_layout_tsx_68b267f5.</em>.js:0:0)
+[ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE (at http://localhost:3000/<em>next/static/chunks/node_modules_next_dist_01fcdebf.</em>.js:0:0)
+[ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE (at http://localhost:3000/<em>next/static/chunks/src_app_favicon_ico_mjs_f9cadd25.</em>.js:0:0)
+[ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE (at http://localhost:3000/<em>next/static/chunks/src_lib_api_ts_16304b0c.</em>.js:0:0)
+[ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE (at http://localhost:3000/<em>next/static/chunks/src_3e6db321.</em>.js:0:0)</li>
+<li><strong>Test Visualization and Result:</strong> https://www.testsprite.com/dashboard/mcp/tests/2ecfccf2-3efd-4e4e-8fa9-955f2016e59a/c351235f-ac82-4853-b006-4fbc0869f48a</li>
+<li><strong>Status:</strong> ❌ Failed</li>
+<li><strong>Severity:</strong> High</li>
+<li><strong>Analysis / Findings:</strong> Frontend static resource loading failure prevented testing of route access control and redirect to login for unauthenticated users.</li>
+</ul>
+<hr>
+<h3>Requirement: Permission Enforcement</h3>
+<ul>
+<li><strong>Description:</strong> Verifies that actions requiring specific permissions are blocked if the user lacks necessary privileges.</li>
+</ul>
+<h4>Test 1</h4>
+<ul>
+<li><strong>Test ID:</strong> TC020</li>
+<li><strong>Test Name:</strong> Permission Enforcement on Restricted Actions</li>
+<li><strong>Test Code:</strong> <a href="./TC020_Permission_Enforcement_on_Restricted_Actions.py">code_file</a></li>
+<li><strong>Test Error:</strong>
+Browser Console Logs:
+[ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE (at http://localhost:3000/_next/static/chunks/<em>01f48b92.</em>.js:0:0)
+[ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE (at http://localhost:3000/_next/static/chunks/<em>d057e1bb.</em>.js:0:0)
+[ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE (at http://localhost:3000/<em>next/static/chunks/node_modules_next_dist_01fcdebf.</em>.js:0:0)
+[ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE (at http://localhost:3000/<em>next/static/chunks/src_app_favicon_ico_mjs_f9cadd25.</em>.js:0:0)
+[ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE (at http://localhost:3000/<em>next/static/chunks/src_lib_api_ts_16304b0c.</em>.js:0:0)</li>
+<li><strong>Test Visualization and Result:</strong> https://www.testsprite.com/dashboard/mcp/tests/2ecfccf2-3efd-4e4e-8fa9-955f2016e59a/eff471c4-57ce-4e04-9cab-d32f9af6ddbe</li>
+<li><strong>Status:</strong> ❌ Failed</li>
+<li><strong>Severity:</strong> High</li>
+<li><strong>Analysis / Findings:</strong> Test unable to verify permission enforcement due to frontend failing to load required JS and component resources.</li>
+</ul>
+<hr>
+<h3>Requirement: URL Parameter Handling</h3>
+<ul>
+<li><strong>Description:</strong> Verifies that the system correctly processes URL parameters and displays dynamic content accordingly.</li>
+</ul>
+<h4>Test 1</h4>
+<ul>
+<li><strong>Test ID:</strong> TC021</li>
+<li><strong>Test Name:</strong> URL Parameter Handling and Dynamic Content Display</li>
+<li><strong>Test Code:</strong> <a href="./TC021_URL_Parameter_Handling_and_Dynamic_Content_Display.py">code_file</a></li>
+<li><strong>Test Error:</strong>
+Browser Console Logs:
+[ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE (at http://localhost:3000/_next/static/chunks/<em>01f48b92.</em>.js:0:0)</li>
+<li><strong>Test Visualization and Result:</strong> https://www.testsprite.com/dashboard/mcp/tests/2ecfccf2-3efd-4e4e-8fa9-955f2016e59a/49616ac9-f7e1-4364-a70b-dc238380b637</li>
+<li><strong>Status:</strong> ❌ Failed</li>
+<li><strong>Severity:</strong> High</li>
+<li><strong>Analysis / Findings:</strong> Loading failure of the frontend blocked testing of URL parameter parsing and dynamic content rendering.</li>
+</ul>
+<hr>
+<h3>Requirement: Invalid Route Handling</h3>
+<ul>
+<li><strong>Description:</strong> Ensures that accessing invalid or nonexistent routes displays a user-friendly 404 error page.</li>
+</ul>
+<h4>Test 1</h4>
+<ul>
+<li><strong>Test ID:</strong> TC022</li>
+<li><strong>Test Name:</strong> Handling of Invalid Routes Shows 404 Page</li>
+<li><strong>Test Code:</strong> <a href="./TC022_Handling_of_Invalid_Routes_Shows_404_Page.py">code_file</a></li>
+<li><strong>Test Error:</strong>
+Browser Console Logs:
+[ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE (at http://localhost:3000/_next/static/chunks/<em>01f48b92.</em>.js:0:0)</li>
+<li><strong>Test Visualization and Result:</strong> https://www.testsprite.com/dashboard/mcp/tests/2ecfccf2-3efd-4e4e-8fa9-955f2016e59a/8da1dff8-0e5b-4032-b812-e132293a5a1d</li>
+<li><strong>Status:</strong> ❌ Failed</li>
+<li><strong>Severity:</strong> High</li>
+<li><strong>Analysis / Findings:</strong> Unable to confirm that invalid routes display a friendly 404 page due to frontend static resource load failure.</li>
+</ul>
+<hr>
+<h3>Requirement: Post-Authentication Redirects</h3>
+<ul>
+<li><strong>Description:</strong> Verifies that after successful login or registration, the user is redirected to the correct landing page.</li>
+</ul>
+<h4>Test 1</h4>
+<ul>
+<li><strong>Test ID:</strong> TC023</li>
+<li><strong>Test Name:</strong> Post-Login and Post-Registration Redirects</li>
+<li><strong>Test Code:</strong> <a href="./TC023_Post_Login_and_Post_Registration_Redirects.py">code_file</a></li>
+<li><strong>Test Error:</strong> Failed to go to the start URL. Err: Error executing action go_to_url: Page.goto: Timeout 60000ms exceeded.
+Call log:
+<ul>
+<li>navigating to &quot;http://localhost:3000/&quot;, waiting until &quot;load&quot;</li>
+</ul>
+</li>
+<li><strong>Test Visualization and Result:</strong> https://www.testsprite.com/dashboard/mcp/tests/2ecfccf2-3efd-4e4e-8fa9-955f2016e59a/8a35e495-a3ac-44c6-a55e-7f3a51d52f98</li>
+<li><strong>Status:</strong> ❌ Failed</li>
+<li><strong>Severity:</strong> High</li>
+<li><strong>Analysis / Findings:</strong> Test failed because the frontend landing page did not load, blocking verification of correct redirects after login or registration.</li>
+</ul>
+<hr>
+<h3>Requirement: Health Check API</h3>
+<ul>
+<li><strong>Description:</strong> Verifies that the health check API endpoint returns the correct service status.</li>
+</ul>
+<h4>Test 1</h4>
+<ul>
+<li><strong>Test ID:</strong> TC024</li>
+<li><strong>Test Name:</strong> Health Check API Status Verification</li>
+<li><strong>Test Code:</strong> <a href="./TC024_Health_Check_API_Status_Verification.py">code_file</a></li>
+<li><strong>Test Error:</strong>
+Browser Console Logs:
+[ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE (at http://localhost:3000/_next/static/chunks/<em>d057e1bb.</em>.js:0:0)
+[ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE (at http://localhost:3000/<em>next/static/chunks/src_app_layout_tsx_68b267f5.</em>.js:0:0)
+[ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE (at http://localhost:3000/<em>next/static/chunks/node_modules_next_dist_01fcdebf.</em>.js:0:0)
+[ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE (at http://localhost:3000/<em>next/static/chunks/src_app_favicon_ico_mjs_f9cadd25.</em>.js:0:0)
+[ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE (at http://localhost:3000/<em>next/static/chunks/src_lib_api_ts_16304b0c.</em>.js:0:0)
+[ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE (at http://localhost:3000/<em>next/static/chunks/node_modules_47aee636.</em>.js:0:0)</li>
+<li><strong>Test Visualization and Result:</strong> https://www.testsprite.com/dashboard/mcp/tests/2ecfccf2-3efd-4e4e-8fa9-955f2016e59a/4082cef7-979e-48ae-bdf6-a3fd12ec0d0e</li>
+<li><strong>Status:</strong> ❌ Failed</li>
+<li><strong>Severity:</strong> High</li>
+<li><strong>Analysis / Findings:</strong> Frontend failed to load thus the health check API endpoint could not be verified through the UI.</li>
+</ul>
+<hr>
+<h2>3️⃣ Coverage &amp; Matching Metrics</h2>
+<ul>
+<li>100% of product requirements tested**</li>
+<li>0% of tests passed**</li>
+<li><strong>Key gaps / risks:</strong><br>
+All frontend tests failed due to resource loading issues (net::ERR_EMPTY_RESPONSE) and page load timeouts. This indicates a fundamental problem with the frontend application's ability to serve its static assets or a severe performance bottleneck. The application is essentially non-functional from a user's perspective.</li>
+</ul>
+
+    </body>
+    </html>
+  

@@ -1,0 +1,547 @@
+[
+  {
+    "id": "TC001",
+    "title": "User Registration Success",
+    "description": "Verify that a new user can register successfully with valid input data and receives a JWT token.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to the registration page."
+      },
+      {
+        "type": "action",
+        "description": "Input valid user details including email, username, and password."
+      },
+      {
+        "type": "action",
+        "description": "Submit the registration form."
+      },
+      {
+        "type": "assertion",
+        "description": "Check that the user account is created in the database."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify that the response includes a valid JWT token."
+      },
+      {
+        "type": "assertion",
+        "description": "Ensure a welcome or confirmation message is returned."
+      }
+    ]
+  },
+  {
+    "id": "TC002",
+    "title": "User Registration Input Validation",
+    "description": "Ensure the registration form validates incorrect inputs and returns appropriate errors.",
+    "category": "error handling",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to the registration page."
+      },
+      {
+        "type": "action",
+        "description": "Submit registration with missing required fields (e.g., no password)."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify that validation errors are displayed for missing fields."
+      },
+      {
+        "type": "action",
+        "description": "Submit registration with invalid email format."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify that email format validation error is shown."
+      },
+      {
+        "type": "action",
+        "description": "Submit registration with password below minimum length."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify that password length validation error is shown."
+      }
+    ]
+  },
+  {
+    "id": "TC003",
+    "title": "User Login Success",
+    "description": "Verify that registered users can log in with correct credentials and obtain a valid JWT token.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to login page."
+      },
+      {
+        "type": "action",
+        "description": "Input valid username/email and password."
+      },
+      {
+        "type": "action",
+        "description": "Submit login."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify response returns a valid JWT token."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify user is redirected to dashboard or homepage."
+      }
+    ]
+  },
+  {
+    "id": "TC004",
+    "title": "User Login Failure",
+    "description": "Verify that login fails with invalid credentials and appropriate error messages are shown.",
+    "category": "error handling",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to login page."
+      },
+      {
+        "type": "action",
+        "description": "Input invalid username/email or password."
+      },
+      {
+        "type": "action",
+        "description": "Submit login form."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify login is rejected with an 'invalid credentials' error."
+      },
+      {
+        "type": "assertion",
+        "description": "Ensure no JWT token is issued."
+      }
+    ]
+  },
+  {
+    "id": "TC005",
+    "title": "JWT Token Authorization Enforced",
+    "description": "Check that API endpoints reject unauthorized access when JWT token is absent or invalid.",
+    "category": "security",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Call protected API endpoints without a JWT token."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the request is denied with a 401 Unauthorized status."
+      },
+      {
+        "type": "action",
+        "description": "Call protected API endpoints with an expired or malformed JWT token."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the request is denied with a 401 Unauthorized status."
+      }
+    ]
+  },
+  {
+    "id": "TC006",
+    "title": "User Profile View and Edit",
+    "description": "Verify that authenticated users can view and update their profile details successfully.",
+    "category": "functional",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Login with valid credentials."
+      },
+      {
+        "type": "action",
+        "description": "Navigate to user profile page."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the current user profile information is displayed."
+      },
+      {
+        "type": "action",
+        "description": "Edit profile fields such as name, contact info."
+      },
+      {
+        "type": "action",
+        "description": "Submit profile update."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify profile data is updated in database."
+      },
+      {
+        "type": "assertion",
+        "description": "Check that updated info is retrieved correctly after refresh."
+      }
+    ]
+  },
+  {
+    "id": "TC007",
+    "title": "Multi-Company Creation and Management",
+    "description": "Ensure users can create multiple companies, view and edit company details when authorized.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Login as a user with company management permissions."
+      },
+      {
+        "type": "action",
+        "description": "Create a new company with valid information."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify new company is saved and visible in the companies list."
+      },
+      {
+        "type": "action",
+        "description": "Select an existing company and change editable fields."
+      },
+      {
+        "type": "action",
+        "description": "Submit the company update form."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify changes are persisted and reflected in database."
+      },
+      {
+        "type": "action",
+        "description": "Attempt to access a company the user is not authorized for."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify access is denied with appropriate error or message."
+      }
+    ]
+  },
+  {
+    "id": "TC008",
+    "title": "Subscription Plan Selection and Status Display",
+    "description": "Verify that users can view current subscription plans with status and select new plans to upgrade or downgrade.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Login and navigate to subscription management page."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the current subscription plan and status is displayed correctly."
+      },
+      {
+        "type": "action",
+        "description": "Select a different subscription plan (upgrade or downgrade)."
+      },
+      {
+        "type": "action",
+        "description": "Confirm the change plan request."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify subscription status updates accordingly in the system."
+      },
+      {
+        "type": "assertion",
+        "description": "Ensure access rights update according to new subscription level."
+      }
+    ]
+  },
+  {
+    "id": "TC009",
+    "title": "Subscription Plan Access Restrictions",
+    "description": "Check that features not included in the current subscription plan are restricted and guarded.",
+    "category": "security",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Login with a user having a limited subscription plan."
+      },
+      {
+        "type": "action",
+        "description": "Attempt to access features or pages reserved for higher subscription tiers."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the feature is blocked or a prompt to upgrade is displayed."
+      },
+      {
+        "type": "action",
+        "description": "Attempt to bypass UI restrictions via direct API calls to protected endpoints."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify backend access control blocks unauthorized access."
+      }
+    ]
+  },
+  {
+    "id": "TC010",
+    "title": "Payment Processing with PayPal Success",
+    "description": "Validate that users can initiate payment transactions through PayPal and that successful payments update the payment history.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Login and navigate to payment/checkout page."
+      },
+      {
+        "type": "action",
+        "description": "Select a subscription plan for payment."
+      },
+      {
+        "type": "action",
+        "description": "Complete payment using valid PayPal credentials."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify that payment is processed successfully by the system."
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm payment transaction is recorded and visible in payment history."
+      },
+      {
+        "type": "assertion",
+        "description": "Subscription status is updated if applicable post payment."
+      }
+    ]
+  },
+  {
+    "id": "TC011",
+    "title": "Payment Processing Failure Handling",
+    "description": "Ensure appropriate error messaging and recovery options are presented to the user in case of payment failures.",
+    "category": "error handling",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Attempt payment with invalid PayPal credentials or cancelled transaction."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify payment is declined or cancelled with clear error messages."
+      },
+      {
+        "type": "assertion",
+        "description": "Ensure no payment record is created for failed transactions."
+      },
+      {
+        "type": "assertion",
+        "description": "User is able to retry payment or select alternate options."
+      }
+    ]
+  },
+  {
+    "id": "TC012",
+    "title": "Dashboard Metrics Load According to Subscription",
+    "description": "Verify that dashboard analytics, charts, and usage reports load correctly and reflect limitations based on user's subscription plan.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Login as user with various subscription levels."
+      },
+      {
+        "type": "action",
+        "description": "Navigate to dashboard page."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify presence and accuracy of available metrics and charts according to subscription privileges."
+      },
+      {
+        "type": "action",
+        "description": "Attempt to view restricted metrics or data beyond subscription scope."
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm that restricted information is hidden or replaced with upgrade notices."
+      }
+    ]
+  },
+  {
+    "id": "TC013",
+    "title": "WhatsApp Chatbot Send and Receive Functionality",
+    "description": "Ensure WhatsApp chatbot integration with Twilio is able to send and receive messages correctly and that AI auto-responses are triggered.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Send a message to the WhatsApp chatbot via Twilio integration."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the message is received on the backend."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the chatbot processes the message using Google Gemini AI and sends an appropriate auto-response."
+      },
+      {
+        "type": "action",
+        "description": "Send messages with various intents and edge cases to validate AI chatbot responses."
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm response relevance and correctness."
+      }
+    ]
+  },
+  {
+    "id": "TC014",
+    "title": "Route Access Control and Redirection",
+    "description": "Validate access control over routes based on authentication and authorization, with proper redirection and 404 handling.",
+    "category": "security",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Attempt to access authenticated routes without logging in."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify user is redirected to login page."
+      },
+      {
+        "type": "action",
+        "description": "Login and attempt to access routes restricted by subscription or permission."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify access is denied or redirected appropriately."
+      },
+      {
+        "type": "action",
+        "description": "Navigate to an invalid or non-existent route."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify that a 404 page is displayed."
+      },
+      {
+        "type": "action",
+        "description": "After successful login or registration, verify user is redirected to the intended page."
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm the redirection is correct and user lands on expected destination."
+      }
+    ]
+  },
+  {
+    "id": "TC015",
+    "title": "Admin Panel User and Configuration Management",
+    "description": "Verify admin users can manage users, permissions and application configuration settings through the admin panel.",
+    "category": "functional",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Login as an admin user."
+      },
+      {
+        "type": "action",
+        "description": "Access the admin panel section for user management."
+      },
+      {
+        "type": "action",
+        "description": "Create, edit, and delete users."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify user changes are persisted correctly."
+      },
+      {
+        "type": "action",
+        "description": "Modify permissions or roles for users."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify access permission updates take effect."
+      },
+      {
+        "type": "action",
+        "description": "Access configuration settings and update system parameters."
+      },
+      {
+        "type": "assertion",
+        "description": "Ensure configuration changes apply and persist."
+      }
+    ]
+  },
+  {
+    "id": "TC016",
+    "title": "Health Monitoring and System Performance",
+    "description": "Validate the health check APIs and that performance monitoring reports are accurate; verify Redis caching improves response time.",
+    "category": "functional",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Call the health monitoring API endpoints."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify system health status is reported correctly."
+      },
+      {
+        "type": "action",
+        "description": "Perform frequent requests to endpoints that use caching."
+      },
+      {
+        "type": "assertion",
+        "description": "Check that Redis cache reduces response times."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify cache invalidation occurs on data updates."
+      }
+    ]
+  },
+  {
+    "id": "TC017",
+    "title": "Database Migration Application and Rollback",
+    "description": "Ensure Alembic migrations apply successfully and can be rolled back without data loss or corruption.",
+    "category": "functional",
+    "priority": "Low",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Run new database migration scripts."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify schema and data changes are applied without errors."
+      },
+      {
+        "type": "action",
+        "description": "Rollback migrations to previous version."
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm database schema and data revert safely without loss."
+      }
+    ]
+  }
+]

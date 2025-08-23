@@ -1,0 +1,111 @@
+{
+  "tech_stack": [
+    "Python",
+    "FastAPI",
+    "PostgreSQL",
+    "SQLAlchemy",
+    "Next.js",
+    "React",
+    "TypeScript",
+    "Tailwind CSS",
+    "Twilio",
+    "Google Gemini AI",
+    "Redis",
+    "Alembic",
+    "Docker",
+    "Railway",
+    "Vercel"
+  ],
+  "features": [
+    {
+      "name": "Authentication System",
+      "description": "Sistema completo de autenticação com JWT, registro e login de usuários",
+      "files": ["backend/app/routers/auth.py", "frontend/src/app/login/page.tsx", "frontend/src/app/register/page.tsx", "frontend/src/components/AuthGuard.tsx"]
+    },
+    {
+      "name": "Company Management",
+      "description": "Gestão de empresas e organizações com múltiplos usuários",
+      "files": ["backend/app/routers/companies.py", "frontend/src/app/companies/page.tsx", "backend/app/models/company.py"]
+    },
+    {
+      "name": "WhatsApp Integration",
+      "description": "Integração com WhatsApp via Twilio para chatbot inteligente",
+      "files": ["backend/app/routers/whatsapp.py", "backend/app/services/twilio_service.py", "backend/app/services/gemini_service.py"]
+    },
+    {
+      "name": "Dashboard Analytics",
+      "description": "Dashboard com métricas, gráficos e análise de uso do chatbot",
+      "files": ["backend/app/routers/dashboard.py", "frontend/src/app/dashboard/page.tsx", "frontend/src/components/DashboardChart.tsx"]
+    },
+    {
+      "name": "Subscription Management",
+      "description": "Sistema de assinaturas e planos com diferentes níveis de acesso",
+      "files": ["backend/app/routers/subscriptions.py", "frontend/src/app/billing/page.tsx", "frontend/src/components/SubscriptionStatusCard.tsx"]
+    },
+    {
+      "name": "Payment Processing",
+      "description": "Processamento de pagamentos e integração com gateways",
+      "files": ["backend/app/routers/payments.py", "frontend/src/app/checkout/page.tsx", "frontend/src/components/Checkout.tsx"]
+    },
+    {
+      "name": "Pricing System",
+      "description": "Sistema de preços dinâmico com diferentes planos e recursos",
+      "files": ["frontend/src/app/pricing/page.tsx", "frontend/src/components/Pricing.tsx", "frontend/src/components/PricingSection.tsx"]
+    },
+    {
+      "name": "Usage Tracking",
+      "description": "Monitoramento de uso de recursos e limites por plano",
+      "files": ["backend/app/routers/usage.py", "frontend/src/components/UsageAlert.tsx", "frontend/src/components/UpgradePrompt.tsx"]
+    },
+    {
+      "name": "Admin Panel",
+      "description": "Painel administrativo para gestão de usuários e configurações",
+      "files": ["backend/app/routers/admin.py", "backend/app/routers/permissions.py"]
+    },
+    {
+      "name": "AI Chatbot Service",
+      "description": "Serviço de chatbot inteligente usando Google Gemini AI",
+      "files": ["backend/app/services/gemini_service.py", "backend/app/services/chatbot_service.py"]
+    },
+    {
+      "name": "Database Models",
+      "description": "Modelos de dados para usuários, empresas, mensagens e assinaturas",
+      "files": ["backend/app/models/user.py", "backend/app/models/company.py", "backend/app/models/message.py", "backend/app/models/subscription.py"]
+    },
+    {
+      "name": "API Configuration",
+      "description": "Configuração da API FastAPI com CORS, middlewares e roteamento",
+      "files": ["backend/main.py", "backend/app/config.py", "backend/app/database.py"]
+    },
+    {
+      "name": "Frontend Layout",
+      "description": "Layout principal da aplicação frontend com navegação e estrutura",
+      "files": ["frontend/src/app/layout.tsx", "frontend/src/components/Layout.tsx", "frontend/src/app/globals.css"]
+    },
+    {
+      "name": "Feature Guards",
+      "description": "Sistema de proteção de funcionalidades baseado em planos de assinatura",
+      "files": ["frontend/src/components/FeatureGuard.tsx", "frontend/src/components/SmartPricingButton.tsx"]
+    },
+    {
+      "name": "Health Monitoring",
+      "description": "Sistema de monitoramento de saúde da aplicação",
+      "files": ["backend/app/routers/health.py", "backend/app/middleware/performance.py"]
+    },
+    {
+      "name": "Redis Caching",
+      "description": "Sistema de cache usando Redis para melhorar performance",
+      "files": ["backend/app/services/redis_service.py"]
+    },
+    {
+      "name": "Database Migrations",
+      "description": "Sistema de migrações de banco de dados usando Alembic",
+      "files": ["backend/alembic.ini", "backend/alembic/"]
+    },
+    {
+      "name": "Deployment Configuration",
+      "description": "Configurações para deploy em Railway, Vercel e Docker",
+      "files": ["Dockerfile", "docker-compose.yml", "railway.json", "vercel.json", "frontend/Dockerfile"]
+    }
+  ]
+}
