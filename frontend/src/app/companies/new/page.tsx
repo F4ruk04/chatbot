@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { AlertCircle } from 'lucide-react';
+import { api } from '@/lib/api'; // Import the API instance
 
 interface CompanyFormData {
   nome: string;
@@ -26,21 +27,12 @@ export default function NewCompanyForm() {
     setError('');
 
     try {
-      const response = await fetch('/api/companies', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(formData)
-      });
-
-      if (!response.ok) {
-        throw new Error('Erro ao criar empresa');
-      }
+      const response = await api.post('/api/companies/add', formData); // Use api.post
 
       router.push('/dashboard');
-    } catch (err: Error | unknown) {
-      setError(err instanceof Error ? err.message : 'Erro ao criar empresa');
+    } catch (err: any) { // Use 'any' for broader error handling from axios
+      const errorMessage = err.response?.data?.detail || err.message || 'Erro ao criar empresa';
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }
