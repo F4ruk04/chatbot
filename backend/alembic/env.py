@@ -16,6 +16,7 @@ from app.database import Base
 from app.models.user import User
 from app.models.company import Company
 from app.models.message import Message
+from app.models.subscription import Subscription
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -70,8 +71,7 @@ def run_migrations_online() -> None:
     """
     # Override sqlalchemy.url with DATABASE_URL from environment if available
     configuration = config.get_section(config.config_ini_section, {})
-    if os.getenv("DATABASE_URL"):
-        configuration["sqlalchemy.url"] = os.getenv("DATABASE_URL")
+    configuration["sqlalchemy.url"] = os.getenv("DATABASE_URL") or config.get_main_option("sqlalchemy.url")
     
     connectable = engine_from_config(
         configuration,

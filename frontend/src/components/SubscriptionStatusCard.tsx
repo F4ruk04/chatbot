@@ -38,12 +38,12 @@ export default function SubscriptionStatusCard() {
       setSubscriptionError(null); // Clear previous errors
       setHasShownNotification(false); // Reset notification flag on new attempt
 
-      const { api } = await import('@/lib/api');
+      const { subscriptionAPI, api } = await import('@/lib/api');
       console.log('API Base URL:', api.defaults.baseURL);
       console.log('Request headers:', api.defaults.headers);
-      const response = await api.get('/api/subscription/status');
+      const data = await subscriptionAPI.getStatus();
       
-      const data = response.data;
+      // const data = response.data;
       if (data && data.plan && data.status) {
         setStatus(data);
       } else {

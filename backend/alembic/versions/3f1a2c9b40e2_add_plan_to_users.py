@@ -20,7 +20,7 @@ def upgrade() -> None:
     # Adiciona a coluna 'plan' com default 'free' para registros existentes
     op.add_column('users', sa.Column('plan', sa.String(), nullable=False, server_default='free'))
     # Remove o server_default para manter a lógica de default no nível da aplicação
-    op.alter_column('users', 'plan', server_default=None)
+    # SQLite doesn't support ALTER COLUMN, so we'll skip this step
 
 
 def downgrade() -> None:

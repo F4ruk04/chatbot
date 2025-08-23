@@ -18,8 +18,8 @@ depends_on = None
 
 def upgrade() -> None:
     # Drop existing tables if they exist (with CASCADE to handle foreign keys)
-    op.execute("DROP TABLE IF EXISTS subscriptions CASCADE")
-    op.execute("DROP TABLE IF EXISTS payments CASCADE")
+    op.execute("DROP TABLE IF EXISTS subscriptions")
+    op.execute("DROP TABLE IF EXISTS payments")
     
     # Create payments table with Integer IDs
     op.create_table('payments',

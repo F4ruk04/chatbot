@@ -4,9 +4,13 @@ Este módulo contém todas as configurações necessárias para o funcionamento 
 """
 
 import os
+from dotenv import load_dotenv
 from pydantic import Field
 from pydantic_settings import BaseSettings
 from typing import Optional
+
+# Carregar variáveis de ambiente do arquivo .env
+load_dotenv()
 
 
 class Settings(BaseSettings):
@@ -51,3 +55,6 @@ class Settings(BaseSettings):
 
 # Instância global das configurações
 settings = Settings()
+
+# Debug output
+print(f"Database URL: {settings.database_url}")

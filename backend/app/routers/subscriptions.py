@@ -8,9 +8,9 @@ from ..utils.auth import get_current_user
 from ..services.feature_service import PLAN_LIMITS # Import PLAN_LIMITS
 from datetime import datetime
 
-router = APIRouter()
+router = APIRouter(prefix="/subscription", tags=["subscriptions"])
 
-@router.get("/subscription/status")
+@router.get("/status")
 async def get_subscription_status(
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)

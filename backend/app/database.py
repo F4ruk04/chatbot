@@ -9,7 +9,14 @@ from sqlalchemy.orm import sessionmaker
 from app.config import settings
 
 # Criar engine do SQLAlchemy
-engine = create_engine(settings.database_url)
+# Handle SQLite with proper connect_args
+if settings.database_url.startswith("sqlite"):
+    engine = create_engine(
+        settings.database_url,
+        connect_args={"check_same_thread": False}
+    )
+else:
+    engine = create_engine(settings.database_url)
 
 # Criar SessionLocal para interações com o banco
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)

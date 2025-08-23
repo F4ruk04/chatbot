@@ -210,3 +210,13 @@ export const messagesAPI = {
     return response.data;
   },
 };
+
+// Funções de subscrição
+export const subscriptionAPI = {
+  getStatus: async () => {
+    const response = await api.get('/api/subscription/status');
+    return response.data;
+  },
+};
+
+export default api;

@@ -34,14 +34,17 @@ class CompanyResponse(BaseModel):
     descricao: Optional[str]
     whatsapp_phone_number: str
     context_prompt: Optional[str]
-    created_at: str
+    created_at: Optional[str] = None
+    updated_at: Optional[str] = None
 
-    @field_validator('created_at', mode='before')
+    @field_validator('created_at', 'updated_at', mode='before')
     @classmethod
     def convert_datetime_to_string(cls, v):
         if isinstance(v, datetime):
             return v.isoformat()
-        return v
+        elif v is None:
+            return None
+        return str(v)
 
     class Config:
         from_attributes = True

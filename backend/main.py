@@ -167,7 +167,7 @@ if __name__ == "__main__":
     except (ValueError, TypeError):
         port = 8000
     
-    print(f"🚀 Iniciando servidor na porta {port}")
+    print(f"Starting server on port {port}")
     
     uvicorn.run(
         "main:app",
