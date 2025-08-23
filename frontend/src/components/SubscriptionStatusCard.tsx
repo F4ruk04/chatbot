@@ -40,6 +40,7 @@ export default function SubscriptionStatusCard() {
 
       const { api } = await import('@/lib/api');
       console.log('API Base URL:', api.defaults.baseURL);
+      console.log('Request headers:', api.defaults.headers);
       const response = await api.get('/api/subscription/status');
       
       const data = response.data;
