@@ -24,18 +24,29 @@ interface SubscriptionStatus {
   warning_level: 'LOW' | 'MEDIUM' | 'HIGH';
 }
 
+const defaultSubscriptionStatus: SubscriptionStatus = {
+  plan: 'free',
+  status: 'inactive',
+  messages_used: 0,
+  messages_quota: 150,
+  usage_percent: 0,
+  days_remaining: 0,
+  renewal_date: new Date().toISOString(), // Default to current date
+  warning_level: 'LOW' as const,
+};
+
 export default function SubscriptionStatusCard() {
   const router = useRouter();
   const { showNotification } = useNotification();
   const [status, setStatus] = useState<SubscriptionStatus | null>(null);
   const [loading, setLoading] = useState(true);
   const [subscriptionError, setSubscriptionError] = useState<string | null>(null);
-  const [hasShownNotification, setHasShownNotification] = useState(false); // Renamed and re-purposed
+  const [hasShownNotification, setHasShownNotification] = useState(false);
 
   const fetchSubscriptionStatus = useCallback(async (retryCount = 0) => {
-    const maxRetries = 5; // Aumentar o número máximo de retries
-    const baseRetryDelay = 1000; // 1 segundo
-    const currentRetryDelay = baseRetryDelay * Math.pow(2, retryCount); // Exponential backoff
+    const maxRetries = 5;
+    const baseRetryDelay = 1000;
+    const currentRetryDelay = baseRetryDelay * Math.pow(2, retryCount);
 
     try {
       if (retryCount === 0) {
@@ -44,32 +55,28 @@ export default function SubscriptionStatusCard() {
         setHasShownNotification(false);
       }
 
-      const { subscriptionAPI, api } = await import('@/lib/api');
-      console.log('API Base URL:', api.defaults.baseURL);
-      console.log('Request headers:', api.defaults.headers);
-      console.log('Attempting to fetch subscription status... (attempt', retryCount + 1, ')');
+      const { subscriptionAPI } = await import('@/lib/api');
       
       const data = await subscriptionAPI.getStatus();
       console.log('Subscription data received:', data);
       
-      // Sempre definir status, mesmo se dados incompletos
-      if (data && data.plan && data.status) {
-        setStatus(data);
-        console.log('Subscription status set successfully');
-      } else {
+      // Safely define status with defaults
+      const receivedStatus: SubscriptionStatus = {
+        plan: data?.plan || defaultSubscriptionStatus.plan,
+        status: data?.status || defaultSubscriptionStatus.status,
+        messages_used: data?.messages_used ?? defaultSubscriptionStatus.messages_used,
+        messages_quota: data?.messages_quota ?? defaultSubscriptionStatus.messages_quota,
+        usage_percent: data?.usage_percent ?? defaultSubscriptionStatus.usage_percent,
+        days_remaining: data?.days_remaining ?? defaultSubscriptionStatus.days_remaining,
+        renewal_date: data?.renewal_date || defaultSubscriptionStatus.renewal_date,
+        warning_level: data?.warning_level || defaultSubscriptionStatus.warning_level,
+      };
+
+      setStatus(receivedStatus);
+      console.log('Subscription status set successfully:', receivedStatus);
+
+      if (!data || !data.plan || !data.status) {
         console.warn('Incomplete subscription data received, using defaults');
-        const defaultStatus = {
-          plan: 'free',
-          status: 'active',
-          messages_used: 0,
-          messages_quota: 150,
-          usage_percent: 0,
-          days_remaining: 30,
-          renewal_date: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
-          warning_level: 'LOW' as const
-        };
-        setStatus(defaultStatus);
-        
         if (!hasShownNotification) {
           showNotification({
             type: 'warning',
@@ -81,9 +88,6 @@ export default function SubscriptionStatusCard() {
         }
       }
       
-      // Sempre definir loading como false quando dados são recebidos
-      setLoading(false);
-      
     } catch (err: unknown) {
       console.error('Subscription status error (attempt', retryCount + 1, '):', err);
       
@@ -91,8 +95,8 @@ export default function SubscriptionStatusCard() {
       let shouldRetry = false;
       
       if (axios.isAxiosError(err)) {
-        const response = err.response; // Narrow the type here
-        if (!response) { // Network error
+        const response = err.response;
+        if (!response) {
           errorMessage = 'Erro de conexão. Verifique sua internet e tente novamente.';
           shouldRetry = true;
         } else if (response.status === 429) {
@@ -113,33 +117,16 @@ export default function SubscriptionStatusCard() {
         errorMessage = err;
       }
       
-      // Se ainda há tentativas disponíveis e deve-se tentar novamente
       if (shouldRetry && retryCount < maxRetries) {
         console.log(`Retrying in ${currentRetryDelay}ms... (${retryCount + 1}/${maxRetries})`);
         setTimeout(() => {
           fetchSubscriptionStatus(retryCount + 1);
         }, currentRetryDelay);
-        return; // Não definir erro ainda, aguardar retry
+        return;
       }
       
-      // Se esgotaram as tentativas ou não deve-se tentar novamente, mostrar erro e dados padrão
       setSubscriptionError(errorMessage);
-      
-      // Sempre definir dados padrão em caso de erro
-      const defaultStatus = {
-        plan: 'free',
-        status: 'active',
-        messages_used: 0,
-        messages_quota: 150,
-        usage_percent: 0,
-        days_remaining: 30,
-        renewal_date: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
-        warning_level: 'LOW' as const
-      };
-      setStatus(defaultStatus);
-      
-      // Sempre definir loading como false em caso de erro
-      setLoading(false);
+      setStatus(defaultSubscriptionStatus); // Always set default status on final error
       
       if (!hasShownNotification) {
         showNotification({
@@ -150,6 +137,8 @@ export default function SubscriptionStatusCard() {
         });
         setHasShownNotification(true);
       }
+    } finally {
+      setLoading(false); // Always set loading to false
     }
   }, [showNotification, hasShownNotification]);
 
@@ -157,28 +146,19 @@ export default function SubscriptionStatusCard() {
     console.log('SubscriptionStatusCard: useEffect triggered');
     fetchSubscriptionStatus();
     
-    // Timeout de segurança para evitar loading infinito
+    // Timeout de segurança para evitar loading infinito (redundante with finally, but good fallback)
     const timeoutId = setTimeout(() => {
       if (loading) {
         console.warn('SubscriptionStatusCard: Loading timeout reached, forcing completion');
         setLoading(false);
         if (!status) {
-          setStatus({
-            plan: 'free',
-            status: 'active',
-            messages_used: 0,
-            messages_quota: 150,
-            usage_percent: 0,
-            days_remaining: 30,
-            renewal_date: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
-            warning_level: 'LOW'
-          });
+          setStatus(defaultSubscriptionStatus);
         }
       }
     }, 10000); // 10 segundos de timeout
     
     return () => clearTimeout(timeoutId);
-  }, [fetchSubscriptionStatus, loading, status]); // Adicionar loading e status como dependências
+  }, [fetchSubscriptionStatus, loading, status]);
 
   const getPlanDisplayName = (plan: string) => {
     const planNames = {
@@ -280,8 +260,16 @@ export default function SubscriptionStatusCard() {
   }
 
   if (!status) {
-    console.log('SubscriptionStatusCard: No status data, returning null');
-    return null;
+    console.log('SubscriptionStatusCard: No status data, rendering default fallback');
+    // This block should ideally not be reached with defaultSubscriptionStatus, but kept as a safeguard
+    return (
+      <div className="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-6 border border-gray-200 dark:border-gray-700">
+        <div className="flex items-center text-gray-700 dark:text-gray-400">
+          <AlertCircle className="h-5 w-5 mr-2 flex-shrink-0" />
+          <span className="text-sm">Não foi possível carregar o status da assinatura. Exibindo dados padrão.</span>
+        </div>
+      </div>
+    );
   }
 
   console.log('SubscriptionStatusCard: Rendering with status:', status);
