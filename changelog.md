@@ -1,5 +1,16 @@
 # Changelog
 
+## [2025-08-23] - Robustecimento do SubscriptionStatusCard e tratamento de erros
+
+### Fixed
+*   **SubscriptionStatusCard preso em "processando"**:
+    - Ajustado `frontend/src/components/SubscriptionStatusCard.tsx` para sempre tratar a resposta de `/api/subscription/status` de forma segura.
+    - Garantido que os campos `plan`, `status`, `messages_used`, `messages_quota`, `usage_percent`, `days_remaining`, `renewal_date`, e `warning_level` tenham valores padrão se estiverem ausentes na resposta da API.
+    - Implementado `finally` block em `fetchSubscriptionStatus` para garantir que `setLoading(false)` seja sempre chamado, evitando que o card fique travado em "processando".
+    - Reforçado o tratamento de 429 (Too Many Requests) com exponential backoff de até 5 tentativas.
+    - Adicionado fallback visual claro para quando houver erro ou dados incompletos.
+    - Garantida a compatibilidade com a interface TypeScript `SubscriptionStatus`.
+
 ## [2025-08-23] - Melhorias no tratamento de erros e otimização de chamadas de API
 
 ### Fixed
