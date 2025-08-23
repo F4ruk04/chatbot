@@ -1,5 +1,73 @@
 # Changelog
 
+## [2025-08-23] - Correção de problemas críticos identificados pelo TestSprite e autenticação
+
+### Fixed
+*   **Problemas críticos identificados pelo TestSprite**:
+    - Corrigido erro SQLAlchemy no health check usando `text()` para evitar warnings
+    - Resolvido problema `net::ERR_EMPTY_RESPONSE` no carregamento de recursos JavaScript
+    - Corrigidos timeouts na navegação com otimizações de performance
+    - Melhorada configuração CORS para resolver problemas de comunicação cross-domain
+*   **Problemas de autenticação**:
+    - Corrigido erro "Erro ao salvar dados de autenticação" no login
+    - Removida configuração de domínio específico para cookies que causava problemas cross-domain
+    - Melhorada verificação de cookies com logs detalhados e mais tentativas
+    - Adicionados headers `Cookie` e `Set-Cookie` na configuração CORS
+*   **Otimizações de performance**:
+    - Configurado pool de conexões do banco de dados com `pool_pre_ping` e reciclagem
+    - Adicionadas otimizações de webpack no Next.js para desenvolvimento
+    - Configurada compressão e cache otimizado para recursos estáticos
+    - Melhorado timeout e configuração `withCredentials` no cliente API
+
+### Added
+*   **Configurações de otimização**:
+    - `experimental.optimizePackageImports` para reduzir bundle size
+    - Headers de cache otimizados para recursos estáticos
+    - Configuração de pool de conexões para PostgreSQL em produção
+    - Logs detalhados para debug de autenticação
+*   **Melhorias de segurança**:
+    - Configuração CORS expandida com cache de preflight requests
+    - Headers de segurança mantidos e otimizados
+    - Verificação robusta de dados de autenticação
+
+### Changed
+*   **Configuração de banco de dados**:
+    - Alterado para usar PostgreSQL em produção (Railway)
+    - Mantido SQLite para desenvolvimento local
+    - Configurado pool de conexões com 10 conexões base + 20 overflow
+*   **Configuração de cookies**:
+    - Cookies salvos no domínio do frontend (Vercel)
+    - Backend recebe cookies via CORS configurado
+    - Removida configuração de domínio específico que causava problemas
+*   **Processo de verificação de autenticação**:
+    - Aumentado número de tentativas de 10 para 20
+    - Aumentado delay entre tentativas de 50ms para 100ms
+    - Adicionados logs detalhados para cada tentativa
+
+### Technical Details
+*   **Backend (FastAPI)**:
+    - `backend/app/routers/health.py`: Corrigido uso de `text()` do SQLAlchemy
+    - `backend/main.py`: CORS otimizado com headers específicos
+    - `backend/app/database.py`: Pool de conexões configurado
+    - `backend/app/config.py`: PostgreSQL configurado para produção
+*   **Frontend (Next.js)**:
+    - `frontend/next.config.ts`: Otimizações de carregamento e cache
+    - `frontend/src/lib/api.ts`: Timeout e withCredentials adicionados
+    - `frontend/src/app/layout.tsx`: Metadata otimizado
+    - `frontend/src/middleware.ts`: Roteamento corrigido
+    - `frontend/src/lib/auth.ts`: Verificação de cookies melhorada
+    - `frontend/src/app/login/page.tsx`: Processo de login robusto
+
+## [2025-08-23] - TestSprite integration and frontend fixes
+
+### Fixed
+*   Corrigido problema de carregamento de recursos estáticos do frontend que causava falhas nos testes TestSprite
+*   Removida configuração `output: 'standalone'` do next.config.ts que era incompatível com o modo de desenvolvimento
+*   Resolvido problema de chunks JavaScript não encontrados que impediam a execução dos testes automatizados
+
+### Added
+*   Configurada integração com TestSprite para testes automatizados
+*   Verificada e corrigida a configuração do servidor MCP TestSprite
 ## [2025-08-23] - Fix API URL configuration issues
 
 ### Fixed
@@ -55,10 +123,58 @@
 *   Resolvido problema com o caminho do endpoint de status da subscrição
 *   Corrigido problema com a validação do modelo de resposta da empresa
 
+## Próximas Mudanças Planejadas
+
+### [Em Desenvolvimento] - Melhorias de Performance e Monitoramento
+*   **Monitoramento e Logs**:
+    - Implementar sistema de logs estruturados (Structured Logging)
+    - Adicionar métricas de performance (APM)
+    - Configurar alertas automáticos para erros críticos
+    - Implementar health checks mais robustos
+*   **Otimizações de Performance**:
+    - Implementar cache Redis para sessões e dados frequentes
+    - Otimizar queries do banco de dados com índices
+    - Implementar lazy loading para componentes pesados
+    - Adicionar service workers para cache offline
+*   **Segurança**:
+    - Implementar rate limiting para APIs
+    - Adicionar validação de entrada mais robusta
+    - Implementar auditoria de ações do usuário
+    - Configurar HTTPS strict transport security
+
+### [Planejado] - Novas Funcionalidades
+*   **Dashboard Avançado**:
+    - Gráficos interativos com filtros avançados
+    - Exportação de relatórios em PDF/Excel
+    - Dashboard personalizável por usuário
+    - Notificações em tempo real
+*   **Integrações**:
+    - Integração com CRM (HubSpot, Salesforce)
+    - Webhooks personalizáveis
+    - API REST completa com documentação
+    - SDK para desenvolvedores
+*   **Chatbot Inteligente**:
+    - Treinamento personalizado por empresa
+    - Suporte a múltiplos idiomas
+    - Análise de sentimento das conversas
+    - Integração com IA avançada (GPT-4, Claude)
+
+### [Futuro] - Escalabilidade e Arquitetura
+*   **Microserviços**:
+    - Separação em serviços independentes
+    - Message queues para processamento assíncrono
+    - Load balancing e auto-scaling
+    - Circuit breakers para resiliência
+*   **Multi-tenancy**:
+    - Suporte a múltiplas organizações
+    - Isolamento de dados por tenant
+    - Customização por organização
+    - White-label solutions
+
 ## Tarefas Pendentes para Implantação em Produção
 
-*   Deploy backend para Railway com base de dados PostgreSQL
-*   Deploy frontend para Vercel com URL da API de produção
+*   ✅ Deploy backend para Railway com base de dados PostgreSQL
+*   ✅ Deploy frontend para Vercel com URL da API de produção
 *   Configurar domínios personalizados para ambos os serviços
 *   Configurar monitoramento e rastreamento de erros
 *   Testar implantação em produção minuciosamente
