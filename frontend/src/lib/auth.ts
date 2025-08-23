@@ -17,12 +17,46 @@ export interface AuthUser {
 export const saveAuthData = (token: string, userId: number, userName: string) => {
   console.log('Saving auth data:', { token, userId, userName });
   // Configurar cookies com opções mais seguras
-  const cookieOptions = {
+  const cookieOptions: {
+    expires: number;
+    secure: boolean;
+    sameSite: 'lax';
+    path: string;
+    domain?: string;
+  } = {
     expires: 1, // 1 dia
     secure: process.env.NODE_ENV === 'production', // HTTPS apenas em produção
     sameSite: 'lax' as const,
     path: '/'
   };
+  
+  // Em produção, definir o domínio para permitir cookies cross-domain
+  if (process.env.NODE_ENV === 'production') {
+    // Remover o protocolo e definir o domínio base
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || '';
+    if (apiUrl) {
+      try {
+        const url = new URL(apiUrl);
+        cookieOptions.domain = url.hostname;
+      } catch (e) {
+        console.error('Error parsing API URL:', e);
+      }
+    }
+  }
+  
+  // Em produção, definir o domínio para permitir cookies cross-domain
+  if (process.env.NODE_ENV === 'production') {
+    // Remover o protocolo e definir o domínio base
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || '';
+    if (apiUrl) {
+      try {
+        const url = new URL(apiUrl);
+        cookieOptions.domain = url.hostname;
+      } catch (e) {
+        console.error('Error parsing API URL:', e);
+      }
+    }
+  }
   
   Cookies.set('access_token', token, cookieOptions);
   Cookies.set('user_id', userId.toString(), cookieOptions);
