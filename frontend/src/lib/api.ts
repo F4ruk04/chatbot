@@ -46,6 +46,8 @@ api.interceptors.response.use(
     if (!error.response) {
       console.error('Network error:', error);
       console.error('Error config:', error.config);
+    } else {
+      console.error('API error:', error.response.status, error.response.data);
     }
     
     if (error.response?.status === 401) {
