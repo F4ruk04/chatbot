@@ -32,7 +32,10 @@ export default function SubscriptionStatusCard() {
   const [subscriptionError, setSubscriptionError] = useState<string | null>(null);
   const [hasShownNotification, setHasShownNotification] = useState(false); // Renamed and re-purposed
 
-  const fetchSubscriptionStatus = useCallback(async () => {
+  const fetchSubscriptionStatus = useCallback(async (retryCount = 0) => {
+    const maxRetries = 3;
+    const retryDelay = 1000; // 1 segundo
+
     try {
       setLoading(true);
       setSubscriptionError(null); // Clear previous errors
@@ -41,12 +44,16 @@ export default function SubscriptionStatusCard() {
       const { subscriptionAPI, api } = await import('@/lib/api');
       console.log('API Base URL:', api.defaults.baseURL);
       console.log('Request headers:', api.defaults.headers);
-      const data = await subscriptionAPI.getStatus();
+      console.log('Attempting to fetch subscription status...');
       
-      // const data = response.data;
+      const data = await subscriptionAPI.getStatus();
+      console.log('Subscription data received:', data);
+      
       if (data && data.plan && data.status) {
         setStatus(data);
+        console.log('Subscription status set successfully');
       } else {
+        console.warn('Incomplete subscription data received, using defaults');
         setStatus({
           plan: 'free',
           status: 'active',
@@ -64,15 +71,34 @@ export default function SubscriptionStatusCard() {
             message: 'Usando dados padrão para o status da assinatura.',
             duration: 7000
           });
-          setHasShownNotification(true); // Set to true to prevent repeated notifications
+          setHasShownNotification(true);
         }
       }
     } catch (err: unknown) {
-      console.error('Subscription status error:', err);
-      let errorMessage = 'Não foi possível carregar o status da sua assinatura. Usando dados padrão.';
-      // Error handling is done in the api.ts interceptor, so we just need to handle the error here
+      console.error('Subscription status error (attempt', retryCount + 1, '):', err);
+      
+      // Se ainda há tentativas disponíveis, tentar novamente
+      if (retryCount < maxRetries) {
+        console.log(`Retrying in ${retryDelay}ms... (${retryCount + 1}/${maxRetries})`);
+        setTimeout(() => {
+          fetchSubscriptionStatus(retryCount + 1);
+        }, retryDelay);
+        return; // Não definir erro ainda, aguardar retry
+      }
+      
+      // Se esgotaram as tentativas, mostrar erro
+      let errorMessage = 'Erro ao carregar assinatura - Network Error';
+      
       if (err instanceof Error) {
-        errorMessage = err.message || errorMessage;
+        if (err.message.includes('Network Error')) {
+          errorMessage = 'Erro de conexão. Verifique sua internet e tente novamente.';
+        } else if (err.message.includes('401')) {
+          errorMessage = 'Sessão expirada. Faça login novamente.';
+        } else if (err.message.includes('500')) {
+          errorMessage = 'Erro interno do servidor. Tente novamente em alguns minutos.';
+        } else {
+          errorMessage = err.message || errorMessage;
+        }
       } else if (typeof err === 'string') {
         errorMessage = err;
       }
@@ -96,13 +122,14 @@ export default function SubscriptionStatusCard() {
           message: errorMessage,
           duration: 7000
         });
-        setHasShownNotification(true); // Set to true to prevent repeated notifications
+        setHasShownNotification(true);
       }
-      console.error('Erro ao carregar status:', err);
     } finally {
-      setLoading(false);
+      if (retryCount === 0) { // Só definir loading como false na primeira tentativa
+        setLoading(false);
+      }
     }
-  }, [showNotification, hasShownNotification]); // Add hasShownNotification to dependencies
+  }, [showNotification, hasShownNotification]);
 
   useEffect(() => {
     fetchSubscriptionStatus();
@@ -189,9 +216,18 @@ export default function SubscriptionStatusCard() {
   if (subscriptionError) {
     return (
       <div className="bg-red-50 dark:bg-red-900/20 rounded-xl p-6 border border-red-200 dark:border-red-800">
-        <div className="flex items-center text-red-700 dark:text-red-400">
-          <AlertCircle className="h-5 w-5 mr-2 flex-shrink-0" />
-          <span className="text-sm">{subscriptionError}</span>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center text-red-700 dark:text-red-400">
+            <AlertCircle className="h-5 w-5 mr-2 flex-shrink-0" />
+            <span className="text-sm">{subscriptionError}</span>
+          </div>
+          <button
+            onClick={() => fetchSubscriptionStatus()}
+            disabled={loading}
+            className="ml-4 px-3 py-1 text-xs bg-red-600 text-white rounded-md hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          >
+            {loading ? 'Tentando...' : 'Tentar Novamente'}
+          </button>
         </div>
       </div>
     );

@@ -48,8 +48,13 @@ api.interceptors.response.use(
     if (!error.response) {
       console.error('Network error:', error);
       console.error('Error config:', error.config);
+      // Adicionar mais detalhes para debug
+      console.error('Request URL:', error.config?.url);
+      console.error('Request method:', error.config?.method);
+      console.error('Request headers:', error.config?.headers);
     } else {
       console.error('API error:', error.response.status, error.response.data);
+      console.error('Response headers:', error.response.headers);
     }
     
     if (error.response?.status === 401) {
