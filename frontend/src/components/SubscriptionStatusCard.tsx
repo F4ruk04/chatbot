@@ -37,24 +37,27 @@ export default function SubscriptionStatusCard() {
     const retryDelay = 1000; // 1 segundo
 
     try {
-      setLoading(true);
-      setSubscriptionError(null); // Clear previous errors
-      setHasShownNotification(false); // Reset notification flag on new attempt
+      if (retryCount === 0) {
+        setLoading(true);
+        setSubscriptionError(null);
+        setHasShownNotification(false);
+      }
 
       const { subscriptionAPI, api } = await import('@/lib/api');
       console.log('API Base URL:', api.defaults.baseURL);
       console.log('Request headers:', api.defaults.headers);
-      console.log('Attempting to fetch subscription status...');
+      console.log('Attempting to fetch subscription status... (attempt', retryCount + 1, ')');
       
       const data = await subscriptionAPI.getStatus();
       console.log('Subscription data received:', data);
       
+      // Sempre definir status, mesmo se dados incompletos
       if (data && data.plan && data.status) {
         setStatus(data);
         console.log('Subscription status set successfully');
       } else {
         console.warn('Incomplete subscription data received, using defaults');
-        setStatus({
+        const defaultStatus = {
           plan: 'free',
           status: 'active',
           messages_used: 0,
@@ -62,8 +65,10 @@ export default function SubscriptionStatusCard() {
           usage_percent: 0,
           days_remaining: 30,
           renewal_date: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
-          warning_level: 'LOW'
-        });
+          warning_level: 'LOW' as const
+        };
+        setStatus(defaultStatus);
+        
         if (!hasShownNotification) {
           showNotification({
             type: 'warning',
@@ -74,6 +79,10 @@ export default function SubscriptionStatusCard() {
           setHasShownNotification(true);
         }
       }
+      
+      // Sempre definir loading como false quando dados são recebidos
+      setLoading(false);
+      
     } catch (err: unknown) {
       console.error('Subscription status error (attempt', retryCount + 1, '):', err);
       
@@ -86,7 +95,7 @@ export default function SubscriptionStatusCard() {
         return; // Não definir erro ainda, aguardar retry
       }
       
-      // Se esgotaram as tentativas, mostrar erro
+      // Se esgotaram as tentativas, mostrar erro e dados padrão
       let errorMessage = 'Erro ao carregar assinatura - Network Error';
       
       if (err instanceof Error) {
@@ -104,7 +113,9 @@ export default function SubscriptionStatusCard() {
       }
       
       setSubscriptionError(errorMessage);
-      setStatus({
+      
+      // Sempre definir dados padrão em caso de erro
+      const defaultStatus = {
         plan: 'free',
         status: 'active',
         messages_used: 0,
@@ -112,8 +123,12 @@ export default function SubscriptionStatusCard() {
         usage_percent: 0,
         days_remaining: 30,
         renewal_date: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
-        warning_level: 'LOW'
-      });
+        warning_level: 'LOW' as const
+      };
+      setStatus(defaultStatus);
+      
+      // Sempre definir loading como false em caso de erro
+      setLoading(false);
       
       if (!hasShownNotification) {
         showNotification({
@@ -124,16 +139,35 @@ export default function SubscriptionStatusCard() {
         });
         setHasShownNotification(true);
       }
-    } finally {
-      if (retryCount === 0) { // Só definir loading como false na primeira tentativa
-        setLoading(false);
-      }
     }
   }, [showNotification, hasShownNotification]);
 
   useEffect(() => {
+    console.log('SubscriptionStatusCard: useEffect triggered');
     fetchSubscriptionStatus();
-  }, [fetchSubscriptionStatus]); // fetchSubscriptionStatus is now stable
+    
+    // Timeout de segurança para evitar loading infinito
+    const timeoutId = setTimeout(() => {
+      if (loading) {
+        console.warn('SubscriptionStatusCard: Loading timeout reached, forcing completion');
+        setLoading(false);
+        if (!status) {
+          setStatus({
+            plan: 'free',
+            status: 'active',
+            messages_used: 0,
+            messages_quota: 150,
+            usage_percent: 0,
+            days_remaining: 30,
+            renewal_date: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+            warning_level: 'LOW'
+          });
+        }
+      }
+    }, 10000); // 10 segundos de timeout
+    
+    return () => clearTimeout(timeoutId);
+  }, [fetchSubscriptionStatus, loading, status]); // Adicionar loading e status como dependências
 
   const getPlanDisplayName = (plan: string) => {
     const planNames = {
@@ -189,6 +223,7 @@ export default function SubscriptionStatusCard() {
   };
 
   if (loading) {
+    console.log('SubscriptionStatusCard: Rendering loading state');
     return (
       <div className="animate-pulse bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
         {/* Header skeleton */}
@@ -233,7 +268,12 @@ export default function SubscriptionStatusCard() {
     );
   }
 
-  if (!status) return null;
+  if (!status) {
+    console.log('SubscriptionStatusCard: No status data, returning null');
+    return null;
+  }
+
+  console.log('SubscriptionStatusCard: Rendering with status:', status);
 
   return (
     <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden">

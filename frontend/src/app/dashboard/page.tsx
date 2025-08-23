@@ -41,20 +41,34 @@ export default function DashboardPage() {
   const loadDashboardData = async () => {
     try {
       setLoading(true);
+      setError('');
+      console.log('Dashboard: Loading dashboard data...');
+      
       const [dashboardStats, compStats] = await Promise.all([
         dashboardAPI.getStats(),
         dashboardAPI.getCompaniesStats(),
       ]);
       
+      console.log('Dashboard: Data loaded successfully:', { dashboardStats, compStats });
       setStats(dashboardStats);
       setCompaniesStats(compStats);
     } catch (err: unknown) {
+      console.error('Dashboard: Error loading data:', err);
       let errorMessage = 'Erro ao carregar dados do dashboard';
-      if (axios.isAxiosError(err) && err.response?.data?.detail) {
-        errorMessage = err.response.data.detail;
+      
+      if (axios.isAxiosError(err)) {
+        if (err.response?.data?.detail) {
+          errorMessage = err.response.data.detail;
+        } else if (err.code === 'NETWORK_ERROR') {
+          errorMessage = 'Erro de conexão. Verifique sua internet e tente novamente.';
+        } else if (err.response?.status === 401) {
+          errorMessage = 'Sessão expirada. Faça login novamente.';
+        } else if (err.response?.status >= 500) {
+          errorMessage = 'Erro interno do servidor. Tente novamente em alguns minutos.';
+        }
       }
+      
       setError(errorMessage);
-      console.error(err);
     } finally {
       setLoading(false);
     }
