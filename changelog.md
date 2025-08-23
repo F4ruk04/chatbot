@@ -15,6 +15,12 @@
     - Removidos logs adicionados em `frontend/src/lib/api.ts` para `API_BASE_URL` e headers de requisição.
     - Removidos logs adicionados em `backend/app/utils/auth.py` para token JWT e payload decodificado.
 
+## [2025-08-23] - Aumento do limite de taxa da API
+
+### Changed
+*   **Limite de taxa da API**:
+    - Aumentado o limite de taxa para 500 requisições por minuto por IP em `backend/app/middleware/performance.py` para mitigar erros 429 persistentes.
+
 ## [2025-08-23] - Correção de erro de tipo TypeScript no tratamento de erros do dashboard
 
 ### Fixed

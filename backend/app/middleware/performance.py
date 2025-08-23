@@ -43,7 +43,7 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
             pipe.expire(cache_key, 60)
             request_count, _ = await pipe.execute()
             
-            if request_count > 100:
+            if request_count > 500:
                 return Response(
                     content='{"detail":"Too many requests"}',
                     media_type='application/json',
