@@ -1,5 +1,13 @@
 # Changelog
 
+## [2025-08-23] - Correção de erro de tipo TypeScript no tratamento de erros do dashboard
+
+### Fixed
+*   **Problemas de tipo TypeScript no dashboard**:
+    - Corrigido erro "'err.response.status' is possibly 'undefined'" no build do Next.js
+    - Implementado tratamento seguro de erros de rede e HTTP no componente de dashboard
+    - Adicionado tratamento para códigos de status 400, 401 e >=500
+    - Garantido que errorMessage sempre recebe um valor string padrão
 ## [2025-08-23] - Correção de problemas críticos identificados pelo TestSprite e autenticação
 
 ### Fixed

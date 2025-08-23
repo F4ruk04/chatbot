@@ -57,14 +57,30 @@ export default function DashboardPage() {
       let errorMessage = 'Erro ao carregar dados do dashboard';
       
       if (axios.isAxiosError(err)) {
-        if (err.response?.data?.detail) {
-          errorMessage = err.response.data.detail;
-        } else if (err.code === 'NETWORK_ERROR') {
-          errorMessage = 'Erro de conexão. Verifique sua internet e tente novamente.';
-        } else if (err.response?.status === 401) {
-          errorMessage = 'Sessão expirada. Faça login novamente.';
-        } else if (err.response?.status >= 500) {
-          errorMessage = 'Erro interno do servidor. Tente novamente em alguns minutos.';
+        // Handle network errors first (when there's no response)
+        if (!err.response) {
+          if (err.code === 'NETWORK_ERROR') {
+            errorMessage = 'Erro de conexão. Verifique sua internet e tente novamente.';
+          } else {
+            errorMessage = 'Erro de conexão. Verifique sua internet e tente novamente.';
+          }
+        }
+        // Handle HTTP errors
+        else {
+          const response = err.response; // This helps TypeScript narrow the type
+          if (response.data?.detail) {
+            errorMessage = response.data.detail;
+          } else if (response.status === 400) {
+            errorMessage = 'Dados inválidos. Verifique as informações e tente novamente.';
+          } else if (response.status === 401) {
+            errorMessage = 'Sessão expirada. Faça login novamente.';
+          } else if (response.status >= 500) {
+            errorMessage = 'Erro interno do servidor. Tente novamente em alguns minutos.';
+          }
+          // Default fallback for other HTTP errors
+          else {
+            errorMessage = 'Erro ao carregar dados do dashboard. Tente novamente.';
+          }
         }
       }
       
