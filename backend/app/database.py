@@ -13,10 +13,18 @@ from app.config import settings
 if settings.database_url.startswith("sqlite"):
     engine = create_engine(
         settings.database_url,
-        connect_args={"check_same_thread": False}
+        connect_args={"check_same_thread": False},
+        pool_pre_ping=True,  # Verificar conexão antes de usar
+        pool_recycle=3600,   # Reciclar conexões a cada hora
     )
 else:
-    engine = create_engine(settings.database_url)
+    engine = create_engine(
+        settings.database_url,
+        pool_pre_ping=True,  # Verificar conexão antes de usar
+        pool_recycle=3600,   # Reciclar conexões a cada hora
+        pool_size=10,        # Tamanho do pool de conexões
+        max_overflow=20,     # Máximo de conexões extras
+    )
 
 # Criar SessionLocal para interações com o banco
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)

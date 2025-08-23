@@ -15,6 +15,8 @@ export const api = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
+  timeout: 30000, // 30 segundos de timeout
+  withCredentials: true, // Incluir cookies nas requisições
 });
 
 // Interceptor para adicionar token de autenticação

@@ -19,6 +19,9 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Chatbot SaaS - Gestão Inteligente",
   description: "Plataforma moderna para gestão de chatbots empresariais",
+  viewport: "width=device-width, initial-scale=1, maximum-scale=1",
+  themeColor: "#ffffff",
+  manifest: "/manifest.json",
 };
 
 export default function RootLayout({

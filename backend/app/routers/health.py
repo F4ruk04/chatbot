@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
+from sqlalchemy import text
 from ..database import get_db
 
 router = APIRouter()
@@ -13,7 +14,8 @@ async def health_check(db: Session = Depends(get_db)):
     """
     try:
         # Tenta fazer uma query simples para verificar a conexão
-        db.execute("SELECT 1")
+        # Usando text() para evitar warning do SQLAlchemy
+        db.execute(text("SELECT 1"))
         return {
             "status": "healthy",
             "database": "connected",

@@ -41,7 +41,9 @@ export const config = {
      * - _next/image (image optimization files)
      * - favicon.ico (favicon file)
      * - / (landing page)
+     * - register (registration page)
+     * - pricing (pricing page)
      */
-    '/((?!api|_next/static|_next/image|favicon.ico|/).*)',
+    '/((?!api|_next/static|_next/image|favicon.ico|register|pricing|/).*)',
   ],
 };

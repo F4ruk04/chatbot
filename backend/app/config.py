@@ -20,6 +20,7 @@ class Settings(BaseSettings):
     """
     
     # Configurações do banco de dados
+    # Em desenvolvimento usa SQLite, em produção usa PostgreSQL do Railway
     database_url: str = Field("postgresql+psycopg2://user:password@localhost:5432/chatbot", env="DATABASE_URL")
     
     # Configurações de autenticação

@@ -56,13 +56,15 @@ if os.getenv("RAILWAY_ENVIRONMENT"):
 if os.getenv("RAILWAY_ENVIRONMENT") == "production" and "*" in allowed_origins:
     allowed_origins = [o for o in allowed_origins if o != "*"]
 
+# Configuração melhorada de CORS para resolver problemas de comunicação
 app.add_middleware(
     CORSMiddleware,
     allow_origins=allowed_origins,
     allow_credentials=True,
-    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allow_headers=["*"],
-    expose_headers=["*"],
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD", "PATCH"],
+    allow_headers=["*", "Content-Type", "Authorization", "X-Requested-With"],
+    expose_headers=["*", "Content-Length", "X-Process-Time"],
+    max_age=86400,  # Cache preflight requests por 24 horas
 )
 
 @app.get("/")
