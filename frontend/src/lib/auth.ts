@@ -99,11 +99,13 @@ export const isAuthenticated = (): boolean => {
  * Fazer logout (remover dados de autenticação)
  */
 export const logout = () => {
+  console.log('Logging out user');
   const cookieOptions = {
     path: '/',
     sameSite: 'lax' as const,
     secure: process.env.NODE_ENV === 'production',
   };
+  console.log('Removing cookies with options:', cookieOptions);
   Cookies.remove('access_token', cookieOptions);
   Cookies.remove('user_id', cookieOptions);
   Cookies.remove('user_name', cookieOptions);
