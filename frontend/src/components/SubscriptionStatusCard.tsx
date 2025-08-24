@@ -42,6 +42,7 @@ export default function SubscriptionStatusCard() {
   const [loading, setLoading] = useState(true);
   const [subscriptionError, setSubscriptionError] = useState<string | null>(null);
   const [hasShownNotification, setHasShownNotification] = useState(false);
+  const [rawApiResponseData, setRawApiResponseData] = useState<any>(null); // New state for raw API response
 
   const fetchSubscriptionStatus = useCallback(async (retryCount = 0) => {
     const maxRetries = 5;
@@ -59,6 +60,7 @@ export default function SubscriptionStatusCard() {
       
       const response = await subscriptionAPI.getStatus();
       const data = response.data; // Access data from the response object
+      setRawApiResponseData(data); // Store raw data
       console.log('DEBUG: Subscription API raw response data:', data);
       
       // Safely define status with defaults
@@ -82,7 +84,7 @@ export default function SubscriptionStatusCard() {
           showNotification({
             type: 'warning',
             title: 'Dados de assinatura incompletos',
-            message: 'Usando dados padrão para o status da assinatura.',
+            message: `Usando dados padrão para o status da assinatura. Dados recebidos: ${JSON.stringify(data)}`, // Include raw data in message
             duration: 7000
           });
           setHasShownNotification(true);
@@ -258,6 +260,11 @@ export default function SubscriptionStatusCard() {
             {loading ? 'Tentando...' : 'Tentar Novamente'}
           </button>
         </div>
+        {rawApiResponseData && (
+          <div className="mt-4 text-xs text-red-600 dark:text-red-300 break-all">
+            Dados da API (Erro): {JSON.stringify(rawApiResponseData)}
+          </div>
+        )}
       </div>
     );
   }
@@ -305,6 +312,11 @@ export default function SubscriptionStatusCard() {
             </button>
           )}
         </div>
+        {rawApiResponseData && (
+          <div className="mt-4 text-xs text-white/80 break-all">
+            Dados da API (Sucesso): {JSON.stringify(rawApiResponseData)}
+          </div>
+        )}
       </div>
 
       {/* Conteúdo principal */}
