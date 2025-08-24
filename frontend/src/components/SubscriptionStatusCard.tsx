@@ -56,7 +56,8 @@ export default function SubscriptionStatusCard() {
         setHasShownNotification(false);
       }
 
-      const { subscriptionAPI } = await import('@/lib/api');
+      const apiModule = await import('@/lib/api'); // Store the imported module
+      const subscriptionAPI = apiModule.subscriptionAPI; // Access subscriptionAPI from the module
       
       const response = await subscriptionAPI.getStatus();
       const data = response.data; // Access data from the response object

@@ -25,6 +25,11 @@
 *   **Erro de tipo TypeScript em `SubscriptionStatusCard.tsx`**:
     - Corrigido o erro "Type 'unknown' is not assignable to type 'ReactNode'" ao exibir `rawApiResponseData` na UI, alterando o tipo de `rawApiResponseData` para `object | null` e garantindo que o objeto seja stringificado corretamente.
 
+### Fixed
+*   **`response.data` `undefined` no `SubscriptionStatusCard`**:
+    - Corrigido o problema onde `response.data` era `undefined` no `SubscriptionStatusCard` mesmo após uma resposta 200 OK da API.
+    - Acessado `subscriptionAPI` do módulo importado (`apiModule.subscriptionAPI`) para garantir que o objeto seja totalmente resolvido antes de chamar `getStatus()`.
+
 ### Added
 *   **Logs de depuração temporários (aprimorados e UI-visible)**:
     - Re-adicionados e aprimorados logs em `frontend/src/components/SubscriptionStatusCard.tsx` para depurar o processamento da resposta da API (`DEBUG: Subscription API raw response data:`, `DEBUG: Processed subscription status:`) e a atualização do estado, bem como o fluxo de carregamento.
