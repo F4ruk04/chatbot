@@ -29,6 +29,7 @@
 *   **Logs de depuração temporários (aprimorados e UI-visible)**:
     - Re-adicionados e aprimorados logs em `frontend/src/components/SubscriptionStatusCard.tsx` para depurar o processamento da resposta da API (`DEBUG: Subscription API raw response data:`, `DEBUG: Processed subscription status:`) e a atualização do estado, bem como o fluxo de carregamento.
     - Adicionada exibição temporária do `rawApiResponseData` diretamente na UI do `SubscriptionStatusCard` em caso de erro ou dados incompletos para facilitar a depuração.
+    - Adicionados logs em `frontend/src/lib/api.ts` dentro de `subscriptionAPI.getStatus` para inspecionar o objeto `response` completo e `response.data` antes de ser retornado.
 
 ## [2025-08-23] - Melhorias no tratamento de erros e otimização de chamadas de API
 

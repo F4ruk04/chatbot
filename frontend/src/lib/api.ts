@@ -221,6 +221,8 @@ export const messagesAPI = {
 export const subscriptionAPI = {
   getStatus: async () => {
     const response = await api.get('/api/subscription/status');
+    console.log('DEBUG: subscriptionAPI.getStatus - Raw Axios response:', response); // Added debug log
+    console.log('DEBUG: subscriptionAPI.getStatus - response.data:', response.data); // Added debug log
     return response.data;
   },
 };
