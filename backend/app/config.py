@@ -34,7 +34,7 @@ class Settings(BaseSettings):
     # Configurações do Twilio para WhatsApp
     twilio_account_sid: str = Field("ACxxxxxxxxxxxxxxxxxxxxxxxxxxxxx", env="TWILIO_ACCOUNT_SID")
     twilio_auth_token: str = Field("your_twilio_auth_token", env="TWILIO_AUTH_TOKEN")
-    twilio_whatsapp_number: str = "whatsapp:+14155238886"
+    twilio_whatsapp_number: str = Field("whatsapp:+14155238886", env="TWILIO_WHATSAPP_NUMBER")
     
     # URL do frontend para redirecionamentos
     frontend_url: str = "http://localhost:3000"

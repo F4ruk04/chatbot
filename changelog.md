@@ -241,3 +241,14 @@
 *   Testar implantação em produção minuciosamente
 *   Configurar webhook do Twilio para ambiente de produção
 *   Configurar pipelines CI/CD para implantações automatizadas
+
+## [2025-08-24] - Correção de envio de mensagens WhatsApp e robustez do serviço Twilio
+
+### Fixed
+*   **Falha no envio de mensagens WhatsApp**:
+    - Corrigido o problema onde mensagens recebidas via WhatsApp não estavam sendo respondidas.
+    - Identificado que `twilio_whatsapp_number` em `backend/app/config.py` não estava lendo a variável de ambiente `TWILIO_WHATSAPP_NUMBER`, fazendo com que sempre usasse o número do sandbox do Twilio (`whatsapp:+14155238886`) como fallback.
+    - Corrigido `backend/app/config.py` para mapear corretamente `twilio_whatsapp_number` à variável de ambiente `TWILIO_WHATSAPP_NUMBER`.
+    - Adicionado `TWILIO_WHATSAPP_NUMBER` ao `backend/.env` com um placeholder para facilitar a configuração.
+*   **Robustez do serviço Twilio**:
+    - Adicionado logging detalhado em `backend/app/services/twilio_whatsapp_service.py` para traçar os valores de `to_number`, `message`, e `from_number` durante o envio de mensagens, facilitando a depuração futura.

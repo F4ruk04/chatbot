@@ -35,8 +35,16 @@ class TwilioWhatsAppService:
             True se enviado com sucesso, False caso contrário
         """
         try:
+            logger.info(f"Attempting to send Twilio WhatsApp message:")
+            logger.info(f"  - To: {to_number}")
+            logger.info(f"  - Message: {message}")
+            logger.info(f"  - From (provided): {from_number}")
+            
             if not from_number:
                 from_number = self.twilio_whatsapp_number
+                logger.info(f"  - From (fallback from config): {from_number}")
+            else:
+                logger.info(f"  - From (used as-is): {from_number}")
             
             message_instance = self.twilio_client.messages.create(
                 body=message,
