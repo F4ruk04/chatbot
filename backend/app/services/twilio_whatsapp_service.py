@@ -6,6 +6,10 @@ Responsável por enviar mensagens via Twilio WhatsApp API
 from twilio.rest import Client
 from app.config import settings
 from typing import Optional
+import logging
+
+# Configurar logging
+logger = logging.getLogger(__name__)
 
 
 class TwilioWhatsAppService:

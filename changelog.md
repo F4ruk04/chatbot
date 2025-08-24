@@ -1,5 +1,8 @@
 # Changelog
 
+## [1.1.1] - 2025-08-24
+### Fixed
+- Fixed missing logger import in Twilio WhatsApp service that was causing webhook failures
 ## [2025-08-23] - Correção de `undefined` `response.data` no SubscriptionStatusCard (Iteração 3)
 
 ### Fixed
