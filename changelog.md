@@ -21,6 +21,10 @@
     - Garantido fallback visual consistente e mensagens claras em caso de falha de conexão ou erro do backend.
     - Preservada compatibilidade total com a interface TypeScript `SubscriptionStatus`.
 
+### Fixed
+*   **Erro de tipo TypeScript em `SubscriptionStatusCard.tsx`**:
+    - Corrigido o erro "Unexpected any. Specify a different type." e "Type 'unknown' is not assignable to type 'ReactNode'" ao exibir `rawApiResponseData` na UI, garantindo que o objeto seja stringificado corretamente.
+
 ### Added
 *   **Logs de depuração temporários (aprimorados e UI-visible)**:
     - Re-adicionados e aprimorados logs em `frontend/src/components/SubscriptionStatusCard.tsx` para depurar o processamento da resposta da API (`DEBUG: Subscription API raw response data:`, `DEBUG: Processed subscription status:`) e a atualização do estado, bem como o fluxo de carregamento.

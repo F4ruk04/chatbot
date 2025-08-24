@@ -42,7 +42,7 @@ export default function SubscriptionStatusCard() {
   const [loading, setLoading] = useState(true);
   const [subscriptionError, setSubscriptionError] = useState<string | null>(null);
   const [hasShownNotification, setHasShownNotification] = useState(false);
-  const [rawApiResponseData, setRawApiResponseData] = useState<any>(null); // New state for raw API response
+  const [rawApiResponseData, setRawApiResponseData] = useState<unknown>(null); // Changed 'any' to 'unknown'
 
   const fetchSubscriptionStatus = useCallback(async (retryCount = 0) => {
     const maxRetries = 5;
@@ -262,7 +262,7 @@ export default function SubscriptionStatusCard() {
         </div>
         {rawApiResponseData && (
           <div className="mt-4 text-xs text-red-600 dark:text-red-300 break-all">
-            Dados da API (Erro): {JSON.stringify(rawApiResponseData)}
+            Dados da API (Erro): {JSON.stringify(rawApiResponseData, null, 2)}
           </div>
         )}
       </div>
@@ -314,7 +314,7 @@ export default function SubscriptionStatusCard() {
         </div>
         {rawApiResponseData && (
           <div className="mt-4 text-xs text-white/80 break-all">
-            Dados da API (Sucesso): {JSON.stringify(rawApiResponseData)}
+            Dados da API (Sucesso): {JSON.stringify(rawApiResponseData, null, 2)}
           </div>
         )}
       </div>
