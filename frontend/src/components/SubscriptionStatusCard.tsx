@@ -42,7 +42,7 @@ export default function SubscriptionStatusCard() {
   const [loading, setLoading] = useState(true);
   const [subscriptionError, setSubscriptionError] = useState<string | null>(null);
   const [hasShownNotification, setHasShownNotification] = useState(false);
-  const [rawApiResponseData, setRawApiResponseData] = useState<unknown>(null); // Changed 'any' to 'unknown'
+  const [rawApiResponseData, setRawApiResponseData] = useState<object | null>(null); // Changed 'unknown' to 'object | null'
 
   const fetchSubscriptionStatus = useCallback(async (retryCount = 0) => {
     const maxRetries = 5;

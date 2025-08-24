@@ -23,7 +23,7 @@
 
 ### Fixed
 *   **Erro de tipo TypeScript em `SubscriptionStatusCard.tsx`**:
-    - Corrigido o erro "Unexpected any. Specify a different type." e "Type 'unknown' is not assignable to type 'ReactNode'" ao exibir `rawApiResponseData` na UI, garantindo que o objeto seja stringificado corretamente.
+    - Corrigido o erro "Type 'unknown' is not assignable to type 'ReactNode'" ao exibir `rawApiResponseData` na UI, alterando o tipo de `rawApiResponseData` para `object | null` e garantindo que o objeto seja stringificado corretamente.
 
 ### Added
 *   **Logs de depuração temporários (aprimorados e UI-visible)**:
