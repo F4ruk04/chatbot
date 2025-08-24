@@ -60,7 +60,7 @@ export default function SubscriptionStatusCard() {
       const subscriptionAPI = apiModule.subscriptionAPI; // Access subscriptionAPI from the module
       
       const response = await subscriptionAPI.getStatus();
-      const data = response.data; // Access data from the response object
+      const data = response?.data;
       setRawApiResponseData(data); // Store raw data
       console.log('DEBUG: Subscription API raw response data:', data);
       

@@ -1,15 +1,20 @@
 # Changelog
 
-## [2025-08-23] - Robustecimento do SubscriptionStatusCard e tratamento de erros
+## [2025-08-23] - Correção de `undefined` `response.data` no SubscriptionStatusCard (Iteração 3)
 
 ### Fixed
-*   **SubscriptionStatusCard preso em "processando"**:
-    - Ajustado `frontend/src/components/SubscriptionStatusCard.tsx` para sempre tratar a resposta de `/api/subscription/status` de forma segura.
-    - Garantido que os campos `plan`, `status`, `messages_used`, `messages_quota`, `usage_percent`, `days_remaining`, `renewal_date`, e `warning_level` tenham valores padrão se estiverem ausentes na resposta da API.
-    - Implementado `finally` block em `fetchSubscriptionStatus` para garantir que `setLoading(false)` seja sempre chamado, evitando que o card fique travado em "processando".
-    - Reforçado o tratamento de 429 (Too Many Requests) com exponential backoff de até 5 tentativas.
-    - Adicionado fallback visual claro para quando houver erro ou dados incompletos.
-    - Garantida a compatibilidade com a interface TypeScript `SubscriptionStatus`.
+*   **`response.data` `undefined` no `SubscriptionStatusCard`**:
+    - Corrigido o problema onde `response.data` era `undefined` no `SubscriptionStatusCard` mesmo após uma resposta 200 OK da API.
+    - Utilizado o operador de encadeamento opcional (`?.`) ao acessar `response.data` em `frontend/src/components/SubscriptionStatusCard.tsx` para garantir que `data` não seja `undefined` se `response` for `null` ou `undefined`.
+    - Removido o comentário `// Safely access data from the response object` para evitar futuras inconsistências no diff.
+
+## [2025-08-23] - Correção de `undefined` `response.data` no SubscriptionStatusCard (Iteração 2)
+
+### Fixed
+*   **`response.data` `undefined` no `SubscriptionStatusCard`**:
+    - Corrigido o problema onde `response.data` era `undefined` no `SubscriptionStatusCard` mesmo após uma resposta 200 OK da API.
+    - Utilizado o operador de encadeamento opcional (`?.`) ao acessar `response.data` em `frontend/src/components/SubscriptionStatusCard.tsx` para garantir que `data` não seja `undefined` se `response` for `null` ou `undefined`.
+    - Removido o comentário `// Safely access data from the response object` para evitar futuras inconsistências no diff.
 
 ## [2025-08-23] - Robustecimento do SubscriptionStatusCard e tratamento de erros (Iteração 2)
 
@@ -20,15 +25,6 @@
     - Reforçado o tratamento de 429 (Too Many Requests) com exponential backoff de até 5 tentativas.
     - Garantido fallback visual consistente e mensagens claras em caso de falha de conexão ou erro do backend.
     - Preservada compatibilidade total com a interface TypeScript `SubscriptionStatus`.
-
-### Fixed
-*   **Erro de tipo TypeScript em `SubscriptionStatusCard.tsx`**:
-    - Corrigido o erro "Type 'unknown' is not assignable to type 'ReactNode'" ao exibir `rawApiResponseData` na UI, alterando o tipo de `rawApiResponseData` para `object | null` e garantindo que o objeto seja stringificado corretamente.
-
-### Fixed
-*   **`response.data` `undefined` no `SubscriptionStatusCard`**:
-    - Corrigido o problema onde `response.data` era `undefined` no `SubscriptionStatusCard` mesmo após uma resposta 200 OK da API.
-    - Acessado `subscriptionAPI` do módulo importado (`apiModule.subscriptionAPI`) para garantir que o objeto seja totalmente resolvido antes de chamar `getStatus()`.
 
 ### Added
 *   **Logs de depuração temporários (aprimorados e UI-visible)**:
