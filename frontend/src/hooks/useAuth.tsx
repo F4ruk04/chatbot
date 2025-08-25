@@ -1,4 +1,6 @@
 
+"use client";
+
 import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { AuthUser } from '@/lib/auth'; // Importando a interface de usuário existente

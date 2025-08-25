@@ -302,3 +302,4 @@
 - feat(frontend): Adiciona sistema de autenticação com AuthProvider e hook useAuth.
 ### Fix
 - fix(frontend): Corrige erro de módulo não encontrado ao criar e integrar o hook useAuth.
+- fix(frontend): Adiciona a diretiva "use client" aos componentes que usam hooks do React para corrigir erros de build do Next.js.
