@@ -14,6 +14,14 @@ import {
 import { useNotification } from '@/hooks/useNotification';
 import { subscriptionAPI } from '@/lib/api'; // Static import
 import { areObjectsEqual } from '@/lib/utils'; // Import utility for deep comparison
+import { useAuth } from '@/hooks/useAuth';
+import { ShieldCheck, Gem } from 'lucide-react';
+import Link from 'next/link';
+
+// Defina a interface para as props do componente
+interface SubscriptionStatusCardProps {
+  isLoading?: boolean;
+}
 
 interface SubscriptionStatus {
   plan: string;
@@ -38,12 +46,40 @@ const defaultSubscriptionStatus: SubscriptionStatus = {
 };
 
 import React from 'react'; // Import React
-export default React.memo(function SubscriptionStatusCard() {
+export default React.memo(function SubscriptionStatusCard({ isLoading = false }: SubscriptionStatusCardProps) {
   const router = useRouter();
   const { showNotification } = useNotification();
+  const { user } = useAuth();
   const [status, setStatus] = useState<SubscriptionStatus | null>(null);
   const [loading, setLoading] = useState(true);
   const [subscriptionError, setSubscriptionError] = useState<string | null>(null);
+  
+  // Renderiza um esqueleto de carregamento se isLoading for true
+  if (isLoading) {
+    return (
+      <div className="animate-pulse bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
+        {/* Header skeleton */}
+        <div className="h-24 bg-gradient-to-r from-gray-300 to-gray-400 dark:from-gray-700 dark:to-gray-600 p-6">
+          <div className="h-6 bg-gray-200 dark:bg-gray-600 rounded w-3/4 mb-2"></div>
+          <div className="h-4 bg-gray-200 dark:bg-gray-600 rounded w-1/2"></div>
+        </div>
+        
+        {/* Content skeleton */}
+        <div className="p-6 space-y-6">
+          <div>
+            <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/3 mb-3"></div>
+            <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-full mb-2"></div>
+            <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-2/3"></div>
+          </div>
+          
+          <div className="h-16 bg-gray-100 dark:bg-gray-700 rounded-lg"></div>
+          
+          <div className="h-10 bg-blue-200 dark:bg-blue-900 rounded-lg"></div>
+        </div>
+      </div>
+    );
+  }
+
   const fetchSubscriptionStatus = useCallback(async (retryCount = 0) => {
     const maxRetries = 5;
     const baseRetryDelay = 1000;
@@ -193,6 +229,7 @@ export default React.memo(function SubscriptionStatusCard() {
     router.push('/billing');
   };
 
+  // Renderiza o conteúdo real do card quando não está carregando
   if (loading || !status) { // Render skeleton if loading or status is not yet available
     return (
       <div className="animate-pulse bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
@@ -237,6 +274,10 @@ export default React.memo(function SubscriptionStatusCard() {
       </div>
     );
   }
+
+  // Renderização do conteúdo real do card
+  const planName = user?.subscription_plan || status.plan;
+  const planIcon = planName === 'business' ? <Gem className="h-5 w-5 mr-2" /> : <ShieldCheck className="h-5 w-5 mr-2" />;
 
   return (
     <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden">

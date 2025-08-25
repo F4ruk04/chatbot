@@ -220,8 +220,13 @@
 ### Corrigido
 - Corrigido erro de tipo `Property 'isLoading' does not exist` no componente `SubscriptionStatusCard` ao aceitar a nova propriedade e adicionar um estado de esqueleto de carregamento.
 
-## [0.3.0] - 2024-07-31
-# ... existing code
+## [0.3.0] - 2024-08-01
+### Feat
+- **SubscriptionStatusCard**: Adicionado suporte para a prop `isLoading` para exibir um estado de esqueleto de carregamento.
+- **Dashboard**: Integrado o estado de carregamento da página com o `SubscriptionStatusCard`.
+
+### Fix
+- Corrigido erro de tipo no `SubscriptionStatusCard` ao passar props não definidas.
 
 ## Próximas Mudanças Planejadas
 
