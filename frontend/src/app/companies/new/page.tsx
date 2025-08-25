@@ -28,7 +28,7 @@ export default function NewCompanyForm() {
     setError('');
 
     try {
-      const response = await api.post('/api/companies/add', formData); // Use api.post
+      await api.post('/api/companies/add', formData); // Use api.post
 
       router.push('/dashboard');
     } catch (err: unknown) { // Use unknown for better type safety

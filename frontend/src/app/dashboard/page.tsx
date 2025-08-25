@@ -160,9 +160,9 @@ export default function DashboardPage() {
         <AuthGuard>
           <div className="p-4 sm:p-6 lg:p-8">
             <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">Dashboard</h1>
-            <div className="grid grid-cols-1 gap-6">
-              <SubscriptionStatusCard isLoading={true} />
-            </div>
+          <div className="grid grid-cols-1 gap-6">
+            <SubscriptionStatusCard />
+          </div>
           </div>
         </AuthGuard>
       </Layout>
@@ -197,7 +197,7 @@ export default function DashboardPage() {
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">Dashboard</h1>
 
           <div className="grid grid-cols-1 gap-6 mb-8">
-            <SubscriptionStatusCard isLoading={loading || featuresLoading} />
+            <SubscriptionStatusCard />
           </div>
 
           {/* Main Stats Grid */}
