@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.1.4] - 2025-08-25
+### Fixed
+- Fixed additional TypeScript build errors in Vercel deployment:
+ - Removed unused eslint-disable directive in frontend/src/app/companies/page.tsx
+  - Fixed React Hook useEffect missing dependency: 'loadDashboardData' in frontend/src/app/dashboard/page.tsx
+  - Fixed React Hook useEffect missing dependency: 'fetchCurrentPlan' in frontend/src/components/SmartPricingButton.tsx
+  - Fixed React Hook useEffect missing dependency: 'fetchCurrentPlan' in frontend/src/app/billing/page.tsx
+  - Fixed unexpected any type in frontend/src/lib/utils.ts
 ## [1.1.3] - 2025-08-25
 ### Fixed
 - Fixed TypeScript build errors in Vercel deployment:

@@ -122,9 +122,9 @@ function BillingContent() {
     if (planFromUrl && plans.find(p => p.id === planFromUrl)) {
       setSelectedPlan(planFromUrl);
     }
-  }, [searchParams]);
+  }, [searchParams, fetchCurrentPlan]);
 
-  const fetchCurrentPlan = async () => {
+  const fetchCurrentPlan = useCallback(async () => {
     try {
       const { api } = await import('@/lib/api');
       const response = await api.get('/api/subscription/status');
@@ -138,7 +138,7 @@ function BillingContent() {
         duration: 5000
       });
     }
-  };
+  }, [showNotification]);
 
   const handlePlanSelect = (planId: string) => {
     setSelectedPlan(planId);

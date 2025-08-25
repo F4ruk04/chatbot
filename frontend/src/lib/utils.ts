@@ -1,5 +1,5 @@
 // Utility function for deep comparison of objects
-export function areObjectsEqual<T extends Record<string, any>>(obj1: T, obj2: T): boolean {
+export function areObjectsEqual<T>(obj1: T, obj2: T): boolean {
   if (obj1 === obj2) {
     return true;
   }
@@ -8,15 +8,15 @@ export function areObjectsEqual<T extends Record<string, any>>(obj1: T, obj2: T)
     return false;
   }
 
-  const keys1 = Object.keys(obj1);
-  const keys2 = Object.keys(obj2);
+  const keys1 = Object.keys(obj1 as Record<string, unknown>);
+  const keys2 = Object.keys(obj2 as Record<string, unknown>);
 
   if (keys1.length !== keys2.length) {
     return false;
   }
 
   for (const key of keys1) {
-    if (!keys2.includes(key) || !areObjectsEqual(obj1[key], obj2[key])) {
+    if (!keys2.includes(key) || !areObjectsEqual((obj1 as Record<string, unknown>)[key], (obj2 as Record<string, unknown>)[key])) {
       return false;
     }
   }

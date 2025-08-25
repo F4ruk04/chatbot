@@ -38,7 +38,7 @@ export default function DashboardPage() {
     if (!featuresLoading) {
       loadDashboardData();
     }
-  }, [featuresLoading]); // Remover loadDashboardData das dependências para evitar o erro de inicialização
+  }, [featuresLoading, loadDashboardData]); // Add loadDashboardData to dependencies
 
   useEffect(() => {
     console.log('Dashboard: checkFeature("advanced_dashboard"):', checkFeature('advanced_dashboard'));

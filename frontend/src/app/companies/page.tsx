@@ -2,7 +2,6 @@
  * Página de Empresas
  * Interface moderna para gestão de empresas
  */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 
 'use client';
 

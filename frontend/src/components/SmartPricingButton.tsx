@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { isAuthenticated } from '@/lib/auth';
 import clsx from 'clsx';
@@ -34,9 +34,9 @@ export default function SmartPricingButton({
     if (isAuthenticated()) {
       fetchCurrentPlan();
     }
-  }, []);
+  }, [fetchCurrentPlan]);
 
-  const fetchCurrentPlan = async () => {
+  const fetchCurrentPlan = useCallback(async () => {
     try {
       const { api } = await import('@/lib/api');
       const response = await api.get('/api/subscription/status');
@@ -45,7 +45,7 @@ export default function SmartPricingButton({
       console.error('Error fetching current plan:', error);
       setCurrentPlan('free');
     }
-  };
+  }, []);
 
   const handleClick = () => {
     if (!mounted || loading) return;
