@@ -158,10 +158,10 @@ export default function DashboardPage() {
     return (
       <Layout>
         <AuthGuard>
-          <div className="flex items-center justify-center h-screen"> {/* Use h-screen for full page loader */}
-            <div className="text-center">
-              <div className="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mb-4"></div>
-              <p className="text-gray-600 dark:text-gray-400">Carregando dados do dashboard...</p>
+          <div className="p-4 sm:p-6 lg:p-8">
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">Dashboard</h1>
+            <div className="grid grid-cols-1 gap-6">
+              <SubscriptionStatusCard isLoading={true} />
             </div>
           </div>
         </AuthGuard>
@@ -173,12 +173,13 @@ export default function DashboardPage() {
     return (
       <Layout>
         <AuthGuard>
-          <div className="flex items-center justify-center h-screen">
-            <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 text-center">
-              <div className="text-red-700 dark:text-red-400 text-lg font-medium mb-2">{error}</div>
+          <div className="flex items-center justify-center h-full">
+            <div className="text-center p-8 bg-white dark:bg-gray-800 rounded-lg shadow-md">
+              <h2 className="text-xl font-semibold text-red-600 dark:text-red-400">Ocorreu um erro</h2>
+              <p className="text-gray-600 dark:text-gray-300 mt-2">{error}</p>
               <button
-                onClick={loadDashboardData} // Allow retrying data load
-                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-red-600 hover:bg-red-700"
+                onClick={() => loadDashboardData()}
+                className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
               >
                 Tentar Novamente
               </button>
@@ -192,142 +193,101 @@ export default function DashboardPage() {
   return (
     <Layout>
       <AuthGuard>
-        <main className="space-y-8">
-          {/* Header */}
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-              Dashboard
-            </h1>
-            <p className="text-gray-600 dark:text-gray-400">
-              Visão geral das suas empresas e estatísticas de mensagens
-            </p>
+        <div className="p-4 sm:p-6 lg:p-8">
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">Dashboard</h1>
+
+          <div className="grid grid-cols-1 gap-6 mb-8">
+            <SubscriptionStatusCard isLoading={loading || featuresLoading} />
           </div>
 
-          {/* Status da Assinatura */}
-          <div className="grid grid-cols-1 xl:grid-cols-4 gap-6">
-            <div className="xl:col-span-1">
-              <SubscriptionStatusCard />
-            </div>
-            
-            {/* Dashboard Content based on plan */}
-            {null /* console.log('Dashboard: checkFeature("advanced_dashboard"):', checkFeature('advanced_dashboard')) */}
-            {checkFeature('advanced_dashboard') ? (
-              <>
-                {/* Estatísticas principais */}
-                <div className="xl:col-span-3">
-                  {stats && (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
-                      <StatCard
-                        title="Total de Empresas"
-                        value={stats.total_companies}
-                        icon={Building2}
-                        color="blue"
-                        trend="up"
-                        trendValue="+12% este mês"
-                      />
-                      <StatCard
-                        title="Total de Mensagens"
-                        value={stats.total_messages}
-                        icon={MessageSquare}
-                        color="green"
-                        trend="up"
-                        trendValue="+8% esta semana"
-                      />
-                      <StatCard
-                        title="Conversas Ativas"
-                        value={stats.active_conversations}
-                        icon={Users}
-                        color="purple"
-                        trend="up"
-                        trendValue="+15% hoje"
-                      />
-                      <StatCard
-                        title="Mensagens Hoje"
-                        value={stats.messages_today}
-                        icon={Activity}
-                        color="orange"
-                      />
-                      <StatCard
-                        title="Esta Semana"
-                        value={stats.messages_this_week}
-                        icon={TrendingUp}
-                        color="indigo"
-                      />
-                      <StatCard
-                        title="Este Mês"
-                        value={stats.messages_this_month}
-                        icon={BarChart3}
-                        color="red"
-                      />
-                    </div>
-                  )}
-                </div>
+          {/* Main Stats Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <StatCard
+              title="Total de Empresas"
+              value={stats?.total_companies || 0}
+              icon={Building2}
+              color="blue"
+              trend="up"
+              trendValue="+12% este mês"
+            />
+            <StatCard
+              title="Total de Mensagens"
+              value={stats?.total_messages || 0}
+              icon={MessageSquare}
+              color="green"
+              trend="up"
+              trendValue="+8% esta semana"
+            />
+            <StatCard
+              title="Conversas Ativas"
+              value={stats?.active_conversations || 0}
+              icon={Users}
+              color="purple"
+              trend="up"
+              trendValue="+15% hoje"
+            />
+            <StatCard
+              title="Mensagens Hoje"
+              value={stats?.messages_today || 0}
+              icon={Activity}
+              color="orange"
+            />
+            <StatCard
+              title="Esta Semana"
+              value={stats?.messages_this_week || 0}
+              icon={TrendingUp}
+              color="indigo"
+            />
+            <StatCard
+              title="Este Mês"
+              value={stats?.messages_this_month || 0}
+              icon={BarChart3}
+              color="red"
+            />
+          </div>
 
-                {/* Gráfico de atividade recente - Usando componente real */}
-                <DashboardChart />
+          {/* Chart Section */}
+          <div className="mb-8">
+            <DashboardChart />
+          </div>
 
-                {/* Cards de ação rápida (Relatórios) */}
-                {null /* console.log('Dashboard: checkFeature("reports"):', checkFeature('reports')) */}
-                {checkFeature('reports') && (
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl p-6 text-white">
-                      <div className="flex items-center justify-between mb-4">
-                        <Zap className="h-8 w-8" />
-                        <ArrowUpRight className="h-6 w-6" />
-                      </div>
-                      <h3 className="text-lg font-semibold mb-2">Performance</h3>
-                      <p className="text-blue-100 text-sm">
-                        Monitore o desempenho dos seus chatbots em tempo real
-                      </p>
-                    </div>
-
-                    <div className="bg-gradient-to-br from-green-500 to-green-600 rounded-xl p-6 text-white">
-                      <div className="flex items-center justify-between mb-4">
-                        <Target className="h-8 w-8" />
-                        <ArrowUpRight className="h-6 w-6" />
-                      </div>
-                      <h3 className="text-lg font-semibold mb-2">Objetivos</h3>
-                      <p className="text-green-100 text-sm">
-                        Defina e acompanhe metas para suas campanhas
-                      </p>
-                    </div>
-
-                    <div className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl p-6 text-white">
-                      <div className="flex items-center justify-between mb-4">
-                        <BarChart3 className="h-8 w-8" />
-                        <ArrowUpRight className="h-6 w-6" />
-                      </div>
-                      <h3 className="text-lg font-semibold mb-2">Relatórios</h3>
-                      <p className="text-purple-100 text-sm">
-                        Gere relatórios detalhados de suas atividades
-                      </p>
-                    </div>
-                  </div>
-                )}
-              </>
-            ) : (
-              // Basic Dashboard for Free Plan
-              <div className="xl:col-span-3">
-                <div className="bg-white dark:bg-gray-900 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 p-6 text-center">
-                  <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
-                    Dashboard Básico
-                  </h3>
-                  <p className="text-gray-600 dark:text-gray-400 mb-6">
-                    Seu plano Gratuito oferece uma visão geral simplificada.
-                    Faça upgrade para acessar estatísticas avançadas, relatórios e muito mais!
-                  </p>
-                  <button
-                    onClick={() => router.push('/pricing')}
-                    className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700"
-                  >
-                    Ver Planos de Upgrade
-                  </button>
-                </div>
+          {/* Action Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl p-6 text-white">
+              <div className="flex items-center justify-between mb-4">
+                <Zap className="h-8 w-8" />
+                <ArrowUpRight className="h-6 w-6" />
               </div>
-            )}
+              <h3 className="text-lg font-semibold mb-2">Performance</h3>
+              <p className="text-blue-100 text-sm">
+                Monitore o desempenho dos seus chatbots em tempo real
+              </p>
+            </div>
+
+            <div className="bg-gradient-to-br from-green-500 to-green-600 rounded-xl p-6 text-white">
+              <div className="flex items-center justify-between mb-4">
+                <Target className="h-8 w-8" />
+                <ArrowUpRight className="h-6 w-6" />
+              </div>
+              <h3 className="text-lg font-semibold mb-2">Objetivos</h3>
+              <p className="text-green-100 text-sm">
+                Defina e acompanhe metas para suas campanhas
+              </p>
+            </div>
+
+            <div className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl p-6 text-white">
+              <div className="flex items-center justify-between mb-4">
+                <BarChart3 className="h-8 w-8" />
+                <ArrowUpRight className="h-6 w-6" />
+              </div>
+              <h3 className="text-lg font-semibold mb-2">Relatórios</h3>
+              <p className="text-purple-100 text-sm">
+                Gere relatórios detalhados de suas atividades
+              </p>
+            </div>
           </div>
 
-          {/* Lista de empresas (sempre visível) */}
+          {/* Companies List */}
           <div className="bg-white dark:bg-gray-900 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
             <div className="px-4 sm:px-6 py-4 border-b border-gray-200 dark:border-gray-700">
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
@@ -470,7 +430,7 @@ export default function DashboardPage() {
               )}
             </div>
           </div>
-        </main>
+        </div>
       </AuthGuard>
     </Layout>
   );
