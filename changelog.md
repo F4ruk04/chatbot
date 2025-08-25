@@ -1,5 +1,8 @@
 # Changelog
 
+## [1.1.5] - 2025-08-25
+### Fixed
+- Fixed Next.js layout error: Moved themeColor and viewport from separate exports to metadata object in frontend/src/app/layout.tsx
 ## [1.1.4] - 2025-08-25
 ### Fixed
 - Fixed additional TypeScript build errors in Vercel deployment:
