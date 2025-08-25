@@ -84,14 +84,28 @@ const SubscriptionStatusCard: FC<SubscriptionStatusCardProps> = ({ isLoading = f
         messages_quota: data.messages_quota ?? defaultSubscriptionStatus.messages_quota,
         usage_percent: data.usage_percent ?? defaultSubscriptionStatus.usage_percent,
         days_remaining: data.days_remaining ?? defaultSubscriptionStatus.days_remaining,
-        renewal_date: data.renewal_date ?? defaultSubscriptionStatus.renewal_date,
+        renewal_date: new Date(data.renewal_date ?? defaultSubscriptionStatus.renewal_date).toISOString().split('.')[0], // Normalize date to remove milliseconds
         warning_level: data.warning_level ?? defaultSubscriptionStatus.warning_level,
       };
 
       // Only update status if the data has actually changed
-      if (!status || !areObjectsEqual(status, receivedStatus)) {
-        setStatus(receivedStatus);
-      }
+      setStatus(prevStatus => {
+        // Create a normalized prevStatus for comparison
+        const normalizedPrevStatus = prevStatus ? {
+          ...prevStatus,
+          renewal_date: new Date(prevStatus.renewal_date).toISOString().split('.')[0],
+        } : null;
+
+        const areEqual = areObjectsEqual(normalizedPrevStatus, receivedStatus);
+        console.log('SubscriptionStatusCard: prevStatus (normalized)', normalizedPrevStatus);
+        console.log('SubscriptionStatusCard: receivedStatus', receivedStatus);
+        console.log('SubscriptionStatusCard: areObjectsEqual result', areEqual);
+
+        if (!normalizedPrevStatus || !areEqual) {
+          return receivedStatus;
+        }
+        return prevStatus;
+      });
       
     } catch (err: unknown) {
       console.error('Erro ao carregar assinatura:', err);
@@ -141,11 +155,11 @@ const SubscriptionStatusCard: FC<SubscriptionStatusCardProps> = ({ isLoading = f
     } finally {
       setLoading(false);
     }
-  }, [showNotification, status]);
+  }, [showNotification]); // 'status' is no longer a dependency
 
   useEffect(() => {
     fetchSubscriptionStatus();
-  }, [fetchSubscriptionStatus]);
+  }, [fetchSubscriptionStatus]); // fetchSubscriptionStatus is now stable
 
   const getPlanDisplayName = (plan: string) => {
     const planNames = {
@@ -247,9 +261,6 @@ const SubscriptionStatusCard: FC<SubscriptionStatusCardProps> = ({ isLoading = f
   }
 
   // Renderização do conteúdo real do card
-  // Use status.plan directly as subscription_plan is not on AuthUser
-  const currentPlan = status.plan; 
-
   return (
     <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
       {/* Header com plano atual */}
@@ -268,15 +279,14 @@ const SubscriptionStatusCard: FC<SubscriptionStatusCardProps> = ({ isLoading = f
               </p>
             </div>
           </div>
-          {status.plan !== 'business' && (
-            <button
-              onClick={handleUpgradeClick}
-              className="bg-white/20 hover:bg-white/30 backdrop-blur-sm px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 flex items-center space-x-1"
-            >
-              <TrendingUp className="h-4 w-4" />
-              <span>Upgrade</span>
-            </button>
-          )}
+          {/* Always show upgrade button as per user request */}
+          <button
+            onClick={handleUpgradeClick}
+            className="bg-white/20 hover:bg-white/30 backdrop-blur-sm px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 flex items-center space-x-1"
+          >
+            <TrendingUp className="h-4 w-4" />
+            <span>Upgrade</span>
+          </button>
         </div>
       </div>
 
@@ -361,16 +371,14 @@ const SubscriptionStatusCard: FC<SubscriptionStatusCardProps> = ({ isLoading = f
           </div>
         )}
 
-        {/* Botão de Upgrade - sempre visível para planos não-business */}
-        {status.plan !== 'business' && (
-          <button
-            onClick={handleUpgradeClick}
-            className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-medium py-3 px-4 rounded-lg transition-all duration-200 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 flex items-center justify-center space-x-2"
-          >
-            <TrendingUp className="h-4 w-4" />
-            <span>Fazer Upgrade do Plano</span>
-          </button>
-        )}
+        {/* Botão de Upgrade - always visible as per user request */}
+        <button
+          onClick={handleUpgradeClick}
+          className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-medium py-3 px-4 rounded-lg transition-all duration-200 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 flex items-center justify-center space-x-2"
+        >
+          <TrendingUp className="h-4 w-4" />
+          <span>Fazer Upgrade do Plano</span>
+        </button>
       </div>
     </div>
   );
