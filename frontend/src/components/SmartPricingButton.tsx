@@ -26,16 +26,6 @@ export default function SmartPricingButton({
   const [mounted, setMounted] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    setMounted(true);
-    setIsLoggedIn(isAuthenticated());
-    
-    // Fetch current user plan if logged in
-    if (isAuthenticated()) {
-      fetchCurrentPlan();
-    }
-  }, [fetchCurrentPlan]);
-
   const fetchCurrentPlan = useCallback(async () => {
     try {
       const { api } = await import('@/lib/api');
@@ -46,6 +36,16 @@ export default function SmartPricingButton({
       setCurrentPlan('free');
     }
   }, []);
+
+  useEffect(() => {
+    setMounted(true);
+    setIsLoggedIn(isAuthenticated());
+    
+    // Fetch current user plan if logged in
+    if (isAuthenticated()) {
+      fetchCurrentPlan();
+    }
+  }, [fetchCurrentPlan]);
 
   const handleClick = () => {
     if (!mounted || loading) return;
