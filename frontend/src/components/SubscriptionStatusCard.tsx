@@ -134,7 +134,7 @@ export default React.memo(function SubscriptionStatusCard() {
     } finally {
       setLoading(false);
     }
-  }, [showNotification]);
+  }, [showNotification, status]);
 
   useEffect(() => {
     fetchSubscriptionStatus();

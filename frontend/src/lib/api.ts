@@ -141,6 +141,17 @@ export interface CompanyStats {
   last_message_date?: string;
 }
 
+export interface SubscriptionStatus {
+  plan: string;
+  status: string;
+  messages_used: number;
+  messages_quota: number;
+  usage_percent: number;
+  days_remaining: number;
+  renewal_date: string;
+  warning_level: 'LOW' | 'MEDIUM' | 'HIGH';
+}
+
 // Funções de autenticação
 export const authAPI = {
   register: async (data: { email: string; nome: string; password: string }) => {
@@ -219,7 +230,7 @@ export const messagesAPI = {
 
 // Funções de subscrição
 export const subscriptionAPI = {
-  getStatus: async (): Promise<any> => { // Especificar tipo Promise<any> em vez de any implícito
+  getStatus: async (): Promise<SubscriptionStatus> => {
     const response = await api.get('/api/subscription/status');
     return response.data;
   },

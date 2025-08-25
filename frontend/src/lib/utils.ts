@@ -1,5 +1,5 @@
 // Utility function for deep comparison of objects
-export function areObjectsEqual(obj1: any, obj2: any): boolean {
+export function areObjectsEqual<T extends Record<string, any>>(obj1: T, obj2: T): boolean {
   if (obj1 === obj2) {
     return true;
   }

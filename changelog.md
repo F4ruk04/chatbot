@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.3] - 2025-08-25
+### Fixed
+- Fixed TypeScript build errors in Vercel deployment:
+  - Created proper SubscriptionStatus interface in frontend/src/lib/api.ts
+  - Updated subscriptionAPI.getStatus to use explicit type instead of any
+  - Fixed generic types in frontend/src/lib/utils.ts
+  - Fixed React hook dependencies in frontend/src/components/SubscriptionStatusCard.tsx
 ## [1.1.2] - 2025-08-25
 ### Fixed
 - Added explicit Promise type annotation to subscriptionAPI.getStatus function in frontend/src/lib/api.ts to improve TypeScript type safety
