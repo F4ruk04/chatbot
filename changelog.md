@@ -1,5 +1,8 @@
 # Changelog
 
+## [1.1.2] - 2025-08-25
+### Fixed
+- Added explicit Promise type annotation to subscriptionAPI.getStatus function in frontend/src/lib/api.ts to improve TypeScript type safety
 ## [1.1.1] - 2025-08-24
 ### Fixed
 - Fixed missing logger import in Twilio WhatsApp service that was causing webhook failures

@@ -219,7 +219,7 @@ export const messagesAPI = {
 
 // Funções de subscrição
 export const subscriptionAPI = {
-  getStatus: async () => {
+  getStatus: async (): Promise<any> => { // Especificar tipo Promise<any> em vez de any implícito
     const response = await api.get('/api/subscription/status');
     return response.data;
   },
