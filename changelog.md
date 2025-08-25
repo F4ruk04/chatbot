@@ -303,3 +303,4 @@
 ### Fix
 - fix(frontend): Corrige erro de módulo não encontrado ao criar e integrar o hook useAuth.
 - fix(frontend): Adiciona a diretiva "use client" aos componentes que usam hooks do React para corrigir erros de build do Next.js.
+- fix(frontend): Refatora a página de faturação para seguir as regras dos Hooks do React e corrigir erros de renderização condicional.

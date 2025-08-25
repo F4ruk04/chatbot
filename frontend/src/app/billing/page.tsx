@@ -1,9 +1,10 @@
+
 /**
  * Página de Billing/Checkout
  * Interface para upgrade de planos e pagamentos
  */
  
-'use client';
+'use client'; // Diretiva obrigatória para componentes que usam Hooks no App Router
 
 import { useState, useEffect, Suspense, useCallback } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -22,19 +23,9 @@ import {
   AlertCircle
 } from 'lucide-react';
 
-interface Plan {
-  id: string;
-  name: string;
-  price: number;
-  priceDisplay: string;
-  description: string;
-  features: string[];
-  popular?: boolean;
-  color: string;
-  icon: React.ComponentType<{ className?: string }>;
-}
-
-const plans: Plan[] = [
+// Definição dos planos fora do componente para evitar recriação em cada renderização.
+// Isto melhora a performance e a clareza.
+const plans = [
   {
     id: 'free',
     name: 'Gratuito',
@@ -47,6 +38,7 @@ const plans: Plan[] = [
       'Dashboard Simples',
       'Inclui a nossa marca nas respostas',
     ],
+    popular: false,
     color: 'from-gray-500 to-gray-600',
     icon: Shield
   },
@@ -81,6 +73,7 @@ const plans: Plan[] = [
       'Onboarding Personalizado por vídeo-chamada',
       'Suporte VIP direto via WhatsApp',
     ],
+    popular: false,
     color: 'from-purple-500 to-purple-600',
     icon: Crown
   }
@@ -103,6 +96,8 @@ const paymentMethods = [
   }
 ];
 
+// O componente principal da página de faturação.
+// Todos os Hooks são chamados no nível superior, garantindo a ordem de execução.
 function BillingContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -115,6 +110,7 @@ function BillingContent() {
 
   const fetchCurrentPlan = useCallback(async () => {
     try {
+      // A importação dinâmica permanece uma boa prática para otimização.
       const { api } = await import('@/lib/api');
       const response = await api.get('/api/subscription/status');
       setCurrentPlan(response.data.plan || 'free');
@@ -127,18 +123,17 @@ function BillingContent() {
         duration: 5000
       });
     }
-  }, [showNotification]);
+  }, [showNotification]); // A dependência está correta.
 
+  // Este Hook agora é chamado incondicionalmente no topo do componente.
   useEffect(() => {
-    // Verificar plano atual do usuário
     fetchCurrentPlan();
     
-    // Verificar se há um plano pré-selecionado na URL
     const planFromUrl = searchParams.get('plan');
     if (planFromUrl && plans.find(p => p.id === planFromUrl)) {
       setSelectedPlan(planFromUrl);
     }
-  }, [searchParams, fetchCurrentPlan]);
+  }, [searchParams, fetchCurrentPlan]); // As dependências estão corretas.
 
 
   const handlePlanSelect = (planId: string) => {
