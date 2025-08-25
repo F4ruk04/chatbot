@@ -5,7 +5,7 @@
  
 'use client';
 
-import { useState, useEffect, Suspense } from 'react';
+import { useState, useEffect, Suspense, useCallback } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Layout from '@/components/Layout';
 import AuthGuard from '@/components/AuthGuard';
@@ -113,17 +113,6 @@ function BillingContent() {
   const [currentPlan, setCurrentPlan] = useState<string>('free');
   const { showNotification } = useNotification();
 
-  useEffect(() => {
-    // Verificar plano atual do usuário
-    fetchCurrentPlan();
-    
-    // Verificar se há um plano pré-selecionado na URL
-    const planFromUrl = searchParams.get('plan');
-    if (planFromUrl && plans.find(p => p.id === planFromUrl)) {
-      setSelectedPlan(planFromUrl);
-    }
-  }, [searchParams, fetchCurrentPlan]);
-
   const fetchCurrentPlan = useCallback(async () => {
     try {
       const { api } = await import('@/lib/api');
@@ -139,6 +128,18 @@ function BillingContent() {
       });
     }
   }, [showNotification]);
+
+  useEffect(() => {
+    // Verificar plano atual do usuário
+    fetchCurrentPlan();
+    
+    // Verificar se há um plano pré-selecionado na URL
+    const planFromUrl = searchParams.get('plan');
+    if (planFromUrl && plans.find(p => p.id === planFromUrl)) {
+      setSelectedPlan(planFromUrl);
+    }
+  }, [searchParams, fetchCurrentPlan]);
+
 
   const handlePlanSelect = (planId: string) => {
     setSelectedPlan(planId);

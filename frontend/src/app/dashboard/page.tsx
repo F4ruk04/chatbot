@@ -33,18 +33,6 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
-  useEffect(() => {
-    console.log('DashboardPage useEffect [featuresLoading] triggered. featuresLoading:', featuresLoading);
-    if (!featuresLoading) {
-      loadDashboardData();
-    }
-  }, [featuresLoading, loadDashboardData]); // Add loadDashboardData to dependencies
-
-  useEffect(() => {
-    console.log('Dashboard: checkFeature("advanced_dashboard"):', checkFeature('advanced_dashboard'));
-    console.log('Dashboard: checkFeature("reports"):', checkFeature('reports'));
-  }, [checkFeature]); // Log feature flags when checkFeature changes
-
   const loadDashboardData = useCallback(async () => { // Wrap with useCallback
     try {
       setLoading(true);
@@ -96,6 +84,18 @@ export default function DashboardPage() {
       setLoading(false);
     }
   }, [setLoading, setError, setStats, setCompaniesStats]); // Dependencies for useCallback
+
+  useEffect(() => {
+    console.log('DashboardPage useEffect [featuresLoading] triggered. featuresLoading:', featuresLoading);
+    if (!featuresLoading) {
+      loadDashboardData();
+    }
+  }, [featuresLoading, loadDashboardData]); // Add loadDashboardData to dependencies
+
+  useEffect(() => {
+    console.log('Dashboard: checkFeature("advanced_dashboard"):', checkFeature('advanced_dashboard'));
+    console.log('Dashboard: checkFeature("reports"):', checkFeature('reports'));
+  }, [checkFeature]); // Log feature flags when checkFeature changes
 
   const StatCard = ({ 
     title, 
@@ -210,7 +210,7 @@ export default function DashboardPage() {
             </div>
             
             {/* Dashboard Content based on plan */}
-            {console.log('Dashboard: checkFeature("advanced_dashboard"):', checkFeature('advanced_dashboard')) && null}
+            {null /* console.log('Dashboard: checkFeature("advanced_dashboard"):', checkFeature('advanced_dashboard')) */}
             {checkFeature('advanced_dashboard') ? (
               <>
                 {/* Estatísticas principais */}

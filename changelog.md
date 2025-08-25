@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.1.6] - 2025-08-25
+### Fixed
+- Fixed React Hook dependency issues:
+  - Fixed 'loadDashboardData' used before initialization in frontend/src/app/dashboard/page.tsx
+  - Fixed 'fetchCurrentPlan' used before declaration in frontend/src/app/billing/page.tsx
+  - Removed console.log statements that were causing TypeScript errors in frontend/src/app/dashboard/page.tsx
 ## [1.1.5] - 2025-08-25
 ### Fixed
 - Fixed Next.js layout error: Moved themeColor and viewport from separate exports to metadata object in frontend/src/app/layout.tsx
