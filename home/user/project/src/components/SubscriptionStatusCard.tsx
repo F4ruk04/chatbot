@@ -5,7 +5,7 @@ interface SubscriptionStatusCardProps {
   isLoading?: boolean;
 }
 
-export default function SubscriptionStatusCard({ isLoading = false }: SubscriptionStatusCardProps) {
+const SubscriptionStatusCard: React.FC<SubscriptionStatusCardProps> = ({ isLoading = false }) => {
   if (isLoading) {
     return (
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
@@ -33,4 +33,6 @@ export default function SubscriptionStatusCard({ isLoading = false }: Subscripti
       </div>
     </div>
   );
-}
+};
+
+export default SubscriptionStatusCard;
