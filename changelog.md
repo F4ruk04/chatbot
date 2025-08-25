@@ -304,3 +304,5 @@
 - fix(frontend): Corrige erro de módulo não encontrado ao criar e integrar o hook useAuth.
 - fix(frontend): Adiciona a diretiva "use client" aos componentes que usam hooks do React para corrigir erros de build do Next.js.
 - fix(frontend): Refatora a página de faturação para seguir as regras dos Hooks do React e corrigir erros de renderização condicional.
+- fix(frontend): Corrige loop infinito de chamadas à API no `SubscriptionStatusCard` ao otimizar as dependências do `useCallback` e usar a forma funcional de `setState`.
+- refactor(frontend): Melhora a estrutura do `SubscriptionStatusCard` movendo tipos, valores padrão e funções auxiliares para fora do componente para melhor performance e legibilidade.
