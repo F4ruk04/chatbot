@@ -227,6 +227,7 @@
 
 ### Fix
 - Corrigido erro de tipo no `SubscriptionStatusCard` ao passar props não definidas.
+- Corrigida a importação do hook `useAuth` no componente `SubscriptionStatusCard` para o caminho correto (`@/contexts/AuthContext`).
 
 ## Próximas Mudanças Planejadas
 

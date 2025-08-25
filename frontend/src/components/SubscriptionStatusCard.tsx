@@ -14,7 +14,7 @@ import {
 import { useNotification } from '@/hooks/useNotification';
 import { subscriptionAPI } from '@/lib/api'; // Static import
 import { areObjectsEqual } from '@/lib/utils'; // Import utility for deep comparison
-import { useAuth } from '@/hooks/useAuth';
+import { useAuth } from '@/contexts/AuthContext'; // Caminho corrigido
 import { ShieldCheck, Gem } from 'lucide-react';
 import Link from 'next/link';
 
