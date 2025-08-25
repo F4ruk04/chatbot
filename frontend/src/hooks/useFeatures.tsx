@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { api } from '@/lib/api'; // Import the configured axios instance
 
 interface Feature {
   name: string;
@@ -15,9 +16,8 @@ export function useFeatures() {
   useEffect(() => {
     const fetchFeatures = async () => {
       try {
-        const response = await fetch('/api/subscription/features');
-        const data = await response.json();
-        setFeatures(data);
+        const response = await api.get('/api/subscription/features');
+        setFeatures(response.data);
       } catch (error) {
         console.error('Erro ao carregar features:', error);
       } finally {
@@ -29,6 +29,10 @@ export function useFeatures() {
   }, []);
 
   const checkFeature = (featureName: string): boolean => {
+    // Durante o carregamento, retornar false para evitar renderização prematura
+    if (loading) {
+      return false;
+    }
     return features[featureName]?.enabled ?? false;
   };
 

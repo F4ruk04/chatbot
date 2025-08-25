@@ -28,7 +28,8 @@ interface LayoutProps {
   children: ReactNode;
 }
 
-export default function Layout({ children }: LayoutProps) {
+import React from 'react'; // Import React
+export default React.memo(function Layout({ children }: LayoutProps) {
   const router = useRouter();
   const pathname = usePathname();
   const [userName, setUserName] = useState<string>('');
@@ -208,5 +209,5 @@ export default function Layout({ children }: LayoutProps) {
       </main>
     </div>
   );
-}
+}); // Wrap with React.memo
 

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import Layout from '@/components/Layout';
 import AuthGuard from '@/components/AuthGuard';
@@ -25,6 +25,7 @@ import {
 } from 'lucide-react';
 
 export default function DashboardPage() {
+  console.log('DashboardPage rendered'); // Log component render
   const router = useRouter();
   const { checkFeature, loading: featuresLoading } = useFeatures();
   const [stats, setStats] = useState<DashboardStats | null>(null);
@@ -33,12 +34,18 @@ export default function DashboardPage() {
   const [error, setError] = useState('');
 
   useEffect(() => {
+    console.log('DashboardPage useEffect [featuresLoading] triggered. featuresLoading:', featuresLoading);
     if (!featuresLoading) {
       loadDashboardData();
     }
-  }, [featuresLoading]);
+  }, [featuresLoading]); // Remover loadDashboardData das dependências para evitar o erro de inicialização
 
-  const loadDashboardData = async () => {
+  useEffect(() => {
+    console.log('Dashboard: checkFeature("advanced_dashboard"):', checkFeature('advanced_dashboard'));
+    console.log('Dashboard: checkFeature("reports"):', checkFeature('reports'));
+  }, [checkFeature]); // Log feature flags when checkFeature changes
+
+  const loadDashboardData = useCallback(async () => { // Wrap with useCallback
     try {
       setLoading(true);
       setError('');
@@ -88,7 +95,7 @@ export default function DashboardPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [setLoading, setError, setStats, setCompaniesStats]); // Dependencies for useCallback
 
   const StatCard = ({ 
     title, 
@@ -147,24 +154,35 @@ export default function DashboardPage() {
     );
   };
 
-  if (loading || featuresLoading) {
+  if (loading || featuresLoading) { // Show full page loading until all data is fetched
     return (
       <Layout>
         <AuthGuard>
-          <div className="flex items-center justify-center h-64">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+          <div className="flex items-center justify-center h-screen"> {/* Use h-screen for full page loader */}
+            <div className="text-center">
+              <div className="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mb-4"></div>
+              <p className="text-gray-600 dark:text-gray-400">Carregando dados do dashboard...</p>
+            </div>
           </div>
         </AuthGuard>
       </Layout>
     );
   }
 
-  if (error) {
+  if (error) { // Show full page error if there's an error
     return (
       <Layout>
         <AuthGuard>
-          <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
-            <div className="text-red-700 dark:text-red-400">{error}</div>
+          <div className="flex items-center justify-center h-screen">
+            <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 text-center">
+              <div className="text-red-700 dark:text-red-400 text-lg font-medium mb-2">{error}</div>
+              <button
+                onClick={loadDashboardData} // Allow retrying data load
+                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-red-600 hover:bg-red-700"
+              >
+                Tentar Novamente
+              </button>
+            </div>
           </div>
         </AuthGuard>
       </Layout>
@@ -192,6 +210,7 @@ export default function DashboardPage() {
             </div>
             
             {/* Dashboard Content based on plan */}
+            {console.log('Dashboard: checkFeature("advanced_dashboard"):', checkFeature('advanced_dashboard')) && null}
             {checkFeature('advanced_dashboard') ? (
               <>
                 {/* Estatísticas principais */}
@@ -248,6 +267,7 @@ export default function DashboardPage() {
                 <DashboardChart />
 
                 {/* Cards de ação rápida (Relatórios) */}
+                {null /* console.log('Dashboard: checkFeature("reports"):', checkFeature('reports')) */}
                 {checkFeature('reports') && (
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl p-6 text-white">

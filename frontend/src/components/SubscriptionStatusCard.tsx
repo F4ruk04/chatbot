@@ -12,6 +12,8 @@ import {
   Zap
 } from 'lucide-react';
 import { useNotification } from '@/hooks/useNotification';
+import { subscriptionAPI } from '@/lib/api'; // Static import
+import { areObjectsEqual } from '@/lib/utils'; // Import utility for deep comparison
 
 interface SubscriptionStatus {
   plan: string;
@@ -35,15 +37,13 @@ const defaultSubscriptionStatus: SubscriptionStatus = {
   warning_level: 'LOW' as const,
 };
 
-export default function SubscriptionStatusCard() {
+import React from 'react'; // Import React
+export default React.memo(function SubscriptionStatusCard() {
   const router = useRouter();
   const { showNotification } = useNotification();
   const [status, setStatus] = useState<SubscriptionStatus | null>(null);
   const [loading, setLoading] = useState(true);
   const [subscriptionError, setSubscriptionError] = useState<string | null>(null);
-  const [hasShownNotification, setHasShownNotification] = useState(false);
-  const [rawApiResponseData, setRawApiResponseData] = useState<object | null>(null); // Changed 'unknown' to 'object | null'
-
   const fetchSubscriptionStatus = useCallback(async (retryCount = 0) => {
     const maxRetries = 5;
     const baseRetryDelay = 1000;
@@ -53,54 +53,48 @@ export default function SubscriptionStatusCard() {
       if (retryCount === 0) {
         setLoading(true);
         setSubscriptionError(null);
-        setHasShownNotification(false);
       }
 
-      const apiModule = await import('@/lib/api'); // Store the imported module
-      const subscriptionAPI = apiModule.subscriptionAPI; // Access subscriptionAPI from the module
+      const data = await subscriptionAPI.getStatus();
+
+      if (!data || typeof data !== 'object' || data.plan === undefined || data.status === undefined) {
+        console.warn('Incomplete or invalid subscription data received:', data, '. Using default values.');
+        setStatus(defaultSubscriptionStatus);
+
+        showNotification({
+          type: 'warning',
+          title: 'Dados de assinatura incompletos',
+          message: `Usando dados padrão para o status da assinatura. Dados recebidos: ${JSON.stringify(data)}`,
+          duration: 7000
+        });
+        return;
+      }
       
-      const response = await subscriptionAPI.getStatus();
-      const data = response?.data;
-      setRawApiResponseData(data); // Store raw data
-      console.log('DEBUG: Subscription API raw response data:', data);
-      
-      // Safely define status with defaults
       const receivedStatus: SubscriptionStatus = {
-        plan: data?.plan || defaultSubscriptionStatus.plan,
-        status: data?.status || defaultSubscriptionStatus.status,
-        messages_used: data?.messages_used ?? defaultSubscriptionStatus.messages_used,
-        messages_quota: data?.messages_quota ?? defaultSubscriptionStatus.messages_quota,
-        usage_percent: data?.usage_percent ?? defaultSubscriptionStatus.usage_percent,
-        days_remaining: data?.days_remaining ?? defaultSubscriptionStatus.days_remaining,
-        renewal_date: data?.renewal_date || defaultSubscriptionStatus.renewal_date,
-        warning_level: data?.warning_level || defaultSubscriptionStatus.warning_level,
+        plan: data.plan,
+        status: data.status,
+        messages_used: data.messages_used ?? defaultSubscriptionStatus.messages_used,
+        messages_quota: data.messages_quota ?? defaultSubscriptionStatus.messages_quota,
+        usage_percent: data.usage_percent ?? defaultSubscriptionStatus.usage_percent,
+        days_remaining: data.days_remaining ?? defaultSubscriptionStatus.days_remaining,
+        renewal_date: data.renewal_date ?? defaultSubscriptionStatus.renewal_date,
+        warning_level: data.warning_level ?? defaultSubscriptionStatus.warning_level,
       };
 
-      console.log('DEBUG: Processed subscription status:', receivedStatus);
-      setStatus(receivedStatus);
-
-      if (!data || !data.plan || !data.status) {
-        console.warn('DEBUG: Incomplete subscription data received, using defaults');
-        if (!hasShownNotification) {
-          showNotification({
-            type: 'warning',
-            title: 'Dados de assinatura incompletos',
-            message: `Usando dados padrão para o status da assinatura. Dados recebidos: ${JSON.stringify(data)}`, // Include raw data in message
-            duration: 7000
-          });
-          setHasShownNotification(true);
-        }
+      // Only update status if the data has actually changed
+      if (!status || !areObjectsEqual(status, receivedStatus)) {
+        setStatus(receivedStatus);
       }
       
     } catch (err: unknown) {
-      console.error('DEBUG: Subscription status error (attempt', retryCount + 1, '):', err);
-      
+      console.error('Erro ao carregar assinatura:', err);
       let errorMessage = 'Erro ao carregar assinatura - Network Error';
       let shouldRetry = false;
       
       if (axios.isAxiosError(err)) {
         const response = err.response;
         if (!response) {
+          console.error('Network error details:', err);
           errorMessage = 'Erro de conexão. Verifique sua internet e tente novamente.';
           shouldRetry = true;
         } else if (response.status === 429) {
@@ -122,7 +116,6 @@ export default function SubscriptionStatusCard() {
       }
       
       if (shouldRetry && retryCount < maxRetries) {
-        console.log(`DEBUG: Retrying in ${currentRetryDelay}ms... (${retryCount + 1}/${maxRetries})`);
         setTimeout(() => {
           fetchSubscriptionStatus(retryCount + 1);
         }, currentRetryDelay);
@@ -130,40 +123,22 @@ export default function SubscriptionStatusCard() {
       }
       
       setSubscriptionError(errorMessage);
-      setStatus(defaultSubscriptionStatus); // Always set default status on final error
+      setStatus(defaultSubscriptionStatus);
       
-      if (!hasShownNotification) {
-        showNotification({
-          type: 'error',
-          title: 'Erro ao carregar assinatura',
-          message: errorMessage,
-          duration: 7000
-        });
-        setHasShownNotification(true);
-      }
+      showNotification({
+        type: 'error',
+        title: 'Erro ao carregar assinatura',
+        message: errorMessage,
+        duration: 7000
+      });
     } finally {
-      console.log('DEBUG: Setting loading to false in finally block.');
-      setLoading(false); // Always set loading to false
+      setLoading(false);
     }
-  }, [showNotification, hasShownNotification]);
+  }, [showNotification]);
 
   useEffect(() => {
-    console.log('DEBUG: SubscriptionStatusCard: useEffect triggered');
     fetchSubscriptionStatus();
-    
-    // Timeout de segurança para evitar loading infinito (redundante with finally, but good fallback)
-    const timeoutId = setTimeout(() => {
-      if (loading) {
-        console.warn('DEBUG: SubscriptionStatusCard: Loading timeout reached, forcing completion');
-        setLoading(false);
-        if (!status) {
-          setStatus(defaultSubscriptionStatus);
-        }
-      }
-    }, 10000); // 10 segundos de timeout
-    
-    return () => clearTimeout(timeoutId);
-  }, [fetchSubscriptionStatus, loading, status]);
+  }, [fetchSubscriptionStatus]);
 
   const getPlanDisplayName = (plan: string) => {
     const planNames = {
@@ -218,8 +193,7 @@ export default function SubscriptionStatusCard() {
     router.push('/billing');
   };
 
-  if (loading) {
-    console.log('DEBUG: SubscriptionStatusCard: Rendering loading state');
+  if (loading || !status) { // Render skeleton if loading or status is not yet available
     return (
       <div className="animate-pulse bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
         {/* Header skeleton */}
@@ -245,7 +219,6 @@ export default function SubscriptionStatusCard() {
   }
 
   if (subscriptionError) {
-    console.log('DEBUG: SubscriptionStatusCard: Rendering error state:', subscriptionError);
     return (
       <div className="bg-red-50 dark:bg-red-900/20 rounded-xl p-6 border border-red-200 dark:border-red-800">
         <div className="flex items-center justify-between">
@@ -261,29 +234,9 @@ export default function SubscriptionStatusCard() {
             {loading ? 'Tentando...' : 'Tentar Novamente'}
           </button>
         </div>
-        {rawApiResponseData && (
-          <div className="mt-4 text-xs text-red-600 dark:text-red-300 break-all">
-            Dados da API (Erro): {JSON.stringify(rawApiResponseData, null, 2)}
-          </div>
-        )}
       </div>
     );
   }
-
-  if (!status) {
-    console.log('DEBUG: SubscriptionStatusCard: No status data, rendering default fallback');
-    // This block should ideally not be reached with defaultSubscriptionStatus, but kept as a safeguard
-    return (
-      <div className="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-6 border border-gray-200 dark:border-gray-700">
-        <div className="flex items-center text-gray-700 dark:text-gray-400">
-          <AlertCircle className="h-5 w-5 mr-2 flex-shrink-0" />
-          <span className="text-sm">Não foi possível carregar o status da assinatura. Exibindo dados padrão.</span>
-        </div>
-      </div>
-    );
-  }
-
-  console.log('DEBUG: SubscriptionStatusCard: Rendering with final status:', status);
 
   return (
     <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
@@ -313,11 +266,6 @@ export default function SubscriptionStatusCard() {
             </button>
           )}
         </div>
-        {rawApiResponseData && (
-          <div className="mt-4 text-xs text-white/80 break-all">
-            Dados da API (Sucesso): {JSON.stringify(rawApiResponseData, null, 2)}
-          </div>
-        )}
       </div>
 
       {/* Conteúdo principal */}
@@ -414,4 +362,4 @@ export default function SubscriptionStatusCard() {
       </div>
     </div>
   );
-}
+}); // Wrap with React.memo

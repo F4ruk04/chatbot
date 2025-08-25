@@ -8,7 +8,7 @@ import Cookies from 'js-cookie';
 
 // Configurar URL base da API
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
-
+console.log('API_BASE_URL used by axios:', API_BASE_URL); // Added logging
 
 // Criar instância do Axios
 export const api = axios.create({
@@ -221,8 +221,6 @@ export const messagesAPI = {
 export const subscriptionAPI = {
   getStatus: async () => {
     const response = await api.get('/api/subscription/status');
-    console.log('DEBUG: subscriptionAPI.getStatus - Raw Axios response:', response); // Added debug log
-    console.log('DEBUG: subscriptionAPI.getStatus - response.data:', response.data); // Added debug log
     return response.data;
   },
 };

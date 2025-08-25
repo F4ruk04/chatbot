@@ -3,21 +3,14 @@
 ## [1.1.1] - 2025-08-24
 ### Fixed
 - Fixed missing logger import in Twilio WhatsApp service that was causing webhook failures
-## [2025-08-23] - Correção de `undefined` `response.data` no SubscriptionStatusCard (Iteração 3)
+## [2025-08-24] - Correção de `undefined` `response.data` no SubscriptionStatusCard
 
 ### Fixed
 *   **`response.data` `undefined` no `SubscriptionStatusCard`**:
     - Corrigido o problema onde `response.data` era `undefined` no `SubscriptionStatusCard` mesmo após uma resposta 200 OK da API.
-    - Utilizado o operador de encadeamento opcional (`?.`) ao acessar `response.data` em `frontend/src/components/SubscriptionStatusCard.tsx` para garantir que `data` não seja `undefined` se `response` for `null` ou `undefined`.
-    - Removido o comentário `// Safely access data from the response object` para evitar futuras inconsistências no diff.
-
-## [2025-08-23] - Correção de `undefined` `response.data` no SubscriptionStatusCard (Iteração 2)
-
-### Fixed
-*   **`response.data` `undefined` no `SubscriptionStatusCard`**:
-    - Corrigido o problema onde `response.data` era `undefined` no `SubscriptionStatusCard` mesmo após uma resposta 200 OK da API.
-    - Utilizado o operador de encadeamento opcional (`?.`) ao acessar `response.data` em `frontend/src/components/SubscriptionStatusCard.tsx` para garantir que `data` não seja `undefined` se `response` for `null` ou `undefined`.
-    - Removido o comentário `// Safely access data from the response object` para evitar futuras inconsistências no diff.
+    - Identificado que `frontend/src/lib/api.ts` já retornava o payload de dados diretamente (`response.data`), mas `frontend/src/components/SubscriptionStatusCard.tsx` estava incorretamente tentando acessar `response?.data` novamente.
+    - A linha `const data = response?.data;` foi alterada para `const data = response;` em `frontend/src/components/SubscriptionStatusCard.tsx` para acessar o payload de dados diretamente.
+    - Removidos logs de depuração temporários e a exibição de `rawApiResponseData` da UI.
 
 ## [2025-08-23] - Robustecimento do SubscriptionStatusCard e tratamento de erros (Iteração 2)
 

@@ -7,6 +7,7 @@ from ..models.user import User
 from ..utils.auth import get_current_user
 from ..services.feature_service import PLAN_LIMITS # Import PLAN_LIMITS
 from datetime import datetime
+from ..services.feature_service import Feature, FeatureService, PLAN_FEATURES # Import Feature and FeatureService
 
 router = APIRouter(prefix="/subscription", tags=["subscriptions"])
 
@@ -53,7 +54,7 @@ async def get_subscription_status(
         usage_percent = (subscription.messages_used / subscription.messages_quota) * 100 if subscription.messages_quota > 0 else 0
         days_remaining = max(0, (subscription.current_period_end - datetime.utcnow()).days)
         
-        return {
+        response_data = {
             "plan": subscription.plan,
             "status": subscription.status,
             "messages_used": subscription.messages_used,
@@ -63,6 +64,8 @@ async def get_subscription_status(
             "renewal_date": subscription.current_period_end.isoformat(),
             "warning_level": "HIGH" if usage_percent > 90 else "MEDIUM" if usage_percent > 70 else "LOW"
         }
+        print(f"Backend: Returning subscription status: {response_data}") # Added logging
+        return response_data
         
     except Exception as e:
         # Em caso de erro, retornar dados padrão para o plano FREE com limites do PLAN_LIMITS
@@ -73,7 +76,7 @@ async def get_subscription_status(
         
         end_date = datetime.utcnow() + timedelta(days=30)
         
-        return {
+        default_response_data = {
             "plan": "free",
             "status": "active",
             "messages_used": 0,
@@ -83,6 +86,51 @@ async def get_subscription_status(
             "renewal_date": end_date.isoformat(),
             "warning_level": "LOW"
         }
+        print(f"Backend: Returning default subscription status due to error: {default_response_data}") # Added logging
+        return default_response_data
+
+@router.get("/features")
+async def get_available_features(
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """
+    Retorna a lista de funcionalidades disponíveis para o plano atual do usuário,
+    indicando quais estão ativadas e quais requerem upgrade.
+    """
+    subscription = db.query(Subscription).filter(
+        Subscription.user_id == current_user.id,
+        Subscription.status == SubscriptionStatus.ACTIVE.value
+    ).first()
+
+    user_plan = subscription.plan if subscription else SubscriptionPlan.FREE.value
+    
+    # Obter todas as funcionalidades definidas no sistema
+    all_features = [f.value for f in Feature]
+    
+    # Obter funcionalidades do plano do usuário
+    plan_features = FeatureService.get_plan_features(user_plan)
+    
+    result_features = {}
+    for feature_name in all_features:
+        is_enabled = FeatureService.has_feature(user_plan, Feature(feature_name))
+        
+        # Determinar se requer upgrade. Se a feature não está habilitada para o plano atual,
+        # e ela existe em algum plano superior, então requer upgrade.
+        requires_upgrade = False
+        if not is_enabled:
+            for plan_enum in SubscriptionPlan:
+                if plan_enum.value != user_plan and FeatureService.has_feature(plan_enum.value, Feature(feature_name)):
+                    requires_upgrade = True
+                    break
+
+        result_features[feature_name] = {
+            "name": feature_name,
+            "enabled": is_enabled,
+            "requiresUpgrade": requires_upgrade
+        }
+    
+    return result_features
 
 @router.post("/upgrade/{plan}")
 async def upgrade_subscription(

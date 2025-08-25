@@ -13,7 +13,8 @@ interface AuthGuardProps {
   children: React.ReactNode;
 }
 
-export default function AuthGuard({ children }: AuthGuardProps) {
+import React from 'react'; // Import React
+export default React.memo(function AuthGuard({ children }: AuthGuardProps) {
   const router = useRouter();
   const [isAuthorized, setIsAuthorized] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -53,4 +54,4 @@ export default function AuthGuard({ children }: AuthGuardProps) {
   }
 
   return <>{children}</>;
-}
+}); // Wrap with React.memo
