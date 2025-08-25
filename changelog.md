@@ -179,7 +179,7 @@
 
 ### Fixed
 *   Corrigido problema com o endpoint de status da subscrição (rota incorreta)
-*   Resolvido problema de compatibilidade com SQLite nas migrações
+*   Resolvido problema com compatibilidade com SQLite nas migrações
 *   Corrigido problema com o modelo de resposta da empresa
 *   Corrigido problema com o caminho do endpoint da subscrição
 *   Resolvido problema de tratamento de erros no componente de gráfico do dashboard
@@ -227,7 +227,7 @@
 
 ### Fix
 - Corrigido erro de tipo no `SubscriptionStatusCard` ao passar props não definidas.
-- Corrigida a importação do hook `useAuth` no componente `SubscriptionStatusCard` para o caminho correto (`@/contexts/AuthContext`).
+- Corrigida a importação do hook `useAuth` no componente `SubscriptionStatusCard` para o caminho correto (`@/hooks/useAuth`).
 
 ## Próximas Mudanças Planejadas
 
@@ -296,3 +296,9 @@
     - Adicionado `TWILIO_WHATSAPP_NUMBER` ao `backend/.env` com um placeholder para facilitar a configuração.
 *   **Robustez do serviço Twilio**:
     - Adicionado logging detalhado em `backend/app/services/twilio_whatsapp_service.py` para traçar os valores de `to_number`, `message`, e `from_number` durante o envio de mensagens, facilitando a depuração futura.
+
+## [Unreleased]
+### Feat
+- feat(frontend): Adiciona sistema de autenticação com AuthProvider e hook useAuth.
+### Fix
+- fix(frontend): Corrige erro de módulo não encontrado ao criar e integrar o hook useAuth.
