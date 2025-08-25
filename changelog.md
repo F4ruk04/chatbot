@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.1.7] - 2025-08-25
+### Reviewed
+- Reviewed SmartPricingButton component implementation:
+  - Confirmed correct usage of React hooks (useEffect, useState, useCallback)
+  - Verified proper import statements with path aliases
+  - Validated error handling in fetchCurrentPlan function
+  - Confirmed useEffect dependency array is correctly configured
+  - No changes required as implementation already matches corrected code patterns
+
 ## [1.1.6] - 2025-08-25
 ### Fixed
 - Fixed React Hook dependency issues:
@@ -12,7 +21,7 @@
 ## [1.1.4] - 2025-08-25
 ### Fixed
 - Fixed additional TypeScript build errors in Vercel deployment:
- - Removed unused eslint-disable directive in frontend/src/app/companies/page.tsx
+  - Removed unused eslint-disable directive in frontend/src/app/companies/page.tsx
   - Fixed React Hook useEffect missing dependency: 'loadDashboardData' in frontend/src/app/dashboard/page.tsx
   - Fixed React Hook useEffect missing dependency: 'fetchCurrentPlan' in frontend/src/components/SmartPricingButton.tsx
   - Fixed React Hook useEffect missing dependency: 'fetchCurrentPlan' in frontend/src/app/billing/page.tsx
@@ -207,6 +216,13 @@
 *   Resolvido problema com o caminho do endpoint de status da subscrição
 *   Corrigido problema com a validação do modelo de resposta da empresa
 
+## [0.3.1] - 2024-08-01
+### Corrigido
+- Corrigido erro de tipo `Property 'isLoading' does not exist` no componente `SubscriptionStatusCard` ao aceitar a nova propriedade e adicionar um estado de esqueleto de carregamento.
+
+## [0.3.0] - 2024-07-31
+# ... existing code
+
 ## Próximas Mudanças Planejadas
 
 ### [Em Desenvolvimento] - Melhorias de Performance e Monitoramento
@@ -256,7 +272,6 @@
     - White-label solutions
 
 ## Tarefas Pendentes para Implantação em Produção
-
 *   ✅ Deploy backend para Railway com base de dados PostgreSQL
 *   ✅ Deploy frontend para Vercel com URL da API de produção
 *   Configurar domínios personalizados para ambos os serviços
