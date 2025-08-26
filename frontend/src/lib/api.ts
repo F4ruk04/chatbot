@@ -67,6 +67,9 @@ export interface Company {
   id: number;
   nome: string;
   descricao?: string;
+  cnpj?: string; // Adicionado CNPJ
+  telefone?: string; // Adicionado Telefone
+  email?: string; // Adicionado Email
   whatsapp_phone_number: string;
   context_prompt?: string;
   created_at: string;
@@ -176,4 +179,3 @@ export const messagesAPI = {
     return response.data;
   },
 };
-
