@@ -87,7 +87,7 @@ export default function CompanyList() {
                     <Link href={`/companies/${company.id}`}>
                       <span className="font-semibold text-lg hover:underline cursor-pointer">{company.nome}</span>
                     </Link>
-                    <p className="text-sm text-gray-500 mt-1">{company.cnpj}</p>
+                    {/* <p className="text-sm text-gray-500 mt-1">{company.cnpj}</p> */}
                     <div className="flex items-center mt-2 text-sm text-gray-600 dark:text-gray-400">
                       <Phone className="h-4 w-4 mr-1" />
                       <span>{company.telefone}</span>
