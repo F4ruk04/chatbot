@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed API base URL configuration to use Railway deployment URL instead of localhost
 - Fixed subscription router endpoint paths to avoid double prefix issue
 - Fixed companies and dashboard router endpoint paths to avoid double prefix issue
+- Fixed health check endpoint to respond with correct format and without database dependency
 
 ### Changed
 - Refactored billing page to use new component structure with Suspense boundary
@@ -25,6 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated frontend environment configuration to use correct Railway API URL
 - Corrected subscription router endpoint paths to match expected API structure
 - Corrected companies and dashboard router endpoint paths to match expected API structure
+- Simplified health check endpoint to respond with {"status": "ok"} without database dependency
 
 ## [1.0.0] - 2025-08-26
 

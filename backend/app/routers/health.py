@@ -1,27 +1,12 @@
-from fastapi import APIRouter, Depends
-from sqlalchemy.orm import Session
-from ..database import get_db
+from fastapi import APIRouter
 
 router = APIRouter()
 
 @router.get("")
 @router.get("/")
-async def health_check(db: Session = Depends(get_db)):
+async def health_check():
     """
     Endpoint de health check para o Railway
-    Verifica se o banco de dados está conectado
+    Retorna um status básico para verificar se a aplicação está rodando
     """
-    try:
-        # Tenta fazer uma query simples para verificar a conexão
-        db.execute("SELECT 1")
-        return {
-            "status": "healthy",
-            "database": "connected",
-            "message": "Sistema operando normalmente"
-        }
-    except Exception as e:
-        return {
-            "status": "unhealthy",
-            "database": "disconnected",
-            "message": str(e)
-        }
+    return {"status": "ok"}
