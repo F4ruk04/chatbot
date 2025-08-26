@@ -15,7 +15,7 @@ from app.models.company import Company
 from app.models.message import Message
 from app.utils.auth import get_current_user
 
-router = APIRouter(prefix="/dashboard", tags=["dashboard"])
+router = APIRouter(tags=["dashboard"])
 
 
 class DashboardStats(BaseModel):

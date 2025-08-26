@@ -15,7 +15,7 @@ from app.models.company import Company
 from app.models.message import Message
 from app.utils.auth import get_current_user
 
-router = APIRouter(prefix="/companies", tags=["companies"])
+router = APIRouter(tags=["companies"])
 
 
 class CompanyCreate(BaseModel):
