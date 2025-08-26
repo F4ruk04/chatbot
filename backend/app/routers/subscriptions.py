@@ -9,7 +9,7 @@ from datetime import datetime
 
 router = APIRouter()
 
-@router.get("/subscription/status")
+@router.get("/status")
 async def get_subscription_status(
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
@@ -77,7 +77,7 @@ async def get_subscription_status(
             "warning_level": "LOW"
         }
 
-@router.post("/subscription/upgrade/{plan}")
+@router.post("/upgrade/{plan}")
 async def upgrade_subscription(
     plan: SubscriptionPlan,
     current_user: User = Depends(get_current_user),
@@ -104,7 +104,7 @@ async def upgrade_subscription(
         "new_plan": plan
     }
 
-@router.get("/subscription/usage/alert")
+@router.get("/usage/alert")
 async def check_usage_alert(
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
