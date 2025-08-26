@@ -27,6 +27,9 @@ app = FastAPI(
     version="1.0.0"
 )
 
+# Incluir router de healthcheck o mais cedo possível para garantir que seja público
+app.include_router(health.router, prefix="/health", tags=["health"])
+
 # Configurar CORS para permitir requisições do frontend
 allowed_origins = [
     "http://localhost:3000",
@@ -124,7 +127,6 @@ app.include_router(whatsapp.router, prefix="/api/whatsapp", tags=["whatsapp"])
 app.include_router(dashboard.router, prefix="/api/dashboard", tags=["dashboard"])
 app.include_router(payments.router, prefix="/api/payments", tags=["payments"])
 app.include_router(subscriptions.router, prefix="/api/subscription", tags=["subscriptions"])
-app.include_router(health.router, prefix="/health", tags=["health"])
 
 
 if __name__ == "__main__":

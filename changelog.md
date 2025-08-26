@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed subscription router endpoint paths to avoid double prefix issue
 - Fixed companies and dashboard router endpoint paths to avoid double prefix issue
 - Fixed health check endpoint to respond with correct format and without database dependency
+- Ensured health check endpoint is publicly accessible by including its router before any global authentication middleware in `main.py`.
 
 ### Changed
 - Refactored billing page to use new component structure with Suspense boundary
