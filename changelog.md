@@ -28,6 +28,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Corrected subscription router endpoint paths to match expected API structure
 - Corrected companies and dashboard router endpoint paths to match expected API structure
 - Simplified health check endpoint to respond with {"status": "ok"} without database dependency
+- Updated `SubscriptionStatusCard.tsx` to display more detailed subscription information (messages used, quota, days remaining, warning level).
+- Updated `SubscriptionStatusResponse` interface in `frontend/src/lib/api.ts` to match the expanded data from the backend.
 
 ## [1.0.0] - 2025-08-26
 

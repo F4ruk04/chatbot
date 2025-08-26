@@ -107,7 +107,12 @@ export interface CompanyStats {
 export interface SubscriptionStatusResponse {
   plan: string;
   status: string;
-  current_period_end: string;
+  messages_used: number;
+  messages_quota: number;
+  usage_percent: number;
+  days_remaining: number;
+  renewal_date: string;
+  warning_level: 'LOW' | 'MEDIUM' | 'HIGH';
 }
 
 // Funções de autenticação
