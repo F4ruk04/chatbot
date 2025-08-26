@@ -14,13 +14,31 @@ import {
   Crown, 
   Zap, 
   Shield, 
-  Headphones, 
   Star,
   CreditCard,
   Smartphone,
   ArrowLeft,
   AlertCircle
 } from 'lucide-react';
+
+// Define interfaces for API responses for better type safety
+interface SubscriptionStatusResponse {
+  plan: string;
+}
+
+interface PaymentCheckoutResponse {
+  success: boolean;
+  detail?: string; // Optional detail for errors or success messages
+}
+
+// Define interface for PaymentMethod for consistency
+interface PaymentMethod {
+  id: string;
+  name: string;
+  description: string;
+  icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+  available: boolean;
+}
 
 interface Plan {
   id: string;
@@ -31,7 +49,7 @@ interface Plan {
   features: string[];
   popular?: boolean;
   color: string;
-  icon: React.ComponentType<any>;
+  icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
 }
 
 const plans: Plan[] = [
@@ -88,7 +106,8 @@ const plans: Plan[] = [
   }
 ];
 
-const paymentMethods = [
+// Apply PaymentMethod interface to paymentMethods array
+const paymentMethods: PaymentMethod[] = [
   {
     id: 'mpesa',
     name: 'M-Pesa',
@@ -128,9 +147,11 @@ export default function BillingPage() {
   const fetchCurrentPlan = async () => {
     try {
       const { api } = await import('@/lib/api');
-      const response = await api.get('/api/subscription/status');
-      setCurrentPlan(response.data.plan || 'free');
-    } catch (error) {
+      // Explicitly type the response from the API call
+      const response: SubscriptionStatusResponse = await api.get('/api/subscription/status');
+      // Access 'plan' directly from the response object, as 'data' property does not exist on SubscriptionStatusResponse
+      setCurrentPlan(response.plan || 'free');
+    } catch (error: unknown) { // Changed 'any' to 'unknown'
       console.error('Erro ao carregar plano atual:', error);
     }
   };
@@ -158,19 +179,41 @@ export default function BillingPage() {
       const { api } = await import('@/lib/api');
       
       // Simular processo de pagamento
-      const response = await api.post('/api/payments/checkout', {
+      // Explicitly type the response from the API call
+      const response: PaymentCheckoutResponse = await api.post('/api/payments/checkout', {
         plan: selectedPlan,
         payment_method: selectedPaymentMethod
       });
 
-      if (response.data.success) {
+      // Access 'success' and 'detail' directly from the response object
+      if (response.success) {
         // Redirecionar para página de sucesso ou dashboard
         router.push('/dashboard?upgrade=success');
       } else {
+        // If success is false, it might still have a detail message
+        setError(response.detail || 'Erro ao processar pagamento. Tente novamente.');
+      }
+    } catch (err: unknown) { // Changed 'any' to 'unknown'
+      // Type guard to safely access properties if it's an error with a response
+      if (
+        err &&
+        typeof err === 'object' &&
+        'response' in err &&
+        err.response &&
+        typeof err.response === 'object' &&
+        'data' in err.response &&
+        err.response.data != null &&
+        typeof err.response.data === 'object' &&
+        'detail' in err.response.data &&
+        typeof err.response.data.detail === 'string'
+      ) {
+        setError(err.response.data.detail);
+      } else if (err instanceof Error) {
+        setError(err.message);
+      }
+      else {
         setError('Erro ao processar pagamento. Tente novamente.');
       }
-    } catch (err: any) {
-      setError(err.response?.data?.detail || 'Erro ao processar pagamento');
     } finally {
       setLoading(false);
     }
