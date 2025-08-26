@@ -113,12 +113,12 @@ export interface SubscriptionStatusResponse {
 // Funções de autenticação
 export const authAPI = {
   register: async (data: { email: string; nome: string; password: string }) => {
-    const response = await api.post('/auth/register', data);
+    const response = await api.post('/api/auth/register', data);
     return response.data;
   },
 
   login: async (data: { email: string; password: string }) => {
-    const response = await api.post('/auth/login', data);
+    const response = await api.post('/api/auth/login', data);
     return response.data;
   },
 };
@@ -126,7 +126,7 @@ export const authAPI = {
 // Funções de empresas
 export const companiesAPI = {
   getAll: async (): Promise<Company[]> => {
-    const response = await api.get('/companies/');
+    const response = await api.get('/api/companies/');
     return response.data;
   },
 
@@ -136,12 +136,12 @@ export const companiesAPI = {
     whatsapp_phone_number: string;
     context_prompt?: string;
   }): Promise<Company> => {
-    const response = await api.post('/companies/add', data);
+    const response = await api.post('/api/companies/add', data);
     return response.data;
   },
 
   getById: async (id: number): Promise<Company> => {
-    const response = await api.get(`/companies/${id}`);
+    const response = await api.get(`/api/companies/${id}`);
     return response.data;
   },
 
@@ -151,12 +151,12 @@ export const companiesAPI = {
     whatsapp_phone_number: string;
     context_prompt?: string;
   }): Promise<Company> => {
-    const response = await api.put(`/companies/${id}`, data);
+    const response = await api.put(`/api/companies/${id}`, data);
     return response.data;
   },
 
   delete: async (id: number): Promise<void> => {
-    await api.delete(`/companies/${id}`);
+    await api.delete(`/api/companies/${id}`);
   },
 };
 
@@ -171,17 +171,17 @@ export const subscriptionsAPI = {
 // Funções do dashboard
 export const dashboardAPI = {
   getStats: async (): Promise<DashboardStats> => {
-    const response = await api.get('/dashboard/');
+    const response = await api.get('/api/dashboard/');
     return response.data;
   },
 
   getCompaniesStats: async (): Promise<CompanyStats[]> => {
-    const response = await api.get('/dashboard/companies');
+    const response = await api.get('/api/dashboard/companies');
     return response.data;
   },
 
   getMessagesChart: async (companyId: number, days: number = 30) => {
-    const response = await api.get(`/dashboard/messages-chart/${companyId}?days=${days}`);
+    const response = await api.get(`/api/dashboard/messages-chart/${companyId}?days=${days}`);
     return response.data;
   },
 };
@@ -189,7 +189,7 @@ export const dashboardAPI = {
 // Funções de mensagens
 export const messagesAPI = {
   getByCompany: async (companyId: number, skip: number = 0, limit: number = 100): Promise<Message[]> => {
-    const response = await api.get(`/whatsapp/messages/${companyId}?skip=${skip}&limit=${limit}`);
+    const response = await api.get(`/api/whatsapp/messages/${companyId}?skip=${skip}&limit=${limit}`);
     return response.data;
   },
 };
