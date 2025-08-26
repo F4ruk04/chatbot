@@ -52,52 +52,50 @@ interface Plan {
 
 const plans: Plan[] = [
   {
-    id: 'free',
-    name: 'Gratuito',
+    id: 'basic',
+    name: 'Básico',
     price: 0,
     priceDisplay: '0 MZN',
-    description: 'Para testar a plataforma',
+    description: 'Para testar a plataforma e para negócios com baixo volume de conversas.',
     features: [
-      '150 mensagens/mês',
+      '1.000 mensagens/mês',
       '1 Conexão WhatsApp',
-      'Dashboard básico',
-      'Suporte por email'
+      'Dashboard Simples',
+      'Inclui a nossa marca nas respostas'
     ],
     color: 'from-gray-500 to-gray-600',
     icon: Shield
   },
   {
-    id: 'pro',
-    name: 'Pro',
+    id: 'professional',
+    name: 'Profissional',
     price: 2499,
     priceDisplay: '2.499 MZN',
-    description: 'Para empresas em crescimento',
+    description: 'A escolha ideal para empresas que buscam profissionalizar o atendimento e vender mais.',
     features: [
-      '3.000 mensagens/mês',
-      '3 Conexões WhatsApp',
-      'Dashboard avançado',
-      'Relatórios detalhados',
-      'Suporte prioritário',
-      'Sem marca da plataforma'
+      '5.000 mensagens/mês',
+      '1 Conexão WhatsApp',
+      'Dashboard Avançado com Relatórios',
+      'Histórico de conversas (90 dias)',
+      'Sem a nossa marca',
+      'Suporte Prioritário via Email'
     ],
     popular: true,
     color: 'from-blue-500 to-blue-600',
     icon: Zap
   },
   {
-    id: 'business',
-    name: 'Business',
+    id: 'enterprise',
+    name: 'Enterprise',
     price: 6999,
     priceDisplay: '6.999 MZN',
-    description: 'Para grandes operações',
+    description: 'Para negócios que exigem o máximo de performance e um suporte personalizado.',
     features: [
-      '10.000 mensagens/mês',
-      'Conexões ilimitadas',
-      'Dashboard personalizado',
-      'API personalizada',
-      'Suporte 24/7',
-      'Onboarding VIP',
-      'Gerente de conta dedicado'
+      'Mensagens Ilimitadas',
+      '1 Conexão WhatsApp',
+      'Tudo do Plano Profissional +',
+      'Onboarding Personalizado por vídeo-chamada',
+      'Suporte VIP direto via WhatsApp'
     ],
     color: 'from-purple-500 to-purple-600',
     icon: Crown

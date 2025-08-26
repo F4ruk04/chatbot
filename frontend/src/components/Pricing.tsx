@@ -19,11 +19,11 @@ interface PricingPlan {
 
 const plans: PricingPlan[] = [
   {
-    title: 'Gratuito',
+    title: 'Básico',
     price: '0 MZN',
     description: 'Para testar a plataforma e para negócios com baixo volume de conversas.',
     features: [
-      { text: '150 mensagens/mês' },
+      { text: '1.000 mensagens/mês' },
       { text: '1 Conexão WhatsApp' },
       { text: 'Dashboard Simples' },
       { text: 'Inclui a nossa marca nas respostas' },
@@ -31,28 +31,28 @@ const plans: PricingPlan[] = [
     ctaText: 'Comece Grátis'
   },
   {
-    title: 'Pro',
+    title: 'Profissional',
     price: '2.499 MZN',
     description: 'A escolha ideal para empresas que buscam profissionalizar o atendimento e vender mais.',
     features: [
-      { text: '3.000 mensagens/mês' },
+      { text: '5.000 mensagens/mês' },
       { text: '1 Conexão WhatsApp' },
       { text: 'Dashboard Avançado com Relatórios' },
       { text: 'Histórico de conversas (90 dias)' },
       { text: 'Sem a nossa marca' },
       { text: 'Suporte Prioritário via Email' },
     ],
-    ctaText: 'Escolher Plano Pro',
+    ctaText: 'Escolher Plano Profissional',
     popular: true
   },
   {
-    title: 'Business',
+    title: 'Enterprise',
     price: '6.999 MZN',
     description: 'Para negócios que exigem o máximo de performance e um suporte personalizado.',
     features: [
-      { text: '10.000 mensagens/mês' },
+      { text: 'Mensagens Ilimitadas' },
       { text: '1 Conexão WhatsApp' },
-      { text: 'Tudo do Plano Pro +' },
+      { text: 'Tudo do Plano Profissional +' },
       { text: 'Onboarding Personalizado por vídeo-chamada' },
       { text: 'Suporte VIP direto via WhatsApp' },
     ],
@@ -63,15 +63,15 @@ const plans: PricingPlan[] = [
 const faqs = [
   {
     question: 'O que acontece se eu atingir o meu limite de mensagens?',
-    answer: 'Não se preocupe, seu serviço não será interrompido. Nos planos Pro e Business, você poderá comprar pacotes de mensagens extras facilmente no seu dashboard a qualquer momento.'
+    answer: 'Não se preocupe, seu serviço não será interrompido. Nos planos Profissional e Enterprise, você poderá comprar pacotes de mensagens extras facilmente no seu dashboard a qualquer momento.'
   },
   {
-    question: 'O Plano Gratuito é realmente grátis?',
+    question: 'O Plano Básico é realmente grátis?',
     answer: 'Sim! É grátis para sempre, dentro dos limites. Não pedimos cartão de crédito para começar.'
   },
   {
     question: 'O que é o Onboarding Personalizado?',
-    answer: 'No plano Business, nós agendamos uma chamada de vídeo com você para configurar toda a plataforma, treinar sua IA e garantir que você tenha o máximo de sucesso.'
+    answer: 'No plano Enterprise, nós agendamos uma chamada de vídeo com você para configurar toda a plataforma, treinar sua IA e garantir que você tenha o máximo de sucesso.'
   }
 ];
 
