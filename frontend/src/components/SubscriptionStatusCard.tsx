@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { getSubscription } from '@/lib/api';
+import { subscriptionsAPI } from '@/lib/api';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -21,7 +21,7 @@ export default function SubscriptionStatusCard() {
     const fetchSubscription = async () => {
       try {
         setLoading(true);
-        const data = await getSubscription();
+        const data = await subscriptionsAPI.getStatus();
         if (data) {
           setSubscription(data);
         } else {

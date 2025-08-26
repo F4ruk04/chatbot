@@ -67,7 +67,6 @@ export interface Company {
   id: number;
   nome: string;
   descricao?: string;
-  cnpj?: string; // Adicionado CNPJ
   telefone?: string; // Adicionado Telefone
   email?: string; // Adicionado Email
   whatsapp_phone_number: string;
@@ -102,6 +101,13 @@ export interface CompanyStats {
   total_messages: number;
   messages_today: number;
   last_message_date?: string;
+}
+
+// Interface para o status da assinatura
+export interface SubscriptionStatusResponse {
+  plan: string;
+  status: string;
+  current_period_end: string;
 }
 
 // Funções de autenticação
@@ -151,6 +157,14 @@ export const companiesAPI = {
 
   delete: async (id: number): Promise<void> => {
     await api.delete(`/companies/${id}`);
+  },
+};
+
+// Funções de assinaturas
+export const subscriptionsAPI = {
+  getStatus: async (): Promise<SubscriptionStatusResponse> => {
+    const response = await api.get('/api/subscription/status');
+    return response.data;
   },
 };
 
