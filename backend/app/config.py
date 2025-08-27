@@ -46,8 +46,15 @@ class Settings(BaseSettings):
     # Limites de empresas por plano
     plan_company_limits: dict[str, int] = {
         "Básico": 1,
-        "Profissional": 5, # Exemplo: 5 empresas para o plano profissional
-        "Enterprise": 999999 # Exemplo: Praticamente ilimitado para o plano Enterprise
+        "Profissional": 1,
+        "Business": 3
+    }
+
+    # Limites de mensagens por plano
+    plan_message_limits: dict[str, int] = {
+        "Básico": 500,
+        "Profissional": 5000,
+        "Business": 10000
     }
 
     model_config = {

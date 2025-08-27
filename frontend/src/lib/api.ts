@@ -87,6 +87,10 @@ export interface Message {
 }
 
 export interface DashboardStats {
+  user_plan: string;
+  company_limit: number;
+  message_limit: number;
+  message_usage_percentage: number;
   total_companies: number;
   total_messages: number;
   messages_today: number;
@@ -101,6 +105,11 @@ export interface CompanyStats {
   total_messages: number;
   messages_today: number;
   last_message_date?: string;
+}
+
+export interface MessageStats {
+  date: string;
+  message_count: number;
 }
 
 // Interface para o status da assinatura

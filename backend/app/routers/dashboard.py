@@ -3,7 +3,7 @@ Router do Dashboard
 Endpoints para estatísticas e dados do dashboard
 """
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from sqlalchemy import func, and_
 from pydantic import BaseModel, field_validator
@@ -14,12 +14,18 @@ from app.models.user import User
 from app.models.company import Company
 from app.models.message import Message
 from app.utils.auth import get_current_user
+from app.config import settings # Importar as configurações
+from app.middleware.plan_checker import PlanCheckerMiddleware # Importar o middleware
 
 router = APIRouter(tags=["dashboard"])
 
 
 class DashboardStats(BaseModel):
     """Schema para estatísticas do dashboard"""
+    user_plan: str
+    company_limit: int
+    message_limit: int
+    message_usage_percentage: float
     total_companies: int
     total_messages: int
     messages_today: int
@@ -62,63 +68,76 @@ def get_dashboard_stats(
     user_companies = db.query(Company).filter(Company.owner_id == current_user.id).all()
     company_ids = [company.id for company in user_companies]
     
-    if not company_ids:
-        return DashboardStats(
-            total_companies=0,
-            total_messages=0,
-            messages_today=0,
-            messages_this_week=0,
-            messages_this_month=0,
-            active_conversations=0
-        )
+    # Obter plano e limites do usuário
+    user_plan_name = current_user.plan
+    company_limit = settings.plan_company_limits.get(user_plan_name, 0)
+    message_limit = settings.plan_message_limits.get(user_plan_name, 0)
+
+    # Obter todas as empresas do utilizador
+    user_companies = db.query(Company).filter(Company.owner_id == current_user.id).all()
+    company_ids = [company.id for company in user_companies]
     
-    # Calcular datas
-    today = datetime.now().date()
-    week_ago = today - timedelta(days=7)
-    month_ago = today - timedelta(days=30)
-    
-    # Total de empresas
+    # Inicializar estatísticas
     total_companies = len(user_companies)
-    
-    # Total de mensagens
-    total_messages = db.query(Message).filter(
-        Message.company_id.in_(company_ids)
-    ).count()
-    
-    # Mensagens hoje
-    messages_today = db.query(Message).filter(
-        and_(
-            Message.company_id.in_(company_ids),
-            func.date(Message.created_at) == today
-        )
-    ).count()
-    
-    # Mensagens esta semana
-    messages_this_week = db.query(Message).filter(
-        and_(
-            Message.company_id.in_(company_ids),
-            func.date(Message.created_at) >= week_ago
-        )
-    ).count()
-    
-    # Mensagens este mês
-    messages_this_month = db.query(Message).filter(
-        and_(
-            Message.company_id.in_(company_ids),
-            func.date(Message.created_at) >= month_ago
-        )
-    ).count()
-    
-    # Conversas ativas (clientes únicos que enviaram mensagem nos últimos 7 dias)
-    active_conversations = db.query(Message.sender_phone).filter(
-        and_(
-            Message.company_id.in_(company_ids),
-            func.date(Message.created_at) >= week_ago,
-            Message.is_from_customer == True
-        )
-    ).distinct().count()
+    total_messages = 0
+    messages_today = 0
+    messages_this_week = 0
+    messages_this_month = 0
+    active_conversations = 0
+    message_usage_percentage = 0.0
+
+    if company_ids:
+        # Calcular datas
+        today = datetime.now().date()
+        week_ago = today - timedelta(days=7)
+        month_ago = today - timedelta(days=30)
+        
+        # Total de mensagens
+        total_messages = db.query(Message).filter(
+            Message.company_id.in_(company_ids)
+        ).count()
+        
+        # Mensagens hoje
+        messages_today = db.query(Message).filter(
+            and_(
+                Message.company_id.in_(company_ids),
+                func.date(Message.created_at) == today
+            )
+        ).count()
+        
+        # Mensagens esta semana
+        messages_this_week = db.query(Message).filter(
+            and_(
+                Message.company_id.in_(company_ids),
+                func.date(Message.created_at) >= week_ago
+            )
+        ).count()
+        
+        # Mensagens este mês
+        messages_this_month = db.query(Message).filter(
+            and_(
+                Message.company_id.in_(company_ids),
+                func.date(Message.created_at) >= month_ago
+            )
+        ).count()
+        
+        # Conversas ativas (clientes únicos que enviaram mensagem nos últimos 7 dias)
+        active_conversations = db.query(Message.sender_phone).filter(
+            and_(
+                Message.company_id.in_(company_ids),
+                func.date(Message.created_at) >= week_ago,
+                Message.is_from_customer == True
+            )
+        ).distinct().count()
+
+        if message_limit > 0:
+            message_usage_percentage = (total_messages / message_limit) * 100
     
     return DashboardStats(
+        user_plan=user_plan_name,
+        company_limit=company_limit,
+        message_limit=message_limit,
+        message_usage_percentage=round(message_usage_percentage, 2),
         total_companies=total_companies,
         total_messages=total_messages,
         messages_today=messages_today,
@@ -176,7 +195,11 @@ def get_companies_stats(
     return companies_stats
 
 
-@router.get("/messages-chart/{company_id}", response_model=List[MessageStats])
+@router.get(
+    "/messages-chart/{company_id}", 
+    response_model=List[MessageStats],
+    dependencies=[Depends(PlanCheckerMiddleware(required_plans=["Profissional", "Business"]))] # Pro e Business podem acessar
+)
 def get_messages_chart_data(
     company_id: int,
     days: int = 30,
@@ -222,4 +245,3 @@ def get_messages_chart_data(
         ))
     
     return chart_data
-

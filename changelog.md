@@ -7,7 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Fixed
+### Added
+- Created `AuthMiddleware` for JWT authentication and user state management in `backend/app/middleware/auth_middleware.py`.
+- Created `PlanCheckerMiddleware` for plan-based access control to API routes in `backend/app/middleware/plan_checker.py`.
+- Created `DashboardBasic.tsx` component for basic plan dashboard.
+- Created `DashboardProfessional.tsx` component for professional plan dashboard.
+- Created `DashboardBusiness.tsx` component for business plan dashboard.
+
+### Changed
+- Updated `backend/app/config.py` to include `plan_message_limits` and adjusted `plan_company_limits`.
+- Modified `backend/app/routers/whatsapp.py` to enforce message limits per plan and log/notify users upon 80% usage or limit exceedance.
+- Enhanced `backend/app/routers/dashboard.py` to return user plan, company/message limits, and message usage percentage.
+- Applied `PlanCheckerMiddleware` to `/api/dashboard/messages-chart/{company_id}` endpoint to restrict access to Professional and Business plans.
+- Integrated `AuthMiddleware` and other performance/security middlewares into `backend/main.py` in the correct order.
+- Updated `frontend/src/lib/api.ts` to include `user_plan`, `company_limit`, `message_limit`, `message_usage_percentage` in `DashboardStats` interface and added `MessageStats` interface.
+- Modified `frontend/src/app/dashboard/page.tsx` to dynamically render plan-specific dashboard components (`DashboardBasic`, `DashboardProfessional`, `DashboardBusiness`).
+- Adjusted `frontend/src/components/dashboards/DashboardBasic.tsx` to correctly display message usage progress.
 - Resolved `useSearchParams()` SSR issue in billing page by implementing proper Suspense boundary
 - Created separate `BillingContent` component to handle client-side hooks
 - Wrapped billing content in Suspense boundary to prevent prerendering errors during build
@@ -18,8 +33,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed companies and dashboard router endpoint paths to avoid double prefix issue
 - Fixed health check endpoint to respond with correct format and without database dependency
 - Ensured health check endpoint is publicly accessible by including its router before any global authentication middleware in `main.py`.
-
-### Changed
 - Refactored billing page to use new component structure with Suspense boundary
 - Improved error handling for payment processing flow
 - Enhanced type safety in API response handling

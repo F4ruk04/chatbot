@@ -13,8 +13,10 @@ from datetime import datetime
 from app.database import get_db
 from app.models.company import Company
 from app.models.message import Message
+from app.models.user import User # Importar o modelo User
 from app.services.twilio_whatsapp_service import twilio_whatsapp_service
 from app.services.gemini_service import gemini_service
+from app.config import settings # Importar as configurações
 
 # Configurar logging
 logging.basicConfig(level=logging.INFO)
@@ -77,6 +79,44 @@ async def receive_twilio_webhook(
             return Response(content=twiml_response, media_type="application/xml")
         
         logger.info(f"Empresa encontrada: {company.nome} (ID: {company.id})")
+        
+        # Obter o usuário proprietário da empresa
+        user = db.query(User).filter(User.id == company.owner_id).first()
+        if not user:
+            logger.error(f"Usuário proprietário não encontrado para a empresa ID: {company.id}")
+            return Response(content=twiml_response, media_type="application/xml")
+
+        # Verificar limite de mensagens do plano do usuário
+        user_plan_name = user.plan
+        message_limit = settings.plan_message_limits.get(user_plan_name, 0)
+        
+        # Contar todas as mensagens do usuário (de todas as suas empresas)
+        user_companies_ids = db.query(Company.id).filter(Company.owner_id == user.id).all()
+        user_companies_ids = [c[0] for c in user_companies_ids]
+        
+        total_messages_count = db.query(Message).filter(
+            Message.company_id.in_(user_companies_ids)
+        ).count()
+
+        logger.info(f"Usuário {user.email} (Plano: {user_plan_name}) tem {total_messages_count} mensagens. Limite: {message_limit}")
+
+        # Lógica para aviso de 80%
+        if message_limit > 0 and total_messages_count >= message_limit * 0.8 and total_messages_count < message_limit:
+            logger.warning(f"Usuário {user.email} atingiu 80% do limite de mensagens ({total_messages_count}/{message_limit}). Enviando aviso.")
+            # TODO: Implementar envio de email de aviso aqui
+            # Exemplo: send_email_notification(user.email, "Aviso de Uso de Mensagens", f"Você atingiu 80% do seu limite de mensagens ({total_messages_count}/{message_limit}).")
+            # Para o dashboard, a informação será exposta via API de dashboard.
+
+        if message_limit > 0 and total_messages_count >= message_limit:
+            logger.warning(f"Usuário {user.email} excedeu o limite de mensagens do plano {user_plan_name}.")
+            # Enviar uma mensagem de volta ao cliente informando sobre o limite
+            limit_exceeded_message = f"Olá! Você atingiu o limite de {message_limit} mensagens do seu plano {user_plan_name}. Por favor, faça upgrade para continuar usando o serviço."
+            twilio_whatsapp_service.send_message(
+                to_number=From,
+                message=limit_exceeded_message,
+                from_number=To
+            )
+            return Response(content=twiml_response, media_type="application/xml")
         
         # Verificar se a mensagem já foi processada (para evitar duplicados)
         existing_message = db.query(Message).filter(
@@ -231,4 +271,3 @@ async def test_webhook_post(
 </Response>"""
     
     return Response(content=twiml_response, media_type="application/xml")
-

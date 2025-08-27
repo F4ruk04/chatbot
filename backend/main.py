@@ -14,8 +14,9 @@ import os
 # Importar os modelos para que o Alembic os detete
 from app.models import user, company, message, subscription
 
-# Importar middleware de performance
-from app.middleware.performance import setup_middlewares
+# Importar middlewares
+from app.middleware.performance import RateLimitMiddleware, PerformanceMiddleware, SecurityMiddleware
+from app.middleware.auth_middleware import AuthMiddleware # Importar o novo middleware de autenticação
 
 # Criar tabelas no banco de dados (apenas se não estiver usando Alembic para isso)
 # Base.metadata.create_all(bind=engine)
@@ -70,6 +71,43 @@ app.add_middleware(
     expose_headers=["*"],
 )
 
+# Adicionar AuthMiddleware ANTES de outros middlewares que dependem do usuário
+app.add_middleware(AuthMiddleware)
+
+# Configurar outros middlewares de performance e segurança
+# Comprimir respostas
+app.add_middleware(GZipMiddleware, minimum_size=1000)
+
+# Hosts confiáveis
+allowed_hosts = ["localhost", "127.0.0.1", "0.0.0.0"]
+railway_host = os.getenv("RAILWAY_STATIC_URL") or os.getenv("RAILWAY_URL")
+if railway_host:
+    railway_host = railway_host.replace("https://", "").replace("http://", "")
+    allowed_hosts.append(railway_host)
+    allowed_hosts.append("*.railway.app")
+# Permitir configuração adicional via ALLOWED_HOSTS (CSV)
+env_hosts = os.getenv("ALLOWED_HOSTS")
+if env_hosts:
+    for h in env_hosts.split(","):
+        h = h.strip()
+        if h and h not in allowed_hosts:
+            allowed_hosts.append(h)
+if os.getenv("RAILWAY_ENVIRONMENT") != "production":
+    allowed_hosts = ["*"]
+app.add_middleware(
+    TrustedHostMiddleware,
+    allowed_hosts=allowed_hosts
+)
+
+# Rate limiting
+app.add_middleware(RateLimitMiddleware)
+
+# Performance tracking
+app.add_middleware(PerformanceMiddleware)
+
+# Security headers
+app.add_middleware(SecurityMiddleware)
+
 # Incluir routers
 app.include_router(auth.router, prefix="/api/auth", tags=["auth"])
 app.include_router(companies.router, prefix="/api/companies", tags=["companies"])
@@ -120,8 +158,6 @@ async def startup_event():
 async def shutdown_event():
     """Encerra serviços quando a aplicação é encerrada"""
     await close_redis(app)
-
-setup_middlewares(app)
 
 
 if __name__ == "__main__":
