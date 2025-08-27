@@ -115,6 +115,11 @@ export interface SubscriptionStatusResponse {
   warning_level: 'LOW' | 'MEDIUM' | 'HIGH';
 }
 
+// Interface para os limites de planos
+export interface PlanLimitsResponse {
+  [key: string]: number; // Ex: { "Básico": 1, "Profissional": 5, "Enterprise": 999999 }
+}
+
 // Funções de autenticação
 export const authAPI = {
   register: async (data: { email: string; nome: string; password: string }) => {
@@ -169,6 +174,10 @@ export const companiesAPI = {
 export const subscriptionsAPI = {
   getStatus: async (): Promise<SubscriptionStatusResponse> => {
     const response = await api.get('/api/subscription/status');
+    return response.data;
+  },
+  getPlanLimits: async (): Promise<PlanLimitsResponse> => {
+    const response = await api.get('/api/subscription/plan-limits');
     return response.data;
   },
 };

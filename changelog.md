@@ -29,6 +29,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Corrected companies and dashboard router endpoint paths to match expected API structure
 - Simplified health check endpoint to respond with {"status": "ok"} without database dependency
 - Updated `SubscriptionStatusCard.tsx` to display more detailed subscription information (messages used, quota, days remaining, warning level).
+- Repositioned `SubscriptionStatusCard` to the left column of the dashboard and enhanced its UI/UX.
+- Implemented dynamic company creation limits based on user's subscription plan in `backend/app/routers/companies.py` and `frontend/src/app/companies/new/page.tsx`.
+- Added `plan_company_limits` configuration to `backend/app/config.py`.
+- Exposed `/api/subscription/plan-limits` endpoint in `backend/app/routers/subscriptions.py` to provide plan limits to the frontend.
+- Updated `frontend/src/lib/api.ts` to include `getPlanLimits` for `subscriptionsAPI`.
+- Corrected redirection logic in `frontend/src/components/Pricing.tsx` so logged-in users are directed to `/billing` or `/dashboard` instead of `/register`.
+- Standardized plan names to "Básico", "Profissional", and "Enterprise" across `backend/app/models/subscription.py`, `backend/app/routers/subscriptions.py`, `backend/app/routers/companies.py`, `backend/app/models/user.py`, and `frontend/src/app/billing/BillingContent.tsx`.
 - Updated `SubscriptionStatusResponse` interface in `frontend/src/lib/api.ts` to match the expanded data from the backend.
 
 ## [1.0.0] - 2025-08-26

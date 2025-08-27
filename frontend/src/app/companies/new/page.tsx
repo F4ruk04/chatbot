@@ -1,13 +1,25 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { AlertCircle } from 'lucide-react';
+import { AlertCircle, Info } from 'lucide-react';
+import { subscriptionsAPI, dashboardAPI } from '@/lib/api'; // Importar APIs
 
 interface CompanyFormData {
   nome: string;
   descricao: string;
   context_prompt: string;
+}
+
+interface Subscription {
+  plan: string;
+  status: string;
+  messages_used: number;
+  messages_quota: number;
+  usage_percent: number;
+  days_remaining: number;
+  renewal_date: string;
+  warning_level: 'LOW' | 'MEDIUM' | 'HIGH';
 }
 
 export default function NewCompanyForm() {
@@ -19,14 +31,50 @@ export default function NewCompanyForm() {
     descricao: '',
     context_prompt: ''
   });
+  const [userSubscription, setUserSubscription] = useState<Subscription | null>(null);
+  const [userCompaniesCount, setUserCompaniesCount] = useState<number>(0);
+  const [planLimits, setPlanLimits] = useState<Record<string, number>>({}); // Novo estado para limites de planos
+  const [dataLoading, setDataLoading] = useState(true); // Para carregar dados da assinatura/empresas
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setDataLoading(true);
+        const [subscriptionData, companiesStats, limitsData] = await Promise.all([
+          subscriptionsAPI.getStatus(),
+          dashboardAPI.getCompaniesStats(),
+          subscriptionsAPI.getPlanLimits(), // Buscar limites de planos
+        ]);
+        setUserSubscription(subscriptionData);
+        setUserCompaniesCount(companiesStats.length);
+        setPlanLimits(limitsData); // Armazenar limites
+      } catch (err) {
+        console.error("Failed to fetch user data:", err);
+        setError("Failed to load user subscription, company data, or plan limits.");
+      } finally {
+        setDataLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
+
+  const currentPlanLimit = userSubscription ? planLimits[userSubscription.plan] : 0;
+  const canCreateCompany = userCompaniesCount < currentPlanLimit;
+  const isPlanMaxed = userCompaniesCount >= currentPlanLimit;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError('');
 
+    if (!canCreateCompany) {
+      setError(`Seu plano ${userSubscription?.plan} permite apenas ${currentPlanLimit} empresa(s). Faça upgrade para adicionar mais.`);
+      setLoading(false);
+      return;
+    }
+
     try {
-      const response = await fetch('/api/companies', {
+      const response = await fetch('/api/companies/add', { // Corrigido para /api/companies/add
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -35,7 +83,8 @@ export default function NewCompanyForm() {
       });
 
       if (!response.ok) {
-        throw new Error('Erro ao criar empresa');
+        const errorData = await response.json();
+        throw new Error(errorData.detail || 'Erro ao criar empresa');
       }
 
       router.push('/dashboard');
@@ -45,6 +94,15 @@ export default function NewCompanyForm() {
       setLoading(false);
     }
   };
+
+  if (dataLoading) {
+    return (
+      <div className="max-w-2xl mx-auto p-6 text-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+        <p className="text-gray-600 dark:text-gray-400">Loading user data...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-2xl mx-auto p-6">
@@ -63,6 +121,17 @@ export default function NewCompanyForm() {
             <div className="flex items-center">
               <AlertCircle className="h-5 w-5 text-red-500 mr-2" />
               <span className="text-red-700 dark:text-red-400">{error}</span>
+            </div>
+          </div>
+        )}
+
+        {isPlanMaxed && (
+          <div className="p-4 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg">
+            <div className="flex items-center">
+              <Info className="h-5 w-5 text-yellow-500 mr-2" />
+              <span className="text-yellow-700 dark:text-yellow-400">
+                Seu plano {userSubscription?.plan} permite apenas {currentPlanLimit} empresa(s). Faça upgrade para adicionar mais.
+              </span>
             </div>
           </div>
         )}
@@ -129,7 +198,7 @@ export default function NewCompanyForm() {
 
         <button
           type="submit"
-          disabled={loading}
+          disabled={loading || !canCreateCompany || dataLoading}
           className="w-full py-3 px-4 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-medium rounded-lg transition-all duration-200 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
         >
           {loading ? (

@@ -14,6 +14,7 @@ from app.models.user import User
 from app.models.company import Company
 from app.models.message import Message
 from app.utils.auth import get_current_user
+from app.config import settings # Importar as configurações
 
 router = APIRouter(tags=["companies"])
 
@@ -64,8 +65,20 @@ def create_company(
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Número do WhatsApp já está em uso"
-        )
+    )
     
+    # Verificar limite de empresas para o plano do usuário
+    # Garantir que o plano do usuário seja mapeado para os nomes de planos consistentes
+    user_plan_name = current_user.plan # O campo plan do User já deve estar consistente com os nomes dos planos
+    plan_limit = settings.plan_company_limits.get(user_plan_name, 0) # Pega o limite do plano, default 0
+    user_companies_count = db.query(Company).filter(Company.owner_id == current_user.id).count()
+
+    if user_companies_count >= plan_limit:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail=f"Seu plano {user_plan_name} permite apenas {plan_limit} empresa(s). Faça upgrade para adicionar mais."
+        )
+
     # Criar nova empresa
     new_company = Company(
         nome=company_data.nome,

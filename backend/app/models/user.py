@@ -20,12 +20,11 @@ class User(Base):
     email = Column(String, unique=True, index=True, nullable=False)
     nome = Column(String, nullable=False)
     password_hash = Column(String, nullable=False)
-    # Plano do usuário (free, pro, business)
-    plan = Column(String, nullable=False, default="free")
+    # Plano do usuário (Básico, Profissional, Enterprise)
+    plan = Column(String, nullable=False, default="Básico") # Alterado de "free" para "Básico"
     is_active = Column(Boolean, default=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
 
     # Relacionamento com empresas (usando string para evitar importação circular)
     # companies = relationship("Company", back_populates="owner", lazy="dynamic")
-

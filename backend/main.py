@@ -70,12 +70,13 @@ app.add_middleware(
     expose_headers=["*"],
 )
 
-# Incluir routers sem prefixo (mantido para compatibilidade)
-app.include_router(auth.router)
-app.include_router(companies.router)
-app.include_router(whatsapp.router)
-app.include_router(dashboard.router)
-app.include_router(payments.router)
+# Incluir routers
+app.include_router(auth.router, prefix="/api/auth", tags=["auth"])
+app.include_router(companies.router, prefix="/api/companies", tags=["companies"])
+app.include_router(whatsapp.router, prefix="/api/whatsapp", tags=["whatsapp"])
+app.include_router(dashboard.router, prefix="/api/dashboard", tags=["dashboard"])
+app.include_router(payments.router, prefix="/api/payments", tags=["payments"])
+app.include_router(subscriptions.router, prefix="/api/subscription", tags=["subscriptions"])
 
 
 @app.get("/")
@@ -100,7 +101,9 @@ def api_info():
             "auth": "/api/auth",
             "companies": "/api/companies",
             "whatsapp": "/api/whatsapp",
-            "dashboard": "/api/dashboard"
+            "dashboard": "/api/dashboard",
+            "payments": "/api/payments",
+            "subscriptions": "/api/subscription"
         },
         "frontend_landing_page": "https://chatbot-frontend-pied.vercel.app"
     }
@@ -119,14 +122,6 @@ async def shutdown_event():
     await close_redis(app)
 
 setup_middlewares(app)
-
-# Incluir routers
-app.include_router(auth.router, prefix="/api/auth", tags=["auth"])
-app.include_router(companies.router, prefix="/api/companies", tags=["companies"])
-app.include_router(whatsapp.router, prefix="/api/whatsapp", tags=["whatsapp"])
-app.include_router(dashboard.router, prefix="/api/dashboard", tags=["dashboard"])
-app.include_router(payments.router, prefix="/api/payments", tags=["payments"])
-app.include_router(subscriptions.router, prefix="/api/subscription", tags=["subscriptions"])
 
 
 if __name__ == "__main__":

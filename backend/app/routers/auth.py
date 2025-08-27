@@ -10,7 +10,7 @@ from app.database import get_db
 from app.models.user import User
 from app.utils.auth import get_password_hash, verify_password, create_access_token
 
-router = APIRouter(prefix="/auth", tags=["auth"])
+router = APIRouter(tags=["auth"]) # Removido o prefixo, pois já é adicionado em main.py
 
 
 class UserRegister(BaseModel):
@@ -54,7 +54,7 @@ def register_user(user_data: UserRegister, db: Session = Depends(get_db)):
             email=user_data.email,
             nome=user_data.nome,
             password_hash=hashed_password,
-            plan="free"
+            plan="Básico" # Alterado de "free" para "Básico"
         )
         
         db.add(new_user)
@@ -63,12 +63,12 @@ def register_user(user_data: UserRegister, db: Session = Depends(get_db)):
         from app.models.subscription import Subscription, SubscriptionPlan, SubscriptionStatus
         from datetime import datetime, timedelta
 
-        # Criar assinatura FREE para novo usuário
+        # Criar assinatura BÁSICA para novo usuário
         start = datetime.utcnow()
         end = start + timedelta(days=30)
         free_subscription = Subscription(
             user_id=new_user.id,
-            plan=SubscriptionPlan.FREE.value,
+            plan=SubscriptionPlan.BASIC.value, # Alterado de FREE para BASIC
             status=SubscriptionStatus.ACTIVE.value,
             current_period_start=start,
             current_period_end=end,
@@ -134,4 +134,3 @@ def login_user(user_data: UserLogin, db: Session = Depends(get_db)):
         user_id=user.id,
         user_name=user.nome
     )
-

@@ -11,9 +11,9 @@ class SubscriptionStatus(str, enum.Enum):
     PENDING = "pending"
 
 class SubscriptionPlan(str, enum.Enum):
-    FREE = "free"
-    PRO = "pro"
-    BUSINESS = "business"
+    BASIC = "Básico" # Alterado de FREE para Básico
+    PRO = "Profissional" # Alterado de PRO para Profissional
+    BUSINESS = "Enterprise" # Alterado de BUSINESS para Enterprise
 
 class Subscription(Base):
     __tablename__ = "subscriptions"

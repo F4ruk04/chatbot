@@ -21,7 +21,7 @@ import {
 
 // Define interfaces for API responses for better type safety
 interface SubscriptionStatusResponse {
- plan: string;
+  plan: string;
 }
 
 interface PaymentCheckoutResponse {
@@ -123,11 +123,11 @@ const paymentMethods: PaymentMethod[] = [
 export default function BillingContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [selectedPlan, setSelectedPlan] = useState<string>('pro');
+  const [selectedPlan, setSelectedPlan] = useState<string>('professional'); // Default para Profissional
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string>('mpesa');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [currentPlan, setCurrentPlan] = useState<string>('free');
+  const [currentPlan, setCurrentPlan] = useState<string>('Básico'); // Default para Básico
 
   useEffect(() => {
     // Verificar plano atual do usuário
@@ -142,13 +142,12 @@ export default function BillingContent() {
 
   const fetchCurrentPlan = async () => {
     try {
-      const { api } = await import('@/lib/api');
-      // Explicitly type the response from the API call
-      const response: SubscriptionStatusResponse = await api.get('/api/subscription/status');
-      // Access 'plan' directly from the response object, as 'data' property does not exist on SubscriptionStatusResponse
-      setCurrentPlan(response.plan || 'free');
-    } catch (error: unknown) { // Changed 'any' to 'unknown'
+      const { subscriptionsAPI } = await import('@/lib/api'); // Usar subscriptionsAPI
+      const response: SubscriptionStatusResponse = await subscriptionsAPI.getStatus();
+      setCurrentPlan(response.plan || 'Básico'); // Usar 'Básico' como fallback
+    } catch (error: unknown) {
       console.error('Erro ao carregar plano atual:', error);
+      setCurrentPlan('Básico'); // Fallback para 'Básico' em caso de erro
     }
   };
 
@@ -163,8 +162,8 @@ export default function BillingContent() {
       return;
     }
 
-    if (selectedPlan === 'free') {
-      setError('Não é possível fazer downgrade para o plano gratuito');
+    if (selectedPlan === 'basic') { // Alterado de 'free' para 'basic'
+      setError('Não é possível fazer downgrade para o plano Básico');
       return;
     }
 
@@ -436,15 +435,15 @@ export default function BillingContent() {
                 {/* Botão de ação */}
                 <button
                   onClick={handlePayment}
-                  disabled={loading || selectedPlan === currentPlan || selectedPlan === 'free'}
-                  className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 disabled:from-gray-400 disabled:to-gray-500 text-white font-medium py-3 px-4 rounded-lg transition-all duration-200 transform hover:scale-[1.02] disabled:transform-none disabled:cursor-not-allowed flex items-center justify-center space-x-2"
+                  disabled={loading || selectedPlan === currentPlan || selectedPlan === 'basic'} // Alterado de 'free' para 'basic'
+                  className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 to-blue-800 disabled:from-gray-400 disabled:to-gray-500 text-white font-medium py-3 px-4 rounded-lg transition-all duration-200 transform hover:scale-[1.02] disabled:transform-none disabled:cursor-not-allowed flex items-center justify-center space-x-2"
                 >
                   {loading ? (
                     <>
                       <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
                       <span>Processando...</span>
                     </>
-                  ) : selectedPlan === 'free' ? (
+                  ) : selectedPlan === 'basic' ? ( // Alterado de 'free' para 'basic'
                     <span>Selecione um plano pago</span>
                   ) : selectedPlan === currentPlan ? (
                     <span>Plano atual</span>

@@ -6,6 +6,7 @@ from ..models.subscription import Subscription, SubscriptionStatus, Subscription
 from ..models.user import User
 from ..utils.auth import get_current_user
 from datetime import datetime
+from ..config import settings # Importar as configurações
 
 router = APIRouter()
 
@@ -32,7 +33,7 @@ async def get_subscription_status(
             
             new_subscription = Subscription(
                 user_id=current_user.id,
-                plan=SubscriptionPlan.FREE.value,
+                plan=SubscriptionPlan.BASIC.value, # Alterado de FREE para BASIC
                 status=SubscriptionStatus.ACTIVE.value,
                 current_period_start=start,
                 current_period_end=end,
@@ -61,13 +62,13 @@ async def get_subscription_status(
         }
         
     except Exception as e:
-        # Em caso de erro, retornar dados padrão para o plano FREE
+        # Em caso de erro, retornar dados padrão para o plano Básico
         from datetime import timedelta
         
         end_date = datetime.utcnow() + timedelta(days=30)
         
         return {
-            "plan": "free",
+            "plan": SubscriptionPlan.BASIC.value, # Alterado de "free" para SubscriptionPlan.BASIC.value
             "status": "active",
             "messages_used": 0,
             "messages_quota": 150,
@@ -77,15 +78,19 @@ async def get_subscription_status(
             "warning_level": "LOW"
         }
 
-@router.post("/upgrade/{plan}")
+@router.post("/upgrade/{plan_name}") # Alterado o nome do parâmetro para evitar conflito com enum
 async def upgrade_subscription(
-    plan: SubscriptionPlan,
+    plan_name: str, # Receber o nome do plano como string
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
     """
     Inicia processo de upgrade de plano
     """
+    # Validar se o plan_name é um plano válido
+    if plan_name not in [p.value for p in SubscriptionPlan]:
+        raise HTTPException(status_code=400, detail="Plano inválido")
+
     current_subscription = db.query(Subscription).filter(
         Subscription.user_id == current_user.id,
         Subscription.status == SubscriptionStatus.ACTIVE.value
@@ -94,14 +99,14 @@ async def upgrade_subscription(
     if not current_subscription:
         raise HTTPException(status_code=400, detail="Nenhuma assinatura ativa encontrada")
     
-    if plan == current_subscription.plan:
+    if plan_name == current_subscription.plan:
         raise HTTPException(status_code=400, detail="Você já está neste plano")
     
     # Retornar URL de checkout para o upgrade
     return {
-        "checkout_url": f"/checkout?plan={plan}&upgrade=true",
+        "checkout_url": f"/checkout?plan={plan_name}&upgrade=true",
         "current_plan": current_subscription.plan,
-        "new_plan": plan
+        "new_plan": plan_name
     }
 
 @router.get("/usage/alert")
@@ -146,3 +151,10 @@ async def check_usage_alert(
         "has_alert": len(alerts) > 0,
         "alerts": alerts
     }
+
+@router.get("/plan-limits")
+async def get_plan_limits():
+    """
+    Retorna os limites de empresas por plano
+    """
+    return settings.plan_company_limits

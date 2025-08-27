@@ -6,7 +6,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Progress } from '@/components/ui/progress';
-import { MessageCircle, DollarSign, Calendar, AlertTriangle, Info, LucideIcon } from 'lucide-react';
+import { MessageCircle, DollarSign, Calendar, AlertTriangle, Info, LucideIcon, ArrowRight } from 'lucide-react';
+import Link from 'next/link';
 
 interface Subscription {
   plan: string;
@@ -20,10 +21,10 @@ interface Subscription {
 }
 
 // Define plan details with colors and icons
-const planDetails: { [key: string]: { color: string; icon: LucideIcon } } = {
-  Básico: { color: 'bg-gray-500', icon: MessageCircle },
-  Profissional: { color: 'bg-blue-500', icon: DollarSign },
-  Enterprise: { color: 'bg-purple-500', icon: Calendar },
+const planDetails: { [key: string]: { color: string; icon: LucideIcon; gradient: string } } = {
+  Básico: { color: 'bg-gray-500', icon: MessageCircle, gradient: 'from-gray-500 to-gray-600' },
+  Profissional: { color: 'bg-blue-500', icon: DollarSign, gradient: 'from-blue-500 to-blue-600' },
+  Enterprise: { color: 'bg-purple-500', icon: Calendar, gradient: 'from-purple-500 to-purple-600' },
   // Add other plans if necessary
 };
 
@@ -54,16 +55,19 @@ export default function SubscriptionStatusCard() {
     fetchSubscription();
   }, []); // O array de dependências vazio garante que isso rode apenas uma vez.
 
+  const currentPlanDetail = subscription ? planDetails[subscription.plan] : null;
+  const PlanIcon = currentPlanDetail?.icon || Info; // Default icon if plan not found
+
   if (loading) {
     return (
       <Card className="dark:bg-gray-800 dark:border-gray-700">
-        <CardHeader>
-          <CardTitle className="dark:text-white">Subscription Status</CardTitle>
+        <CardHeader className="bg-gray-100 dark:bg-gray-700 rounded-t-lg p-4">
+          <CardTitle className="text-lg font-semibold text-gray-900 dark:text-white">Subscription Status</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardContent className="p-4 space-y-4">
+          <Skeleton className="h-5 w-full bg-gray-200 dark:bg-gray-700" />
           <Skeleton className="h-4 w-3/4 bg-gray-200 dark:bg-gray-700" />
           <Skeleton className="h-4 w-1/2 bg-gray-200 dark:bg-gray-700" />
-          <Skeleton className="h-4 w-1/4 bg-gray-200 dark:bg-gray-700" />
         </CardContent>
       </Card>
     );
@@ -72,28 +76,30 @@ export default function SubscriptionStatusCard() {
   if (error) {
     return (
       <Card className="dark:bg-gray-800 dark:border-gray-700">
-        <CardHeader>
-          <CardTitle className="dark:text-white">Subscription Status</CardTitle>
+        <CardHeader className="bg-red-100 dark:bg-red-900/20 rounded-t-lg p-4">
+          <CardTitle className="text-lg font-semibold text-red-700 dark:text-red-400">Subscription Status</CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="p-4">
           <p className="text-red-500 dark:text-red-400">{error}</p>
         </CardContent>
       </Card>
     );
   }
 
-  const currentPlanDetail = subscription ? planDetails[subscription.plan] : null;
-  const PlanIcon = currentPlanDetail?.icon || Info; // Default icon if plan not found
-
   return (
-    <Card className="dark:bg-gray-800 dark:border-gray-700">
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-        <CardTitle className="text-sm font-medium dark:text-gray-300">
-          Subscription Status
-        </CardTitle>
-        <PlanIcon className="h-4 w-4 text-gray-500 dark:text-gray-400" />
+    <Card className="dark:bg-gray-800 dark:border-gray-700 overflow-hidden">
+      <CardHeader
+        className={`relative p-4 text-white ${currentPlanDetail?.gradient || 'from-gray-700 to-gray-800'} bg-gradient-to-br`}
+      >
+        <div className="absolute inset-0 opacity-20" style={{ backgroundImage: 'url(/images/pattern.svg)', backgroundSize: 'cover' }}></div>
+        <div className="relative z-10 flex items-center justify-between">
+          <CardTitle className="text-lg font-semibold">
+            Subscription Status
+          </CardTitle>
+          <PlanIcon className="h-5 w-5" />
+        </div>
       </CardHeader>
-      <CardContent>
+      <CardContent className="p-4 space-y-5">
         {subscription ? (
           <div className="space-y-4">
             <div className="flex items-center justify-between">
@@ -102,7 +108,7 @@ export default function SubscriptionStatusCard() {
               </h3>
               <Badge
                 variant={subscription.status === 'active' ? 'default' : 'secondary'}
-                className={`capitalize ${
+                className={`capitalize px-3 py-1 rounded-full text-sm font-medium ${
                   subscription.status === 'active'
                     ? 'bg-green-500 text-white dark:bg-green-600'
                     : 'bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-gray-200'
@@ -112,7 +118,7 @@ export default function SubscriptionStatusCard() {
               </Badge>
             </div>
 
-            <div className="grid grid-cols-1 gap-4">
+            <div className="space-y-4">
               {/* Messages Used */}
               <div>
                 <div className="flex items-center justify-between mb-1">
@@ -123,8 +129,10 @@ export default function SubscriptionStatusCard() {
                     {subscription.messages_used} / {subscription.messages_quota}
                   </p>
                 </div>
-                <Progress value={subscription.usage_percent} className="w-full h-2 mt-1" />
-                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{subscription.usage_percent.toFixed(1)}% used</p>
+                <Progress value={subscription.usage_percent} className="w-full h-2.5" />
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1.5">
+                  {subscription.usage_percent.toFixed(1)}% used
+                </p>
               </div>
 
               {/* Days Remaining */}
@@ -132,10 +140,10 @@ export default function SubscriptionStatusCard() {
                 <p className="text-sm font-medium text-gray-700 dark:text-gray-300">
                   Days Remaining
                 </p>
-                <p className="text-lg font-semibold text-gray-900 dark:text-white">
+                <p className="text-xl font-bold text-gray-900 dark:text-white">
                   {subscription.days_remaining} days
                 </p>
-                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1.5">
                   Renews on: {new Date(subscription.renewal_date).toLocaleDateString()}
                 </p>
               </div>
@@ -157,11 +165,23 @@ export default function SubscriptionStatusCard() {
                 <p>You've used a significant portion of your messages. Keep an eye on your usage.</p>
               </div>
             )}
+
+            <Link
+              href="/billing"
+              className="mt-4 w-full inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:bg-blue-700 dark:hover:bg-blue-800"
+            >
+              Manage Subscription <ArrowRight className="ml-2 h-4 w-4" />
+            </Link>
           </div>
         ) : (
-          <div className="p-4 text-center text-gray-600 dark:text-gray-400">
+          <div className="p-4 text-center text-gray-600 dark:text-gray-400 space-y-4">
             <p>No active subscription found. Please choose a plan to get started!</p>
-            {/* Optionally add a link to pricing page here */}
+            <Link
+              href="/pricing"
+              className="inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 dark:bg-green-700 dark:hover:bg-green-800"
+            >
+              View Plans <ArrowRight className="ml-2 h-4 w-4" />
+            </Link>
           </div>
         )}
       </CardContent>

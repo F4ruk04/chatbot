@@ -43,6 +43,13 @@ class Settings(BaseSettings):
         env=["REDIS_URL", "RAILWAY_REDIS_URL"]
     )
 
+    # Limites de empresas por plano
+    plan_company_limits: dict[str, int] = {
+        "Básico": 1,
+        "Profissional": 5, # Exemplo: 5 empresas para o plano profissional
+        "Enterprise": 999999 # Exemplo: Praticamente ilimitado para o plano Enterprise
+    }
+
     model_config = {
         "case_sensitive": False,
         "extra": "ignore"
