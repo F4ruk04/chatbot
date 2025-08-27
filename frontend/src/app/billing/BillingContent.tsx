@@ -52,31 +52,31 @@ interface Plan {
 
 const plans: Plan[] = [
   {
-    id: 'basic',
+    id: 'Básico', // Alterado para corresponder ao nome do plano
     name: 'Básico',
     price: 0,
     priceDisplay: '0 MZN',
     description: 'Para testar a plataforma e para negócios com baixo volume de conversas.',
     features: [
-      '1.000 mensagens/mês',
-      '1 Conexão WhatsApp',
-      'Dashboard Simples',
-      'Inclui a nossa marca nas respostas'
+      'Até 500 mensagens',
+      '1 conexão WhatsApp (1 empresa)',
+      'Dashboard simples: contador de mensagens, status da conexão',
+      'Aviso ao atingir 80% do limite de mensagens'
     ],
     color: 'from-gray-500 to-gray-600',
     icon: Shield
   },
   {
-    id: 'professional',
+    id: 'Profissional', // Alterado para corresponder ao nome do plano
     name: 'Profissional',
     price: 2499,
     priceDisplay: '2.499 MZN',
     description: 'A escolha ideal para empresas que buscam profissionalizar o atendimento e vender mais.',
     features: [
-      '5.000 mensagens/mês',
-      '1 Conexão WhatsApp',
-      'Dashboard Avançado com Relatórios',
-      'Histórico de conversas (90 dias)',
+      'Até 5000 mensagens',
+      '1 conexão WhatsApp (1 empresa)',
+      'Dashboard completo: Uso de mensagens em gráfico, Relatório básico de atendimentos',
+      'Aviso ao atingir 80% do limite de mensagens',
       'Sem a nossa marca',
       'Suporte Prioritário via Email'
     ],
@@ -85,15 +85,16 @@ const plans: Plan[] = [
     icon: Zap
   },
   {
-    id: 'enterprise',
-    name: 'Enterprise',
+    id: 'Business', // Alterado de 'enterprise' para 'Business'
+    name: 'Business', // Alterado de 'Enterprise' para 'Business'
     price: 6999,
     priceDisplay: '6.999 MZN',
     description: 'Para negócios que exigem o máximo de performance e um suporte personalizado.',
     features: [
-      'Mensagens Ilimitadas',
-      '1 Conexão WhatsApp',
-      'Tudo do Plano Profissional +',
+      'Até 10000 mensagens',
+      'Até 3 conexões WhatsApp (3 empresas)',
+      'Dashboard avançado: Gráficos detalhados de uso, Relatórios exportáveis, Gestão de múltiplas empresas/conexões',
+      'Aviso ao atingir 80% do limite de mensagens',
       'Onboarding Personalizado por vídeo-chamada',
       'Suporte VIP direto via WhatsApp'
     ],
@@ -123,7 +124,7 @@ const paymentMethods: PaymentMethod[] = [
 export default function BillingContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [selectedPlan, setSelectedPlan] = useState<string>('professional'); // Default para Profissional
+  const [selectedPlan, setSelectedPlan] = useState<string>('Profissional'); // Default para Profissional
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string>('mpesa');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -135,7 +136,8 @@ export default function BillingContent() {
     
     // Verificar se há um plano pré-selecionado na URL
     const planFromUrl = searchParams.get('plan');
-    if (planFromUrl && plans.find(p => p.id === planFromUrl)) {
+    // Encontrar o plano pelo nome, não pelo id, para consistência
+    if (planFromUrl && plans.find(p => p.name === planFromUrl)) {
       setSelectedPlan(planFromUrl);
     }
   }, [searchParams]);
@@ -151,8 +153,8 @@ export default function BillingContent() {
     }
   };
 
-  const handlePlanSelect = (planId: string) => {
-    setSelectedPlan(planId);
+  const handlePlanSelect = (planName: string) => { // Alterado para usar nome do plano
+    setSelectedPlan(planName);
     setError('');
   };
 
@@ -162,7 +164,7 @@ export default function BillingContent() {
       return;
     }
 
-    if (selectedPlan === 'basic') { // Alterado de 'free' para 'basic'
+    if (selectedPlan === 'Básico') { // Alterado de 'basic' para 'Básico'
       setError('Não é possível fazer downgrade para o plano Básico');
       return;
     }
@@ -266,18 +268,18 @@ export default function BillingContent() {
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
             {plans.map((plan) => {
               const Icon = plan.icon;
-              const isSelected = selectedPlan === plan.id;
-              const isCurrent = currentPlan === plan.id;
+              const isSelected = selectedPlan === plan.name; // Comparar pelo nome
+              const isCurrent = currentPlan === plan.name; // Comparar pelo nome
               
               return (
                 <div
-                  key={plan.id}
+                  key={plan.id} // Manter o id como key para React
                   className={`relative rounded-xl border-2 transition-all duration-200 cursor-pointer ${
                     isSelected
                       ? 'border-blue-500 ring-2 ring-blue-500 ring-opacity-50 shadow-lg'
                       : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'
-                  } ${isCurrent ? 'opacity-50' : ''}`}
-                  onClick={() => !isCurrent && handlePlanSelect(plan.id)}
+                  } ${isCurrent ? 'opacity-50 cursor-not-allowed' : ''}`}
+                  onClick={() => !isCurrent && handlePlanSelect(plan.name)} // Passar nome do plano
                 >
                   {plan.popular && (
                     <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
@@ -435,7 +437,7 @@ export default function BillingContent() {
                 {/* Botão de ação */}
                 <button
                   onClick={handlePayment}
-                  disabled={loading || selectedPlan === currentPlan || selectedPlan === 'basic'} // Alterado de 'free' para 'basic'
+                  disabled={loading || selectedPlan === currentPlan || selectedPlan === 'Básico'} // Alterado de 'basic' para 'Básico'
                   className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 to-blue-800 disabled:from-gray-400 disabled:to-gray-500 text-white font-medium py-3 px-4 rounded-lg transition-all duration-200 transform hover:scale-[1.02] disabled:transform-none disabled:cursor-not-allowed flex items-center justify-center space-x-2"
                 >
                   {loading ? (
@@ -443,7 +445,7 @@ export default function BillingContent() {
                       <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
                       <span>Processando...</span>
                     </>
-                  ) : selectedPlan === 'basic' ? ( // Alterado de 'free' para 'basic'
+                  ) : selectedPlan === 'Básico' ? ( // Alterado de 'basic' para 'Básico'
                     <span>Selecione um plano pago</span>
                   ) : selectedPlan === currentPlan ? (
                     <span>Plano atual</span>

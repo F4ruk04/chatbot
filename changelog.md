@@ -42,6 +42,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Modified `frontend/src/app/dashboard/page.tsx` to dynamically render plan-specific dashboard components (`DashboardBasic`, `DashboardProfessional`, `DashboardBusiness`).
 - Adjusted `frontend/src/components/dashboards/DashboardBasic.tsx` to correctly display message usage progress.
 - Updated `frontend/src/components/PricingSection.tsx` to reflect correct plan names ("Básico", "Profissional", "Business") and their detailed features/descriptions as per task requirements.
+- Updated `frontend/src/app/billing/BillingContent.tsx` to reflect correct plan names ("Básico", "Profissional", "Business") and their detailed features/descriptions, and to use plan names for selection and comparison.
 - Refactored billing page to use new component structure with Suspense boundary
 - Improved error handling for payment processing flow
 - Enhanced type safety in API response handling
