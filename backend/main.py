@@ -6,6 +6,8 @@ Ponto de entrada da aplicação SaaS de Chatbot Inteligente
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import RedirectResponse
+from starlette.middleware.gzip import GZipMiddleware # Importar GZipMiddleware corretamente
+from starlette.middleware.trustedhost import TrustedHostMiddleware # Importar TrustedHostMiddleware corretamente
 from app.database import engine, Base
 from app.routers import auth, companies, whatsapp, dashboard, health, payments, subscriptions
 from app.services.redis_service import init_redis, close_redis

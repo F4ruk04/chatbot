@@ -1,4 +1,5 @@
 fastapi==0.104.1
+starlette==0.27.0 # Adicionado para garantir compatibilidade com middlewares
 uvicorn==0.24.0
 sqlalchemy==2.0.23
 alembic==1.12.1
