@@ -13,7 +13,7 @@ class SubscriptionStatus(str, enum.Enum):
 class SubscriptionPlan(str, enum.Enum):
     BASIC = "Básico" # Alterado de FREE para Básico
     PRO = "Profissional" # Alterado de PRO para Profissional
-    BUSINESS = "Enterprise" # Alterado de BUSINESS para Enterprise
+    BUSINESS = "Business" # Alterado de BUSINESS para Business (corrigido de Enterprise)
 
 class Subscription(Base):
     __tablename__ = "subscriptions"

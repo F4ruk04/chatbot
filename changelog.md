@@ -10,6 +10,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Corrected `GZipMiddleware` and `TrustedHostMiddleware` imports in `backend/main.py` to use `starlette.middleware.gzip` and `starlette.middleware.trustedhost` respectively.
 - Added `starlette==0.27.0` to `backend/requirements.txt` to ensure compatibility with FastAPI middlewares.
+- Standardized plan name "Enterprise" to "Business" in `backend/app/models/subscription.py` and `backend/app/models/user.py` comments for consistency across the application.
+- Updated `backend/app/routers/subscriptions.py` to dynamically fetch `messages_quota` for new basic subscriptions from `settings.plan_message_limits`.
+- Modified `backend/app/routers/subscriptions.py`'s `get_plan_limits` endpoint to return both `plan_company_limits` and `plan_message_limits`.
+- Corrected plan name "Enterprise" to "Business" in `frontend/src/components/SubscriptionStatusCard.tsx`'s `planDetails` object.
 - Resolved `useSearchParams()` SSR issue in billing page by implementing proper Suspense boundary
 - Created separate `BillingContent` component to handle client-side hooks
 - Wrapped billing content in Suspense boundary to prevent prerendering errors during build
@@ -54,6 +58,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Corrected redirection logic in `frontend/src/components/Pricing.tsx` so logged-in users are directed to `/billing` or `/dashboard` instead of `/register`.
 - Standardized plan names to "Básico", "Profissional", and "Enterprise" across `backend/app/models/subscription.py`, `backend/app/routers/subscriptions.py`, `backend/app/routers/companies.py`, `backend/app/models/user.py`, and `frontend/src/app/billing/BillingContent.tsx`.
 - Updated `SubscriptionStatusResponse` interface in `frontend/src/lib/api.ts` to match the expanded data from the backend.
+
+## [1.0.0] - 2025-08-26
 
 ## [1.0.0] - 2025-08-26
 

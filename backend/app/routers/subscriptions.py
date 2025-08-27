@@ -31,13 +31,16 @@ async def get_subscription_status(
             start = datetime.utcnow()
             end = start + timedelta(days=30)
             
+            # Obter o limite de mensagens para o plano Básico das configurações
+            basic_message_limit = settings.plan_message_limits.get(SubscriptionPlan.BASIC.value, 150)
+
             new_subscription = Subscription(
                 user_id=current_user.id,
                 plan=SubscriptionPlan.BASIC.value, # Alterado de FREE para BASIC
                 status=SubscriptionStatus.ACTIVE.value,
                 current_period_start=start,
                 current_period_end=end,
-                messages_quota=150,
+                messages_quota=basic_message_limit, # Usar o limite configurado
                 messages_used=0
             )
             
@@ -155,6 +158,9 @@ async def check_usage_alert(
 @router.get("/plan-limits")
 async def get_plan_limits():
     """
-    Retorna os limites de empresas por plano
+    Retorna os limites de empresas e mensagens por plano
     """
-    return settings.plan_company_limits
+    return {
+        "company_limits": settings.plan_company_limits,
+        "message_limits": settings.plan_message_limits
+    }

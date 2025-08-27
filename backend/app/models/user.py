@@ -20,7 +20,7 @@ class User(Base):
     email = Column(String, unique=True, index=True, nullable=False)
     nome = Column(String, nullable=False)
     password_hash = Column(String, nullable=False)
-    # Plano do usuário (Básico, Profissional, Enterprise)
+    # Plano do usuário (Básico, Profissional, Business)
     plan = Column(String, nullable=False, default="Básico") # Alterado de "free" para "Básico"
     is_active = Column(Boolean, default=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())

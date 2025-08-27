@@ -24,7 +24,7 @@ interface Subscription {
 const planDetails: { [key: string]: { color: string; icon: LucideIcon; gradient: string } } = {
   Básico: { color: 'bg-gray-500', icon: MessageCircle, gradient: 'from-gray-500 to-gray-600' },
   Profissional: { color: 'bg-blue-500', icon: DollarSign, gradient: 'from-blue-500 to-blue-600' },
-  Enterprise: { color: 'bg-purple-500', icon: Calendar, gradient: 'from-purple-500 to-purple-600' },
+  Business: { color: 'bg-purple-500', icon: Calendar, gradient: 'from-purple-500 to-purple-600' }, // Alterado de "Enterprise" para "Business"
   // Add other plans if necessary
 };
 
