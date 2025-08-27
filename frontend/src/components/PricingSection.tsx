@@ -19,30 +19,30 @@ interface PricingPlan {
 
 const plans: PricingPlan[] = [
   {
-    title: 'Gratuito',
+    title: 'Básico',
     price: '0 MZN',
     description: 'Para testar a plataforma e para negócios com baixo volume de conversas.',
     features: [
-      { text: '150 mensagens/mês' },
-      { text: '1 Conexão WhatsApp' },
-      { text: 'Dashboard Simples' },
-      { text: 'Inclui a nossa marca nas respostas' },
+      { text: 'Até 500 mensagens' },
+      { text: '1 conexão WhatsApp (1 empresa)' },
+      { text: 'Dashboard simples: contador de mensagens, status da conexão' },
+      { text: 'Aviso ao atingir 80% do limite de mensagens' },
     ],
     ctaText: 'Comece Grátis'
   },
   {
-    title: 'Pro',
+    title: 'Profissional',
     price: '2.499 MZN',
     description: 'A escolha ideal para empresas que buscam profissionalizar o atendimento e vender mais.',
     features: [
-      { text: '3.000 mensagens/mês' },
-      { text: '1 Conexão WhatsApp' },
-      { text: 'Dashboard Avançado com Relatórios' },
-      { text: 'Histórico de conversas (90 dias)' },
+      { text: 'Até 5000 mensagens' },
+      { text: '1 conexão WhatsApp (1 empresa)' },
+      { text: 'Dashboard completo: Uso de mensagens em gráfico, Relatório básico de atendimentos' },
+      { text: 'Aviso ao atingir 80% do limite de mensagens' },
       { text: 'Sem a nossa marca' },
       { text: 'Suporte Prioritário via Email' },
     ],
-    ctaText: 'Escolher Plano Pro',
+    ctaText: 'Escolher Plano Profissional',
     popular: true
   },
   {
@@ -50,13 +50,14 @@ const plans: PricingPlan[] = [
     price: '6.999 MZN',
     description: 'Para negócios que exigem o máximo de performance e um suporte personalizado.',
     features: [
-      { text: '10.000 mensagens/mês' },
-      { text: '1 Conexão WhatsApp' },
-      { text: 'Tudo do Plano Pro +' },
+      { text: 'Até 10000 mensagens' },
+      { text: 'Até 3 conexões WhatsApp (3 empresas)' },
+      { text: 'Dashboard avançado: Gráficos detalhados de uso, Relatórios exportáveis, Gestão de múltiplas empresas/conexões' },
+      { text: 'Aviso ao atingir 80% do limite de mensagens' },
       { text: 'Onboarding Personalizado por vídeo-chamada' },
       { text: 'Suporte VIP direto via WhatsApp' },
     ],
-    ctaText: 'Fale Conosco'
+    ctaText: 'Escolher Plano Business'
   }
 ];
 

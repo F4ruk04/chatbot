@@ -41,6 +41,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated `frontend/src/lib/api.ts` to include `user_plan`, `company_limit`, `message_limit`, `message_usage_percentage` in `DashboardStats` interface and added `MessageStats` interface.
 - Modified `frontend/src/app/dashboard/page.tsx` to dynamically render plan-specific dashboard components (`DashboardBasic`, `DashboardProfessional`, `DashboardBusiness`).
 - Adjusted `frontend/src/components/dashboards/DashboardBasic.tsx` to correctly display message usage progress.
+- Updated `frontend/src/components/PricingSection.tsx` to reflect correct plan names ("Básico", "Profissional", "Business") and their detailed features/descriptions as per task requirements.
 - Refactored billing page to use new component structure with Suspense boundary
 - Improved error handling for payment processing flow
 - Enhanced type safety in API response handling
