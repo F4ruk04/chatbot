@@ -3,7 +3,12 @@ Middleware para validação de limites de mensagens
 Verifica se o usuário pode enviar mensagens baseado no plano
 """
 
-from fastapi import Request, HTTPException, status
+from starlette.middleware.base import BaseHTTPMiddleware
+from starlette.requests import Request
+from starlette.responses import Response
+from starlette.types import ASGIApp
+from typing import Callable
+from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
 from app.database import get_db
 from app.models.user import User
@@ -15,15 +20,16 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-class MessageLimitsMiddleware:
+class MessageLimitsMiddleware(BaseHTTPMiddleware):
     """
     Middleware para validar limites de mensagens antes do envio
     """
 
-    def __init__(self, check_before_send: bool = True):
+    def __init__(self, app: ASGIApp, check_before_send: bool = True):
+        super().__init__(app)
         self.check_before_send = check_before_send
 
-    async def __call__(self, request: Request, call_next):
+    async def dispatch(self, request: Request, call_next: Callable) -> Response:
         """
         Verifica limites de mensagens para o usuário atual
         """
@@ -36,7 +42,8 @@ class MessageLimitsMiddleware:
             "/api/dashboard",
             "/api/subscription"
         ] or request.url.path.startswith(("/health", "/docs", "/api/auth", "/api/dashboard")):
-            return await call_next(request)
+            response = await call_next(request)
+            return response
 
         # Para endpoints que consomem mensagens (WhatsApp send)
         if self.check_before_send and request.url.path == "/api/whatsapp/send":
