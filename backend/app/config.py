@@ -43,19 +43,14 @@ class Settings(BaseSettings):
         env=["REDIS_URL", "RAILWAY_REDIS_URL"]
     )
 
-    # Limites de empresas por plano
-    plan_company_limits: dict[str, int] = {
-        "Básico": 1,
-        "Profissional": 1,
-        "Business": 3
-    }
+    # Importar configuração centralizada dos planos
+    from .plans import PLAN_COMPANY_LIMITS, PLAN_MESSAGE_LIMITS
 
-    # Limites de mensagens por plano
-    plan_message_limits: dict[str, int] = {
-        "Básico": 500,
-        "Profissional": 5000,
-        "Business": 10000
-    }
+    # Limites de empresas por plano (usando configuração centralizada)
+    plan_company_limits: dict[str, int] = PLAN_COMPANY_LIMITS
+
+    # Limites de mensagens por plano (usando configuração centralizada)
+    plan_message_limits: dict[str, int] = PLAN_MESSAGE_LIMITS
 
     model_config = {
         "case_sensitive": False,

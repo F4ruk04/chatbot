@@ -5,66 +5,7 @@ import { Check } from 'lucide-react';
 import Link from 'next/link';
 import clsx from 'clsx';
 import Cookies from 'js-cookie'; // Importar Cookies
-
-interface PricingFeature {
-  text: string;
-}
-
-interface PricingPlan {
-  title: string;
-  id: string; // Adicionar ID para usar na URL de billing
-  price: string;
-  description: string;
-  features: PricingFeature[];
-  ctaText: string;
-  popular?: boolean;
-}
-
-const plans: PricingPlan[] = [
-  {
-    title: 'Básico',
-    id: 'basic',
-    price: '0 MZN',
-    description: 'Para testar a plataforma e para negócios com baixo volume de conversas.',
-    features: [
-      { text: '1.000 mensagens/mês' },
-      { text: '1 Conexão WhatsApp' },
-      { text: 'Dashboard Simples' },
-      { text: 'Inclui a nossa marca nas respostas' },
-    ],
-    ctaText: 'Comece Grátis'
-  },
-  {
-    title: 'Profissional',
-    id: 'professional',
-    price: '2.499 MZN',
-    description: 'A escolha ideal para empresas que buscam profissionalizar o atendimento e vender mais.',
-    features: [
-      { text: '5.000 mensagens/mês' },
-      { text: '1 Conexão WhatsApp' },
-      { text: 'Dashboard Avançado com Relatórios' },
-      { text: 'Histórico de conversas (90 dias)' },
-      { text: 'Sem a nossa marca' },
-      { text: 'Suporte Prioritário via Email' },
-    ],
-    ctaText: 'Escolher Plano Profissional',
-    popular: true
-  },
-  {
-    title: 'Enterprise',
-    id: 'enterprise',
-    price: '6.999 MZN',
-    description: 'Para negócios que exigem o máximo de performance e um suporte personalizado.',
-    features: [
-      { text: 'Mensagens Ilimitadas' },
-      { text: '1 Conexão WhatsApp' },
-      { text: 'Tudo do Plano Profissional +' },
-      { text: 'Onboarding Personalizado por vídeo-chamada' },
-      { text: 'Suporte VIP direto via WhatsApp' },
-    ],
-    ctaText: 'Fale Conosco'
-  }
-];
+import { PLANS, PlanDetails } from '@/config/plans'; // Importar configuração centralizada
 
 const faqs = [
   {
@@ -90,7 +31,7 @@ export default function PricingSection() {
 
   const getPlanLink = (planId: string) => {
     if (isLoggedIn) {
-      if (planId === 'basic') {
+      if (planId === 'Básico') {
         return '/dashboard'; // Ou '/companies/new' se for o fluxo de criação de empresa
       }
       return `/billing?plan=${planId}`;
@@ -113,7 +54,7 @@ export default function PricingSection() {
 
         {/* Pricing Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
-          {plans.map((plan) => (
+          {PLANS.map((plan) => (
             <div
               key={plan.id}
               className={clsx(
@@ -132,9 +73,12 @@ export default function PricingSection() {
               )}
 
               <div className="text-center">
-                <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">{plan.title}</h3>
+                <div className={`w-12 h-12 mx-auto mb-4 bg-gradient-to-r ${plan.gradient} rounded-xl flex items-center justify-center`}>
+                  <plan.icon className="h-6 w-6 text-white" />
+                </div>
+                <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">{plan.name}</h3>
                 <div className="mb-4">
-                  <span className="text-4xl font-bold text-gray-900 dark:text-white">{plan.price}</span>
+                  <span className="text-4xl font-bold text-gray-900 dark:text-white">{plan.priceDisplay}</span>
                   <span className="text-gray-500 dark:text-gray-400">/mês</span>
                 </div>
                 <p className="text-gray-600 dark:text-gray-400 mb-8">{plan.description}</p>

@@ -18,6 +18,7 @@ import {
   ArrowLeft,
   AlertCircle
 } from 'lucide-react';
+import { PLANS, PlanDetails } from '@/config/plans'; // Importar a configuração de planos
 
 // Define interfaces for API responses for better type safety
 interface SubscriptionStatusResponse {
@@ -38,72 +39,6 @@ interface PaymentMethod {
   available: boolean;
 }
 
-interface Plan {
-  id: string;
-  name: string;
-  price: number;
-  priceDisplay: string;
-  description: string;
-  features: string[];
-  popular?: boolean;
-  color: string;
-  icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
-}
-
-const plans: Plan[] = [
-  {
-    id: 'Básico', // Alterado para corresponder ao nome do plano
-    name: 'Básico',
-    price: 0,
-    priceDisplay: '0 MZN',
-    description: 'Para testar a plataforma e para negócios com baixo volume de conversas.',
-    features: [
-      'Até 500 mensagens',
-      '1 conexão WhatsApp (1 empresa)',
-      'Dashboard simples: contador de mensagens, status da conexão',
-      'Aviso ao atingir 80% do limite de mensagens'
-    ],
-    color: 'from-gray-500 to-gray-600',
-    icon: Shield
-  },
-  {
-    id: 'Profissional', // Alterado para corresponder ao nome do plano
-    name: 'Profissional',
-    price: 2499,
-    priceDisplay: '2.499 MZN',
-    description: 'A escolha ideal para empresas que buscam profissionalizar o atendimento e vender mais.',
-    features: [
-      'Até 5000 mensagens',
-      '1 conexão WhatsApp (1 empresa)',
-      'Dashboard completo: Uso de mensagens em gráfico, Relatório básico de atendimentos',
-      'Aviso ao atingir 80% do limite de mensagens',
-      'Sem a nossa marca',
-      'Suporte Prioritário via Email'
-    ],
-    popular: true,
-    color: 'from-blue-500 to-blue-600',
-    icon: Zap
-  },
-  {
-    id: 'Business', // Alterado de 'enterprise' para 'Business'
-    name: 'Business', // Alterado de 'Enterprise' para 'Business'
-    price: 6999,
-    priceDisplay: '6.999 MZN',
-    description: 'Para negócios que exigem o máximo de performance e um suporte personalizado.',
-    features: [
-      'Até 10000 mensagens',
-      'Até 3 conexões WhatsApp (3 empresas)',
-      'Dashboard avançado: Gráficos detalhados de uso, Relatórios exportáveis, Gestão de múltiplas empresas/conexões',
-      'Aviso ao atingir 80% do limite de mensagens',
-      'Onboarding Personalizado por vídeo-chamada',
-      'Suporte VIP direto via WhatsApp'
-    ],
-    color: 'from-purple-500 to-purple-600',
-    icon: Crown
-  }
-];
-
-// Apply PaymentMethod interface to paymentMethods array
 const paymentMethods: PaymentMethod[] = [
   {
     id: 'mpesa',
@@ -136,8 +71,8 @@ export default function BillingContent() {
     
     // Verificar se há um plano pré-selecionado na URL
     const planFromUrl = searchParams.get('plan');
-    // Encontrar o plano pelo nome, não pelo id, para consistência
-    if (planFromUrl && plans.find(p => p.name === planFromUrl)) {
+    // Encontrar o plano pelo id, para consistência
+    if (planFromUrl && PLANS.find(p => p.id === planFromUrl)) {
       setSelectedPlan(planFromUrl);
     }
   }, [searchParams]);
@@ -153,8 +88,8 @@ export default function BillingContent() {
     }
   };
 
-  const handlePlanSelect = (planName: string) => { // Alterado para usar nome do plano
-    setSelectedPlan(planName);
+  const handlePlanSelect = (planId: string) => { // Alterado para usar id do plano
+    setSelectedPlan(planId);
     setError('');
   };
 
@@ -164,7 +99,7 @@ export default function BillingContent() {
       return;
     }
 
-    if (selectedPlan === 'Básico') { // Alterado de 'basic' para 'Básico'
+    if (selectedPlan === 'Básico') { // Usar o id do plano
       setError('Não é possível fazer downgrade para o plano Básico');
       return;
     }
@@ -216,8 +151,8 @@ export default function BillingContent() {
     }
   };
 
-  const selectedPlanData = plans.find(p => p.id === selectedPlan);
-  const currentPlanData = plans.find(p => p.id === currentPlan);
+  const selectedPlanData = PLANS.find(p => p.id === selectedPlan); // Usar PLANS
+  const currentPlanData = PLANS.find(p => p.id === currentPlan); // Usar PLANS
 
   return (
     <div className="max-w-6xl mx-auto space-y-8">
@@ -243,7 +178,7 @@ export default function BillingContent() {
       {currentPlanData && (
         <div className="bg-blue-50 dark:bg-blue-90/20 border-blue-200 dark:border-blue-800 rounded-xl p-4">
           <div className="flex items-center space-x-3">
-            <div className={`w-10 h-10 bg-gradient-to-r ${currentPlanData.color} rounded-lg flex items-center justify-center`}>
+            <div className={`w-10 h-10 bg-gradient-to-r ${currentPlanData.gradient} rounded-lg flex items-center justify-center`}>
               <currentPlanData.icon className="h-5 w-5 text-white" />
             </div>
             <div>
@@ -266,20 +201,20 @@ export default function BillingContent() {
           </h2>
           
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-            {plans.map((plan) => {
+            {PLANS.map((plan) => { // Usar PLANS importado
               const Icon = plan.icon;
-              const isSelected = selectedPlan === plan.name; // Comparar pelo nome
-              const isCurrent = currentPlan === plan.name; // Comparar pelo nome
+              const isSelected = selectedPlan === plan.id; // Comparar pelo id
+              const isCurrent = currentPlan === plan.id; // Comparar pelo id
               
               return (
                 <div
-                  key={plan.id} // Manter o id como key para React
+                  key={plan.id}
                   className={`relative rounded-xl border-2 transition-all duration-200 cursor-pointer ${
                     isSelected
                       ? 'border-blue-500 ring-2 ring-blue-500 ring-opacity-50 shadow-lg'
                       : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'
                   } ${isCurrent ? 'opacity-50 cursor-not-allowed' : ''}`}
-                  onClick={() => !isCurrent && handlePlanSelect(plan.name)} // Passar nome do plano
+                  onClick={() => !isCurrent && handlePlanSelect(plan.id)} // Passar id do plano
                 >
                   {plan.popular && (
                     <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
@@ -300,7 +235,7 @@ export default function BillingContent() {
 
                   <div className="p-6">
                     <div className="flex items-center space-x-3 mb-4">
-                      <div className={`w-10 h-10 bg-gradient-to-r ${plan.color} rounded-lg flex items-center justify-center`}>
+                      <div className={`w-10 h-10 bg-gradient-to-r ${plan.gradient} rounded-lg flex items-center justify-center`}>
                         <Icon className="h-5 w-5 text-white" />
                       </div>
                       <div>
@@ -325,7 +260,7 @@ export default function BillingContent() {
                         <li key={index} className="flex items-center space-x-2">
                           <Check className="h-4 w-4 text-green-500 flex-shrink-0" />
                           <span className="text-sm text-gray-700 dark:text-gray-300">
-                            {feature}
+                            {feature.text}
                           </span>
                         </li>
                       ))}
@@ -348,7 +283,7 @@ export default function BillingContent() {
               <div className="space-y-4">
                 {/* Plano selecionado */}
                 <div className="flex items-center space-x-3 p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
-                  <div className={`w-8 h-8 bg-gradient-to-r ${selectedPlanData.color} rounded-lg flex items-center justify-center`}>
+                  <div className={`w-8 h-8 bg-gradient-to-r ${selectedPlanData.gradient} rounded-lg flex items-center justify-center`}>
                     <selectedPlanData.icon className="h-4 w-4 text-white" />
                   </div>
                   <div className="flex-1">
@@ -437,7 +372,7 @@ export default function BillingContent() {
                 {/* Botão de ação */}
                 <button
                   onClick={handlePayment}
-                  disabled={loading || selectedPlan === currentPlan || selectedPlan === 'Básico'} // Alterado de 'basic' para 'Básico'
+                  disabled={loading || selectedPlan === currentPlan || selectedPlan === 'Básico'}
                   className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 to-blue-800 disabled:from-gray-400 disabled:to-gray-500 text-white font-medium py-3 px-4 rounded-lg transition-all duration-200 transform hover:scale-[1.02] disabled:transform-none disabled:cursor-not-allowed flex items-center justify-center space-x-2"
                 >
                   {loading ? (
@@ -445,7 +380,7 @@ export default function BillingContent() {
                       <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
                       <span>Processando...</span>
                     </>
-                  ) : selectedPlan === 'Básico' ? ( // Alterado de 'basic' para 'Básico'
+                  ) : selectedPlan === 'Básico' ? (
                     <span>Selecione um plano pago</span>
                   ) : selectedPlan === currentPlan ? (
                     <span>Plano atual</span>

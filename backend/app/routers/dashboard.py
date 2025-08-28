@@ -14,7 +14,7 @@ from app.models.user import User
 from app.models.company import Company
 from app.models.message import Message
 from app.utils.auth import get_current_user
-from app.config import settings # Importar as configurações
+from app.config.plans import get_plan_limits # Importar funções de planos centralizadas
 from app.middleware.plan_checker import PlanCheckerMiddleware # Importar o middleware
 
 router = APIRouter(tags=["dashboard"])
@@ -68,10 +68,11 @@ def get_dashboard_stats(
     user_companies = db.query(Company).filter(Company.owner_id == current_user.id).all()
     company_ids = [company.id for company in user_companies]
     
-    # Obter plano e limites do usuário
+    # Obter plano e limites do usuário usando configuração centralizada
     user_plan_name = current_user.plan
-    company_limit = settings.plan_company_limits.get(user_plan_name, 0)
-    message_limit = settings.plan_message_limits.get(user_plan_name, 0)
+    plan_limits = get_plan_limits(user_plan_name)
+    company_limit = plan_limits['company_limit']
+    message_limit = plan_limits['message_limit']
 
     # Obter todas as empresas do utilizador
     user_companies = db.query(Company).filter(Company.owner_id == current_user.id).all()

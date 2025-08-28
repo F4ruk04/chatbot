@@ -31,6 +31,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Created `DashboardBasic.tsx` component for basic plan dashboard.
 - Created `DashboardProfessional.tsx` component for professional plan dashboard.
 - Created `DashboardBusiness.tsx` component for business plan dashboard.
+- **NEW**: Created centralized plan configuration system with `backend/app/config/plans.py` and updated `frontend/src/config/plans.ts`
+- **NEW**: Created `usePlanConfig` custom hook for accessing plan information in React components
+- **NEW**: Added comprehensive plan features tracking (detailed history, export capabilities, support levels, dashboard types)
 
 ### Changed
 - Updated `backend/app/config.py` to include `plan_message_limits` and adjusted `plan_company_limits`.
@@ -60,6 +63,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Corrected redirection logic in `frontend/src/components/Pricing.tsx` so logged-in users are directed to `/billing` or `/dashboard` instead of `/register`.
 - Standardized plan names to "Básico", "Profissional", and "Enterprise" across `backend/app/models/subscription.py`, `backend/app/routers/subscriptions.py`, `backend/app/routers/companies.py`, `backend/app/models/user.py`, and `frontend/src/app/billing/BillingContent.tsx`.
 - Updated `SubscriptionStatusResponse` interface in `frontend/src/lib/api.ts` to match the expanded data from the backend.
+- **NEW**: Refactored plan configuration to use centralized system - updated `frontend/src/config/plans.ts` with user's exact requirements
+- **NEW**: Updated `backend/app/config.py` to use centralized plan configuration from `backend/app/config/plans.py`
+- **NEW**: Updated `backend/app/middleware/plan_checker.py` to use centralized plan functions
+- **NEW**: Updated `backend/app/routers/dashboard.py` to use centralized plan configuration
+- **NEW**: Updated `frontend/src/components/Pricing.tsx` to use centralized `PLANS` configuration instead of local array
+- **NEW**: Created utility functions for plan management (getPlanById, getPlanLimits, canAccessFeature)
 
 ## [1.0.0] - 2025-08-26
 

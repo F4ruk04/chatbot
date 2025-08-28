@@ -3,71 +3,15 @@
 import { Check } from 'lucide-react';
 import Link from 'next/link';
 import clsx from 'clsx';
-
-interface PricingFeature {
-  text: string;
-}
-
-interface PricingPlan {
-  title: string;
-  price: string;
-  description: string;
-  features: PricingFeature[];
-  ctaText: string;
-  popular?: boolean;
-}
-
-const plans: PricingPlan[] = [
-  {
-    title: 'Básico',
-    price: '0 MZN',
-    description: 'Para testar a plataforma e para negócios com baixo volume de conversas.',
-    features: [
-      { text: 'Até 500 mensagens' },
-      { text: '1 conexão WhatsApp (1 empresa)' },
-      { text: 'Dashboard simples: contador de mensagens, status da conexão' },
-      { text: 'Aviso ao atingir 80% do limite de mensagens' },
-    ],
-    ctaText: 'Comece Grátis'
-  },
-  {
-    title: 'Profissional',
-    price: '2.499 MZN',
-    description: 'A escolha ideal para empresas que buscam profissionalizar o atendimento e vender mais.',
-    features: [
-      { text: 'Até 5000 mensagens' },
-      { text: '1 conexão WhatsApp (1 empresa)' },
-      { text: 'Dashboard completo: Uso de mensagens em gráfico, Relatório básico de atendimentos' },
-      { text: 'Aviso ao atingir 80% do limite de mensagens' },
-      { text: 'Sem a nossa marca' },
-      { text: 'Suporte Prioritário via Email' },
-    ],
-    ctaText: 'Escolher Plano Profissional',
-    popular: true
-  },
-  {
-    title: 'Business',
-    price: '6.999 MZN',
-    description: 'Para negócios que exigem o máximo de performance e um suporte personalizado.',
-    features: [
-      { text: 'Até 10000 mensagens' },
-      { text: 'Até 3 conexões WhatsApp (3 empresas)' },
-      { text: 'Dashboard avançado: Gráficos detalhados de uso, Relatórios exportáveis, Gestão de múltiplas empresas/conexões' },
-      { text: 'Aviso ao atingir 80% do limite de mensagens' },
-      { text: 'Onboarding Personalizado por vídeo-chamada' },
-      { text: 'Suporte VIP direto via WhatsApp' },
-    ],
-    ctaText: 'Escolher Plano Business'
-  }
-];
+import { PLANS } from '../config/plans'; // Importar a configuração de planos
 
 const faqs = [
   {
     question: 'O que acontece se eu atingir o meu limite de mensagens?',
-    answer: 'Não se preocupe, seu serviço não será interrompido. Nos planos Pro e Business, você poderá comprar pacotes de mensagens extras facilmente no seu dashboard a qualquer momento.'
+    answer: 'Não se preocupe, seu serviço não será interrompido. Nos planos Profissional e Business, você poderá comprar pacotes de mensagens extras facilmente no seu dashboard a qualquer momento.'
   },
   {
-    question: 'O Plano Gratuito é realmente grátis?',
+    question: 'O Plano Básico é realmente grátis?',
     answer: 'Sim! É grátis para sempre, dentro dos limites. Não pedimos cartão de crédito para começar.'
   },
   {
@@ -92,9 +36,9 @@ export default function PricingSection() {
 
         {/* Pricing Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
-          {plans.map((plan) => (
+          {PLANS.map((plan) => ( // Usar PLANS importado
             <div
-              key={plan.title}
+              key={plan.id}
               className={clsx(
                 "relative rounded-2xl shadow-lg bg-white p-8",
                 plan.popular 
@@ -111,9 +55,9 @@ export default function PricingSection() {
               )}
 
               <div className="text-center">
-                <h3 className="text-2xl font-bold text-gray-900 mb-4">{plan.title}</h3>
+                <h3 className="text-2xl font-bold text-gray-900 mb-4">{plan.name}</h3> {/* Usar plan.name */}
                 <div className="mb-4">
-                  <span className="text-4xl font-bold text-gray-900">{plan.price}</span>
+                  <span className="text-4xl font-bold text-gray-900">{plan.priceDisplay}</span>
                   <span className="text-gray-500">/mês</span>
                 </div>
                 <p className="text-gray-600 mb-8">{plan.description}</p>
@@ -129,10 +73,10 @@ export default function PricingSection() {
               </ul>
 
               <Link
-                href={`/register`}
+                href={`/register?plan=${plan.id}`}
                 className={clsx(
                   "w-full py-3 px-6 rounded-lg font-semibold transition-colors block text-center",
-                  plan.popular 
+                  plan.popular
                     ? "bg-blue-500 text-white hover:bg-blue-600"
                     : "border-2 border-blue-500 text-blue-500 hover:bg-blue-50"
                 )}
