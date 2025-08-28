@@ -8,6 +8,9 @@ from pydantic import Field
 from pydantic_settings import BaseSettings
 from typing import Optional
 
+# Importar configuração centralizada dos planos
+from .plans import PLAN_COMPANY_LIMITS, PLAN_MESSAGE_LIMITS
+
 
 class Settings(BaseSettings):
     """
@@ -42,9 +45,6 @@ class Settings(BaseSettings):
         "redis://localhost:6379",
         env=["REDIS_URL", "RAILWAY_REDIS_URL"]
     )
-
-    # Importar configuração centralizada dos planos
-    from .plans import PLAN_COMPANY_LIMITS, PLAN_MESSAGE_LIMITS
 
     # Limites de empresas por plano (usando configuração centralizada)
     plan_company_limits: dict[str, int] = PLAN_COMPANY_LIMITS
