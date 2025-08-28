@@ -24,6 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed companies and dashboard router endpoint paths to avoid double prefix issue
 - Fixed health check endpoint to respond with correct format and without database dependency
 - Ensured health check endpoint is publicly accessible by including its router before any global authentication middleware in `main.py`.
+- **FIXED**: Corrected import error in `backend/app/config.py` - moved import from `.plans` to module level to fix `ModuleNotFoundError` during deployment
 
 ### Added
 - Created `AuthMiddleware` for JWT authentication and user state management in `backend/app/middleware/auth_middleware.py`.
