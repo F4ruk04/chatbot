@@ -19,6 +19,7 @@ from app.models import user, company, message, subscription
 # Importar middlewares
 from app.middleware.performance import RateLimitMiddleware, PerformanceMiddleware, SecurityMiddleware
 from app.middleware.auth_middleware import AuthMiddleware # Importar o novo middleware de autenticação
+from app.middleware.message_limits import MessageLimitsMiddleware # Importar middleware de limites
 
 # Criar tabelas no banco de dados (apenas se não estiver usando Alembic para isso)
 # Base.metadata.create_all(bind=engine)
@@ -75,6 +76,9 @@ app.add_middleware(
 
 # Adicionar AuthMiddleware ANTES de outros middlewares que dependem do usuário
 app.add_middleware(AuthMiddleware)
+
+# Adicionar middleware de limites de mensagens (depois do AuthMiddleware)
+app.add_middleware(MessageLimitsMiddleware)
 
 # Configurar outros middlewares de performance e segurança
 # Comprimir respostas

@@ -16,6 +16,8 @@ from app.models.message import Message
 from app.utils.auth import get_current_user
 from app.config import get_plan_limits # Importar funções de planos centralizadas
 from app.middleware.plan_checker import PlanCheckerMiddleware # Importar o middleware
+from app.middleware.message_limits import check_message_limits # Importar função de limites
+from app.services.notification_service import notification_service # Importar serviço de notificações
 
 router = APIRouter(tags=["dashboard"])
 
@@ -133,6 +135,13 @@ def get_dashboard_stats(
 
         if message_limit > 0:
             message_usage_percentage = (total_messages / message_limit) * 100
+
+            # Verificar se deve enviar aviso de limite
+            if message_usage_percentage >= 80 and message_usage_percentage < 100:
+                # Enviar notificação (apenas uma vez por dia para não spam)
+                notification_service.send_message_limit_warning(
+                    current_user, total_messages, message_limit
+                )
     
     return DashboardStats(
         user_plan=user_plan_name,
