@@ -38,6 +38,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **NEW**: Created centralized plan configuration system with `backend/app/config/plans.py` and updated `frontend/src/config/plans.ts`
 - **NEW**: Created `usePlanConfig` custom hook for accessing plan information in React components
 - **NEW**: Added comprehensive plan features tracking (detailed history, export capabilities, support levels, dashboard types)
+- **SPRINT 1**: Created `MessageLimitsMiddleware` for real-time message validation and quota enforcement
+- **SPRINT 1**: Created `NotificationService` for intelligent user notifications (80% limit warnings, limit exceeded alerts)
+- **SPRINT 1**: Implemented comprehensive message usage tracking and automatic blocking system
+- **SPRINT 1**: Added detailed documentation files: `ROADMAP_PROJETO.md`, `TWILIO_PRODUCAO_PLANO.md`, `EXPLICACAO_POOL_COMPARTILHADO.md`
 
 ### Changed
 - Updated `backend/app/config.py` to include `plan_message_limits` and adjusted `plan_company_limits`.
