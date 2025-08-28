@@ -24,6 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed companies and dashboard router endpoint paths to avoid double prefix issue
 - Fixed health check endpoint to respond with correct format and without database dependency
 - Ensured health check endpoint is publicly accessible by including its router before any global authentication middleware in `main.py`.
+- **CRITICAL FIX**: Corrected `MessageLimitsMiddleware` to inherit from `BaseHTTPMiddleware` and implement proper `dispatch()` method instead of `__call__()` to resolve deployment error: `TypeError: MessageLimitsMiddleware.__init__() got an unexpected keyword argument 'app'`
 - **FIXED**: Corrected import error in `backend/app/config.py` - moved all plan configurations directly into `config.py` to eliminate `ModuleNotFoundError` during deployment
 - **FIXED**: Removed `backend/app/config/plans.py` file to avoid import conflicts and consolidate everything in a single file
 - **FIXED**: Updated imports in `dashboard.py` and `plan_checker.py` to use `app.config` instead of `app.config.plans`
