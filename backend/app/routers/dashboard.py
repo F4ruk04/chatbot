@@ -14,7 +14,7 @@ from app.models.user import User
 from app.models.company import Company
 from app.models.message import Message
 from app.utils.auth import get_current_user
-from app.config.plans import get_plan_limits # Importar funções de planos centralizadas
+from app.config import get_plan_limits # Importar funções de planos centralizadas
 from app.middleware.plan_checker import PlanCheckerMiddleware # Importar o middleware
 
 router = APIRouter(tags=["dashboard"])
