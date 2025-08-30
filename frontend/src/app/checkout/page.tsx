@@ -4,20 +4,24 @@ import { Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Checkout from '@/components/Checkout';
 
-const planPrices = {
-  free: 0,
-  pro: 2499,
-  business: 6999
+// Mapeamento dos planos para os novos nomes
+const planMapping = {
+  'basic': 'Básico',
+  'professional': 'Profissional',
+  'business': 'Business',
+  'free': 'Básico',
+  'pro': 'Profissional',
+  'enterprise': 'Business'
 };
 
 function CheckoutContent() {
   const searchParams = useSearchParams();
-  const plan = searchParams.get('plan') || 'pro';
+  const planParam = searchParams.get('plan') || 'professional';
+  const plan = planMapping[planParam as keyof typeof planMapping] || 'Profissional';
 
   return (
-    <Checkout 
-      plan={plan} 
-      amount={planPrices[plan as keyof typeof planPrices]} 
+    <Checkout
+      plan={plan}
     />
   );
 }

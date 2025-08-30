@@ -18,3 +18,4 @@ twilio==8.10.0
 redis==5.0.1
 aioredis==2.0.1
 httpx==0.25.2
+stripe==7.4.0

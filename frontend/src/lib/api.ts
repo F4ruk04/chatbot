@@ -129,6 +129,42 @@ export interface PlanLimitsResponse {
   [key: string]: number; // Ex: { "Básico": 1, "Profissional": 5, "Enterprise": 999999 }
 }
 
+// Interfaces para pagamentos Stripe
+export interface PaymentSessionResponse {
+  status: string;
+  checkout_url?: string;
+  session_id?: string;
+  plan?: string;
+  amount?: number;
+  currency?: string;
+  message?: string;
+}
+
+export interface PaymentVerificationResponse {
+  status: string;
+  amount?: number;
+  currency?: string;
+  metadata?: any;
+  customer_email?: string;
+}
+
+export interface PaymentHistoryItem {
+  id: number;
+  amount: number;
+  currency: string;
+  status: string;
+  plan_name: string;
+  created_at: string;
+  stripe_session_id: string;
+}
+
+export interface RefundResponse {
+  status: string;
+  refund_id?: string;
+  amount?: number;
+  message?: string;
+}
+
 // Funções de autenticação
 export const authAPI = {
   register: async (data: { email: string; nome: string; password: string }) => {
@@ -213,6 +249,29 @@ export const dashboardAPI = {
 export const messagesAPI = {
   getByCompany: async (companyId: number, skip: number = 0, limit: number = 100): Promise<Message[]> => {
     const response = await api.get(`/api/whatsapp/messages/${companyId}?skip=${skip}&limit=${limit}`);
+    return response.data;
+  },
+};
+
+// Funções de pagamentos Stripe
+export const paymentsAPI = {
+  createSession: async (planName: string): Promise<PaymentSessionResponse> => {
+    const response = await api.post('/api/payments/create-session', { plan_name: planName });
+    return response.data;
+  },
+
+  verifyPayment: async (sessionId: string): Promise<PaymentVerificationResponse> => {
+    const response = await api.get(`/api/payments/verify/${sessionId}`);
+    return response.data;
+  },
+
+  getHistory: async (): Promise<PaymentHistoryItem[]> => {
+    const response = await api.get('/api/payments/history');
+    return response.data;
+  },
+
+  createRefund: async (paymentId: number): Promise<RefundResponse> => {
+    const response = await api.post(`/api/payments/refund/${paymentId}`);
     return response.data;
   },
 };
