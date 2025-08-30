@@ -151,13 +151,17 @@ export default function DashboardBasic({ stats, companiesStats }: DashboardBasic
             {companiesStats.length > 0 ? (
               <div className="space-y-3">
                 {companiesStats.map((company) => (
-                  <div key={company.company_id} className="flex items-center justify-between">
+                  <div
+                    key={company.company_id}
+                    className="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer transition-colors"
+                    onClick={() => router.push('/companies')}
+                  >
                     <div className="flex items-center space-x-2">
                       <span className="relative flex h-3 w-3">
                         <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
                         <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
                       </span>
-                      <p className="text-gray-700 dark:text-gray-300">{company.company_name}</p>
+                      <p className="text-gray-700 dark:text-gray-300 font-medium">{company.company_name}</p>
                     </div>
                     <span className="text-sm font-medium text-green-600 dark:text-green-400">Conectado</span>
                   </div>

@@ -3,7 +3,7 @@
 import { Check } from 'lucide-react';
 import Link from 'next/link';
 import clsx from 'clsx';
-import { PLANS } from '../config/plans'; // Importar a configuração de planos
+import { PLANS } from '@/config/plans'; // Importar a configuração de planos
 
 const faqs = [
   {
