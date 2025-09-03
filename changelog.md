@@ -37,6 +37,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **FIXED**: Added missing `Dict` import in `backend/app/routers/payments.py` to resolve `NameError: name 'Dict' is not defined` during application startup
 - **FIXED**: Wrapped `useSearchParams()` in Suspense boundary in `frontend/src/app/success/page.tsx` to resolve Next.js prerendering error during build
 - **FIXED**: Updated `frontend/.env.local` to use Railway backend URL `https://chatbot-production-d2d7.up.railway.app` for production deployment while keeping localhost:8000 for local development
+- **FIXED**: Added proper router imports in `backend/app/routers/__init__.py` to ensure all routers (including WhatsApp) are properly registered in Railway deployment
 
 ### Added
 - Created `AuthMiddleware` for JWT authentication and user state management in `backend/app/middleware/auth_middleware.py`.
