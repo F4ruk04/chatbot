@@ -6,7 +6,7 @@ from ..models.subscription import Subscription, SubscriptionStatus, Subscription
 from ..models.user import User
 from ..utils.auth import get_current_user
 from datetime import datetime
-from ..config import settings # Importar as configurações
+from app.config import settings # Importar as configurações
 
 router = APIRouter()
 

@@ -13,8 +13,8 @@ from ..database import get_db
 from ..models import Payment, Subscription, User
 from ..utils.auth import get_current_user
 from ..services.stripe_service import stripe_service
-from ..config import get_plan_limits
-from ..config.stripe_config import stripe_config
+from app.config import get_plan_limits
+from app.config.stripe_config import stripe_config
 
 logger = logging.getLogger(__name__)
 
