@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 
 class StripeService:
     def __init__(self):
-        from app.config.stripe_config import stripe_config
+        from ..config.stripe_config import stripe_config
 
         # Configurar Stripe
         stripe.api_key = stripe_config.SECRET_KEY or "sk_test_..."
