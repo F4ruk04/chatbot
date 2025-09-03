@@ -10,6 +10,7 @@ from starlette.middleware.gzip import GZipMiddleware # Importar GZipMiddleware c
 from starlette.middleware.trustedhost import TrustedHostMiddleware # Importar TrustedHostMiddleware corretamente
 from app.database import engine, Base
 from app.routers import auth_router, companies_router, whatsapp_router, dashboard_router, health_router, payments_router, subscriptions_router
+from app.routers.admin import router as admin_router
 from app.services.redis_service import init_redis, close_redis
 import os
 
@@ -121,6 +122,7 @@ app.include_router(whatsapp_router, prefix="/api/whatsapp", tags=["whatsapp"])
 app.include_router(dashboard_router, prefix="/api/dashboard", tags=["dashboard"])
 app.include_router(payments_router, prefix="/api/payments", tags=["payments"])
 app.include_router(subscriptions_router, prefix="/api/subscription", tags=["subscriptions"])
+app.include_router(admin_router, prefix="/api/admin", tags=["admin"])
 
 
 @app.get("/")
