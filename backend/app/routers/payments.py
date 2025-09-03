@@ -5,7 +5,7 @@ Endpoints para processamento de pagamentos via Stripe
 
 from fastapi import APIRouter, Depends, HTTPException, Request, Header
 from sqlalchemy.orm import Session
-from typing import Optional
+from typing import Optional, Dict
 from datetime import datetime
 import logging
 

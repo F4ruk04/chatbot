@@ -34,6 +34,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **FIXED**: Updated relative import paths in `stripe_service.py`, `subscriptions.py`, `payments.py`, and `performance.py` to use absolute imports after removing `__init__.py` file
 - **FIXED**: Changed import in `stripe_service.py` back to relative import `from ..config.stripe_config import stripe_config` to resolve deployment error
 - **FIXED**: Added missing `Header` import in `backend/app/routers/payments.py` to resolve `NameError: name 'Header' is not defined` during application startup
+- **FIXED**: Added missing `Dict` import in `backend/app/routers/payments.py` to resolve `NameError: name 'Dict' is not defined` during application startup
 
 ### Added
 - Created `AuthMiddleware` for JWT authentication and user state management in `backend/app/middleware/auth_middleware.py`.
