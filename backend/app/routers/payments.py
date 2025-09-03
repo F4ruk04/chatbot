@@ -3,7 +3,7 @@ Router de Pagamentos - Integração com Stripe
 Endpoints para processamento de pagamentos via Stripe
 """
 
-from fastapi import APIRouter, Depends, HTTPException, Request
+from fastapi import APIRouter, Depends, HTTPException, Request, Header
 from sqlalchemy.orm import Session
 from typing import Optional
 from datetime import datetime
