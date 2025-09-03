@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { subscriptionsAPI } from '@/lib/api';
+import { subscriptionsAPI, dashboardAPI } from '@/lib/api';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -18,6 +18,9 @@ interface Subscription {
   days_remaining: number;
   renewal_date: string;
   warning_level: 'LOW' | 'MEDIUM' | 'HIGH';
+  // Adicionar campos para sincronização com dashboard
+  total_messages?: number;
+  message_usage_percentage?: number;
 }
 
 // Define plan details with colors and icons
@@ -30,19 +33,34 @@ const planDetails: { [key: string]: { color: string; icon: LucideIcon; gradient:
 
 export default function SubscriptionStatusCard() {
   const [subscription, setSubscription] = useState<Subscription | null>(null);
+  const [dashboardStats, setDashboardStats] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchSubscription = async () => {
+    const fetchData = async () => {
       try {
         setLoading(true);
-        const data = await subscriptionsAPI.getStatus();
-        if (data) {
-          setSubscription(data);
+
+        // Buscar dados da subscription e do dashboard simultaneamente
+        const [subscriptionData, dashboardData] = await Promise.all([
+          subscriptionsAPI.getStatus(),
+          dashboardAPI.getStats()
+        ]);
+
+        if (subscriptionData) {
+          // Combinar dados: usar métricas reais do dashboard mas manter dados da subscription
+          const combinedData = {
+            ...subscriptionData,
+            messages_used: dashboardData?.total_messages || subscriptionData.messages_used,
+            usage_percent: dashboardData?.message_usage_percentage || subscriptionData.usage_percent
+          };
+          setSubscription(combinedData);
         } else {
           setSubscription(null);
         }
+
+        setDashboardStats(dashboardData);
         setError(null);
       } catch (err) {
         setError('Failed to load subscription details.');
@@ -52,7 +70,7 @@ export default function SubscriptionStatusCard() {
       }
     };
 
-    fetchSubscription();
+    fetchData();
   }, []); // O array de dependências vazio garante que isso rode apenas uma vez.
 
   const currentPlanDetail = subscription ? planDetails[subscription.plan] : null;

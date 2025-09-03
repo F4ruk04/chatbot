@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **FIXED**: Added temporary `/test-twilio` endpoint to diagnose Twilio authentication issues.
 - **SECURITY**: Added comprehensive `.gitignore` file to prevent accidental commits of sensitive data (API keys, tokens, secrets, environment files).
 - **FIXED**: Resolved inconsistency between dashboard and SubscriptionStatusCard message metrics by updating `messages_used` counter in subscription table when messages are sent successfully.
+- **FIXED**: Synchronized SubscriptionStatusCard with dashboard data by fetching both subscription and dashboard stats, using accurate message counts from dashboard.
 - **TEMP**: Added admin endpoints for testing plan changes (`/api/admin/change-user-plan` and `/api/admin/user-status/{email}`).
 
 ### Fixed
