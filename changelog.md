@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Fixed
+- **FIXED**: Resolved import error by restructuring the config module. Moved all settings into the `config` package's `__init__.py` and removed the conflicting `config.py` file.
 - Corrected `GZipMiddleware` and `TrustedHostMiddleware` imports in `backend/main.py` to use `starlette.middleware.gzip` and `starlette.middleware.trustedhost` respectively.
 - Added `starlette==0.27.0` to `backend/requirements.txt` to ensure compatibility with FastAPI middlewares.
 - Standardized plan name "Enterprise" to "Business" in `backend/app/models/subscription.py` and `backend/app/models/user.py` comments for consistency across the application.
