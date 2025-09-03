@@ -8,6 +8,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Fixed
+- **FIXED**: Enhanced login endpoint in `backend/app/routers/auth.py` to provide specific error messages for "Email não registado" and "Senha incorreta", instead of a generic error.
+- **FIXED**: Implemented a dedicated `TwilioSMSService` in `backend/app/services/twilio_sms_service.py` for sending SMS messages, separate from WhatsApp.
+- **FIXED**: Added Twilio SMS configuration (`twilio_sms_number`, `twilio_sms_sandbox_enabled`, `twilio_sms_sandbox_number`) to `backend/app/config/__init__.py` for better control and sandbox testing.
+- **FIXED**: Integrated logging into `TwilioSMSService` for improved error visibility and debugging.
+
+### Fixed
 - **FIXED**: Resolved import error by restructuring the config module. Moved all settings into the `config` package's `__init__.py` and removed the conflicting `config.py` file.
 - Corrected `GZipMiddleware` and `TrustedHostMiddleware` imports in `backend/main.py` to use `starlette.middleware.gzip` and `starlette.middleware.trustedhost` respectively.
 - Added `starlette==0.27.0` to `backend/requirements.txt` to ensure compatibility with FastAPI middlewares.

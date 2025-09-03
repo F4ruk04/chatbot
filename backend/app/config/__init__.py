@@ -138,7 +138,12 @@ class Settings(BaseSettings):
     # Configurações do Twilio para WhatsApp
     twilio_account_sid: str = Field("ACxxxxxxxxxxxxxxxxxxxxxxxxxxxxx", env="TWILIO_ACCOUNT_SID")
     twilio_auth_token: str = Field("your_twilio_auth_token", env="TWILIO_AUTH_TOKEN")
-    twilio_whatsapp_number: str = "whatsapp:+14155238886"
+    twilio_whatsapp_number: str = "whatsapp:+14155238886" # Número Twilio para WhatsApp
+    
+    # Configurações do Twilio para SMS
+    twilio_sms_number: str = Field("+15017122661", env="TWILIO_SMS_NUMBER") # Exemplo: seu número Twilio SMS
+    twilio_sms_sandbox_enabled: bool = Field(True, env="TWILIO_SMS_SANDBOX_ENABLED")
+    twilio_sms_sandbox_number: str = Field("+15005550006", env="TWILIO_SMS_SANDBOX_NUMBER") # Número sandbox Twilio para testes
     
     # URL do frontend para redirecionamentos
     frontend_url: str = "http://localhost:3000"

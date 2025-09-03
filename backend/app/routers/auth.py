@@ -108,29 +108,39 @@ def register_user(user_data: UserRegister, db: Session = Depends(get_db)):
 @router.post("/login", response_model=Token)
 def login_user(user_data: UserLogin, db: Session = Depends(get_db)):
     """
-    Endpoint para login de utilizador
+    Endpoint para login de utilizador com tratamento de erros detalhado.
     """
-    # Verificar se o utilizador existe
-    user = db.query(User).filter(User.email == user_data.email).first()
-    if not user:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Email ou password incorretos"
+    try:
+        # Verificar se o utilizador existe
+        user = db.query(User).filter(User.email == user_data.email).first()
+        if not user:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Email não registado"
+            )
+        
+        # Verificar password
+        if not verify_password(user_data.password, user.password_hash):
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Senha incorreta"
+            )
+        
+        # Criar token de acesso
+        access_token = create_access_token(data={"sub": str(user.id)})
+        
+        return Token(
+            access_token=access_token,
+            token_type="bearer",
+            user_id=user.id,
+            user_name=user.nome
         )
-    
-    # Verificar password
-    if not verify_password(user_data.password, user.password_hash):
+    except HTTPException as e:
+        # Re-raise HTTPExceptions (como email não registado ou senha incorreta)
+        raise e
+    except Exception as e:
+        # Capturar outros erros internos
         raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Email ou password incorretos"
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Erro interno ao fazer login: {str(e)}"
         )
-    
-    # Criar token de acesso
-    access_token = create_access_token(data={"sub": str(user.id)})
-    
-    return Token(
-        access_token=access_token,
-        token_type="bearer",
-        user_id=user.id,
-        user_name=user.nome
-    )
