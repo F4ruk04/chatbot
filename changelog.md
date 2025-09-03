@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **FIXED**: Implemented a dedicated `TwilioSMSService` in `backend/app/services/twilio_sms_service.py` for sending SMS messages, separate from WhatsApp.
 - **FIXED**: Added Twilio SMS configuration (`twilio_sms_number`, `twilio_sms_sandbox_enabled`, `twilio_sms_sandbox_number`) to `backend/app/config/__init__.py` for better control and sandbox testing.
 - **FIXED**: Integrated logging into `TwilioSMSService` for improved error visibility and debugging.
+- **FIXED**: Provided detailed debugging steps for WhatsApp sandbox message responses, focusing on Twilio webhook configuration and backend logs.
 
 ### Fixed
 - **FIXED**: Resolved import error by restructuring the config module. Moved all settings into the `config` package's `__init__.py` and removed the conflicting `config.py` file.
