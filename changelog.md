@@ -38,6 +38,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **FIXED**: Wrapped `useSearchParams()` in Suspense boundary in `frontend/src/app/success/page.tsx` to resolve Next.js prerendering error during build
 - **FIXED**: Updated `frontend/.env.local` to use Railway backend URL `https://chatbot-production-d2d7.up.railway.app` for production deployment while keeping localhost:8000 for local development
 - **FIXED**: Added proper router imports in `backend/app/routers/__init__.py` to ensure all routers (including WhatsApp) are properly registered in Railway deployment
+- **FIXED**: Fixed router import naming conflict in `backend/main.py` by updating router references to use correct imported names
 
 ### Added
 - Created `AuthMiddleware` for JWT authentication and user state management in `backend/app/middleware/auth_middleware.py`.

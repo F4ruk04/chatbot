@@ -9,7 +9,7 @@ from fastapi.responses import RedirectResponse
 from starlette.middleware.gzip import GZipMiddleware # Importar GZipMiddleware corretamente
 from starlette.middleware.trustedhost import TrustedHostMiddleware # Importar TrustedHostMiddleware corretamente
 from app.database import engine, Base
-from app.routers import auth, companies, whatsapp, dashboard, health, payments, subscriptions
+from app.routers import auth_router, companies_router, whatsapp_router, dashboard_router, health_router, payments_router, subscriptions_router
 from app.services.redis_service import init_redis, close_redis
 import os
 
@@ -32,7 +32,7 @@ app = FastAPI(
 )
 
 # Incluir router de healthcheck o mais cedo possível para garantir que seja público
-app.include_router(health.router, prefix="/health", tags=["health"])
+app.include_router(health_router, prefix="/health", tags=["health"])
 
 # Configurar CORS para permitir requisições do frontend
 allowed_origins = [
@@ -115,12 +115,12 @@ app.add_middleware(PerformanceMiddleware)
 app.add_middleware(SecurityMiddleware)
 
 # Incluir routers
-app.include_router(auth.router, prefix="/api/auth", tags=["auth"])
-app.include_router(companies.router, prefix="/api/companies", tags=["companies"])
-app.include_router(whatsapp.router, prefix="/api/whatsapp", tags=["whatsapp"])
-app.include_router(dashboard.router, prefix="/api/dashboard", tags=["dashboard"])
-app.include_router(payments.router, prefix="/api/payments", tags=["payments"])
-app.include_router(subscriptions.router, prefix="/api/subscription", tags=["subscriptions"])
+app.include_router(auth_router, prefix="/api/auth", tags=["auth"])
+app.include_router(companies_router, prefix="/api/companies", tags=["companies"])
+app.include_router(whatsapp_router, prefix="/api/whatsapp", tags=["whatsapp"])
+app.include_router(dashboard_router, prefix="/api/dashboard", tags=["dashboard"])
+app.include_router(payments_router, prefix="/api/payments", tags=["payments"])
+app.include_router(subscriptions_router, prefix="/api/subscription", tags=["subscriptions"])
 
 
 @app.get("/")
