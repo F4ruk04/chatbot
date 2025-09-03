@@ -24,7 +24,7 @@ from app.middleware.message_limits import check_message_limits # Importar funç�
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-router = APIRouter(prefix="/whatsapp", tags=["whatsapp"])
+router = APIRouter(tags=["whatsapp"]) # Removido o prefixo, pois já é adicionado em main.py
 
 
 # O webhook do Twilio envia dados como application/x-www-form-urlencoded
