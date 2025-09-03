@@ -29,7 +29,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **FIXED**: Removed `backend/app/config/plans.py` file to avoid import conflicts and consolidate everything in a single file
 - **FIXED**: Updated imports in `dashboard.py` and `plan_checker.py` to use `app.config` instead of `app.config.plans`
 - **FIXED**: Updated middleware functions to use consolidated `get_plan_limits` function from config module
-- **FIXED**: Corrected import path in `backend/app/config/__init__.py` to properly reference `settings` from `backend/app/config.py`
+- **FIXED**: Removed `backend/app/config/__init__.py` to resolve circular import issue that was preventing application startup
 
 ### Added
 - Created `AuthMiddleware` for JWT authentication and user state management in `backend/app/middleware/auth_middleware.py`.
