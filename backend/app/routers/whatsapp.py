@@ -121,6 +121,21 @@ async def receive_twilio_webhook(
             logger.info(f"Mensagem já processada: {message_id}")
             return Response(content=twiml_response, media_type="application/xml")
         
+        
+        # Endpoint temporário para testar credenciais Twilio
+        @router.get("/test-twilio")
+        def test_twilio():
+            """
+            Endpoint temporário para testar credenciais Twilio
+            """
+            try:
+                from twilio.rest import Client
+                client = Client(settings.twilio_account_sid, settings.twilio_auth_token)
+                account = client.api.accounts(settings.twilio_account_sid).fetch()
+                return {"status": "success", "account_sid": account.sid}
+            except Exception as e:
+                return {"status": "error", "message": str(e)}
+        
         # Buscar mensagens anteriores para contexto de conversa
         previous_messages = db.query(Message).filter(
             Message.company_id == company.id,
