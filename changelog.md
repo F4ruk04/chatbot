@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **FIXED**: Corrected double prefixing of `/whatsapp` in `backend/app/routers/whatsapp.py` to resolve `404 Not Found` error for Twilio webhook.
 - **FIXED**: Provided detailed debugging steps for WhatsApp sandbox message responses, focusing on Twilio webhook configuration and backend logs.
 - **FIXED**: Added temporary `/test-twilio` endpoint to diagnose Twilio authentication issues.
+- **SECURITY**: Added comprehensive `.gitignore` file to prevent accidental commits of sensitive data (API keys, tokens, secrets, environment files).
 
 ### Fixed
 - **FIXED**: Resolved import error by restructuring the config module. Moved all settings into the `config` package's `__init__.py` and removed the conflicting `config.py` file.
