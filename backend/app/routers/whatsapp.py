@@ -184,9 +184,21 @@ async def receive_twilio_webhook(
             message=response_text,
             from_number=To # Usar o número da empresa como remetente
         )
-        
+
         if success:
             logger.info(f"Resposta enviada com sucesso para {from_number} via {to_number}")
+
+            # Atualizar contador de mensagens na subscription
+            from app.models.subscription import Subscription, SubscriptionStatus
+            subscription = db.query(Subscription).filter(
+                Subscription.user_id == user.id,
+                Subscription.status == SubscriptionStatus.ACTIVE.value
+            ).first()
+
+            if subscription:
+                subscription.messages_used += 1
+                db.commit()
+                logger.info(f"Contador de mensagens atualizado: {subscription.messages_used}/{subscription.messages_quota}")
         else:
             logger.error(f"Erro ao enviar resposta para {from_number} via {to_number}")
         
